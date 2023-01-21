@@ -22,6 +22,7 @@ import frc.lib.team6328.util.Alert.AlertType;
  */
 public final class Constants {
 //test comment
+//Ethan Test comment
   public static final double LOOP_PERIOD_SECS = 0.02;
 
   public static final boolean TUNING_MODE = false;
