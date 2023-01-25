@@ -3,7 +3,6 @@ package frc.robot.subsystems.drivetrain;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.lib.team3061.swerve.SwerveModuleConstants;
 import java.util.HashMap;
 
 public final class DrivetrainConstants {
@@ -16,25 +15,25 @@ public final class DrivetrainConstants {
 
   // FIXME: update all CAN IDs
   // FIXME: update all steer offsets
-  public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 7;
-  public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 6;
-  public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 8;
-  public static final double FRONT_LEFT_MODULE_STEER_OFFSET = 118.0371;
+  public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 5;
+  public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 4;
+  public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 3;
+  public static final double FRONT_LEFT_MODULE_STEER_OFFSET = 8.262; // 185.000;//4.8339;
 
-  public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 13;
-  public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 12;
-  public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 14;
-  public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = 102.9968;
+  public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 7;
+  public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 2;
+  public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 4;
+  public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = 153.809; // 338.02;
 
-  public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 10;
-  public static final int BACK_LEFT_MODULE_STEER_MOTOR = 9;
-  public static final int BACK_LEFT_MODULE_STEER_ENCODER = 11;
-  public static final double BACK_LEFT_MODULE_STEER_OFFSET = -189.7051;
+  public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 1;
+  public static final int BACK_LEFT_MODULE_STEER_MOTOR = 6;
+  public static final int BACK_LEFT_MODULE_STEER_ENCODER = 1;
+  public static final double BACK_LEFT_MODULE_STEER_OFFSET = 220.166;
 
-  public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 16;
-  public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 15;
-  public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 17;
-  public static final double BACK_RIGHT_MODULE_STEER_OFFSET = 40.3335;
+  public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 3;
+  public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 8;
+  public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 2;
+  public static final double BACK_RIGHT_MODULE_STEER_OFFSET = 159.346;
 
   public static final int PIGEON_ID = 18;
 
@@ -45,7 +44,7 @@ public final class DrivetrainConstants {
    *
    * <p>Should be measured from center to center.
    */
-  public static final double TRACKWIDTH_METERS = 0.5715; // 22.5 inches
+  public static final double TRACKWIDTH_METERS = 0.5969; // 22.5 inches
 
   /**
    * The front-to-back distance between the drivetrain wheels.
@@ -54,8 +53,8 @@ public final class DrivetrainConstants {
    */
   public static final double WHEELBASE_METERS = 0.5969; // 23.5 inches
 
-  public static final double ROBOT_WIDTH_WITH_BUMPERS = 0.89; // meters
-  public static final double ROBOT_LENGTH_WITH_BUMPERS = 0.91; // meters
+  public static final double ROBOT_WIDTH_WITH_BUMPERS = 0.94; // meters
+  public static final double ROBOT_LENGTH_WITH_BUMPERS = 0.94; // meters
 
   /* The geometry and coordinate systems can be confusing. Refer to this document
   for a detailed explanation: https://docs.google.com/document/d/17dg5cIfqVOlQTTbo2ust4QxTZlUoPNzuBu2oe58Ov84/edit#heading=h.x4ppzp81ed1
@@ -84,12 +83,13 @@ public final class DrivetrainConstants {
    *
    * <p>This is a measure of how fast the robot should be able to drive in a straight line.
    */
-  public static final double MAX_VELOCITY_METERS_PER_SECOND =
-      6380.0
-          / 60.0
-          / SwerveModuleConstants.DRIVE_GEAR_RATIO
-          * SwerveModuleConstants.WHEEL_CIRCUMFERENCE;
-
+  public static final double MAX_VELOCITY_METERS_PER_SECOND = 0.05;
+  /*
+        6380.0
+            / 60.0
+            / SwerveModuleConstants.DRIVE_GEAR_RATIO
+            * SwerveModuleConstants.WHEEL_CIRCUMFERENCE;
+  */
   /**
    * The maximum angular velocity of the robot in radians per second.
    *

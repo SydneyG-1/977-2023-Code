@@ -17,17 +17,17 @@ public class SingleHandheldOI implements OperatorInterface {
 
   @Override
   public double getTranslateX() {
-    return -controller.getLeftY();
+    return controller.getLeftY();
   }
 
   @Override
   public double getTranslateY() {
-    return -controller.getLeftX();
+    return controller.getLeftX();
   }
 
   @Override
   public double getRotate() {
-    return -controller.getLeftTriggerAxis();
+    return controller.getRightX();
   }
 
   @Override

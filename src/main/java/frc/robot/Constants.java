@@ -21,19 +21,19 @@ import frc.lib.team6328.util.Alert.AlertType;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-//test comment
+  // test comment
   public static final double LOOP_PERIOD_SECS = 0.02;
 
   public static final boolean TUNING_MODE = false;
 
   // FIXME: an empty string uses the default CAN bus; specify the name of the CANivore as
   // appropriate
-  public static final String CAN_BUS_NAME = "";
+  public static final String CAN_BUS_NAME = "SwerveBus";
 
   // FIXME: specify the name of the camera used for detecting AprilTags
   public static final String CAMERA_NAME = "ov9268";
 
-  private static final RobotType ROBOT = RobotType.ROBOT_SIMBOT;
+  private static final RobotType ROBOT = RobotType.ROBOT_2023_SEASON;
 
   private static final Alert invalidRobotAlert =
       new Alert("Invalid robot selected, using competition robot as default.", AlertType.ERROR);
@@ -43,7 +43,7 @@ public final class Constants {
     if (RobotBase.isReal()) {
       if (ROBOT == RobotType.ROBOT_SIMBOT) { // Invalid robot selected
         invalidRobotAlert.set(true);
-        return RobotType.ROBOT_2022_PRESEASON;
+        return RobotType.ROBOT_2023_SEASON;
       } else {
         return ROBOT;
       }
@@ -61,6 +61,9 @@ public final class Constants {
       case ROBOT_SIMBOT:
         return Mode.SIM;
 
+      case ROBOT_2023_SEASON:
+        return RobotBase.isReal() ? Mode.REAL : Mode.REPLAY;
+
       default:
         return Mode.REAL;
     }
@@ -69,7 +72,8 @@ public final class Constants {
   // FIXME: update for various robots
   public enum RobotType {
     ROBOT_2022_PRESEASON,
-    ROBOT_SIMBOT
+    ROBOT_SIMBOT,
+    ROBOT_2023_SEASON
   }
 
   public enum Mode {
