@@ -173,5 +173,5 @@ gversion {
     indent       = "  "
 }
 
-//project.compileJava.dependsOn(createVersionFile)
+project.compileJava.dependsOn(createVersionFile)
 build.dependsOn(spotlessApply)

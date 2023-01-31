@@ -37,6 +37,7 @@ import frc.robot.commands.FollowPath;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.operator_interface.OISelector;
 import frc.robot.operator_interface.OperatorInterface;
+import frc.robot.subsystems.drivetrain.Arm;
 import frc.robot.subsystems.drivetrain.Drivetrain;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -53,6 +54,7 @@ public class RobotContainer {
   private OperatorInterface oi = new OperatorInterface() {};
 
   private Drivetrain drivetrain;
+  private Arm arm;
 
   // use AdvantageKit's LoggedDashboardChooser instead of SendableChooser to ensure accurate logging
   private final LoggedDashboardChooser<Command> autoChooser =
@@ -117,6 +119,7 @@ public class RobotContainer {
             drivetrain = new Drivetrain(gyro, flModule, frModule, blModule, brModule);
             // new Pneumatics(new PneumaticsIORev());
             new Vision(new VisionIOPhotonVision(CAMERA_NAME));
+            arm = new Arm();
             break;
           }
         case ROBOT_SIMBOT:
@@ -142,6 +145,7 @@ public class RobotContainer {
             }
             new Vision(
                 new VisionIOSim(layout, drivetrain::getPose, VisionConstants.ROBOT_TO_CAMERA));
+            arm = new Arm();
             break;
           }
         default:
@@ -163,6 +167,7 @@ public class RobotContainer {
       drivetrain = new Drivetrain(new GyroIO() {}, flModule, frModule, blModule, brModule);
       new Pneumatics(new PneumaticsIO() {});
       new Vision(new VisionIO() {});
+      arm = new Arm();
     }
 
     // disable all telemetry in the LiveWindow to reduce the processing during each iteration

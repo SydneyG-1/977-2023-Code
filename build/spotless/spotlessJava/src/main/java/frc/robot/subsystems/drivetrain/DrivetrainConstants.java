@@ -3,6 +3,7 @@ package frc.robot.subsystems.drivetrain;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.lib.team3061.swerve.SwerveModuleConstants;
 import java.util.HashMap;
 
 public final class DrivetrainConstants {
@@ -83,13 +84,12 @@ public final class DrivetrainConstants {
    *
    * <p>This is a measure of how fast the robot should be able to drive in a straight line.
    */
-  public static final double MAX_VELOCITY_METERS_PER_SECOND = 0.05;
-  /*
-        6380.0
-            / 60.0
-            / SwerveModuleConstants.DRIVE_GEAR_RATIO
-            * SwerveModuleConstants.WHEEL_CIRCUMFERENCE;
-  */
+  public static final double MAX_VELOCITY_METERS_PER_SECOND =
+      6380.0
+          / 60.0
+          / SwerveModuleConstants.DRIVE_GEAR_RATIO
+          * SwerveModuleConstants.WHEEL_CIRCUMFERENCE;
+
   /**
    * The maximum angular velocity of the robot in radians per second.
    *
