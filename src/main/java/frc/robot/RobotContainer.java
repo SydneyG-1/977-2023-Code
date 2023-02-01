@@ -237,8 +237,8 @@ public class RobotContainer {
     oi.getXStanceButton().onFalse(Commands.runOnce(drivetrain::disableXstance, drivetrain));
 
 
-new Trigger(oi.getXStanceButton()).onTrue(Commands.runOnce(gripper::opengrip, gripper));
-new Trigger(oi.getXStanceButton()).onTrue(Commands.runOnce(gripper::closegrip, gripper));
+(oi.getCloseButton()).onTrue(Commands.runOnce(gripper::opengrip, gripper));
+(oi.getOpenButton()).onTrue(Commands.runOnce(gripper::closegrip, gripper));
 
 
 
