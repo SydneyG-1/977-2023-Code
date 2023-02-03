@@ -130,6 +130,7 @@ public class Robot extends LoggedRobot {
     CommandScheduler.getInstance().run();
 
     logReceiverQueueAlert.set(Logger.getInstance().getReceiverQueueFault());
+    robotContainer.updateEncoders();
   }
 
   @Override

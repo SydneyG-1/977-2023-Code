@@ -6,26 +6,24 @@ package frc.robot.subsystems.gripper;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Gripper extends SubsystemBase {
-  private CANSparkMax intake_motor = new CANSparkMax(GripperConstants.gripperSparkMaxID, MotorType.kBrushed );
-  private Solenoid grip= new Solenoid(PneumaticsModuleType.REVPH, 1);
+  private CANSparkMax intake_motor =
+      new CANSparkMax(GripperConstants.gripperSparkMaxID, MotorType.kBrushed);
+  private Solenoid grip = new Solenoid(PneumaticsModuleType.REVPH, 1);
   /** Creates a new Gripper. */
-  public Gripper() {
+  public Gripper() {}
 
-  }
-
-  public void closegrip(){
+  public void closegrip() {
     grip.set(true);
   }
-  public void opengrip(){
+
+  public void opengrip() {
     grip.set(false);
   }
- 
 
   @Override
   public void periodic() {

@@ -13,6 +13,7 @@ import com.pathplanner.lib.commands.FollowPathWithEvents;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -21,6 +22,7 @@ import frc.lib.team3061.gyro.GyroIO;
 import frc.lib.team3061.gyro.GyroIOPigeon2;
 import frc.lib.team3061.pneumatics.Pneumatics;
 import frc.lib.team3061.pneumatics.PneumaticsIO;
+import frc.lib.team3061.pneumatics.PneumaticsIORev;
 import frc.lib.team3061.swerve.SwerveModule;
 import frc.lib.team3061.swerve.SwerveModuleIO;
 import frc.lib.team3061.swerve.SwerveModuleIOSim;
@@ -37,8 +39,9 @@ import frc.robot.commands.FollowPath;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.operator_interface.OISelector;
 import frc.robot.operator_interface.OperatorInterface;
-import frc.robot.subsystems.drivetrain.Arm;
+import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.drivetrain.Drivetrain;
+import frc.robot.subsystems.gripper.Gripper;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +57,7 @@ public class RobotContainer {
   private OperatorInterface oi = new OperatorInterface() {};
 
   private Drivetrain drivetrain;
+  private Gripper gripper;
   private Arm arm;
 
   // use AdvantageKit's LoggedDashboardChooser instead of SendableChooser to ensure accurate logging
@@ -117,8 +121,9 @@ public class RobotContainer {
                     MAX_VELOCITY_METERS_PER_SECOND);
 
             drivetrain = new Drivetrain(gyro, flModule, frModule, blModule, brModule);
-            // new Pneumatics(new PneumaticsIORev());
+            new Pneumatics(new PneumaticsIORev());
             new Vision(new VisionIOPhotonVision(CAMERA_NAME));
+            gripper = new Gripper();
             arm = new Arm();
             break;
           }
@@ -145,7 +150,6 @@ public class RobotContainer {
             }
             new Vision(
                 new VisionIOSim(layout, drivetrain::getPose, VisionConstants.ROBOT_TO_CAMERA));
-            arm = new Arm();
             break;
           }
         default:
@@ -167,7 +171,6 @@ public class RobotContainer {
       drivetrain = new Drivetrain(new GyroIO() {}, flModule, frModule, blModule, brModule);
       new Pneumatics(new PneumaticsIO() {});
       new Vision(new VisionIO() {});
-      arm = new Arm();
     }
 
     // disable all telemetry in the LiveWindow to reduce the processing during each iteration
@@ -206,6 +209,11 @@ public class RobotContainer {
     configureButtonBindings();
   }
 
+  public void updateEncoders() {
+    SmartDashboard.putNumber("J1 Position", arm.getJ1postition());
+    SmartDashboard.putNumber("J2 Position", arm.getJ2postition());
+  }
+
   /**
    * Factory method to create the singleton robot container object.
    *
@@ -231,6 +239,9 @@ public class RobotContainer {
     // x-stance
     oi.getXStanceButton().onTrue(Commands.runOnce(drivetrain::enableXstance, drivetrain));
     oi.getXStanceButton().onFalse(Commands.runOnce(drivetrain::disableXstance, drivetrain));
+
+    (oi.getCloseButton()).onTrue(Commands.runOnce(gripper::opengrip, gripper));
+    (oi.getOpenButton()).onTrue(Commands.runOnce(gripper::closegrip, gripper));
   }
 
   /** Use this method to define your commands for autonomous mode. */

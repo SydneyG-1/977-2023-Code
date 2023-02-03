@@ -13,11 +13,11 @@ import com.pathplanner.lib.commands.FollowPathWithEvents;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.team3061.gyro.GyroIO;
 import frc.lib.team3061.gyro.GyroIOPigeon2;
 import frc.lib.team3061.pneumatics.Pneumatics;
@@ -42,7 +42,6 @@ import frc.robot.operator_interface.OperatorInterface;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.drivetrain.Drivetrain;
 import frc.robot.subsystems.gripper.Gripper;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -124,8 +123,8 @@ public class RobotContainer {
             drivetrain = new Drivetrain(gyro, flModule, frModule, blModule, brModule);
             new Pneumatics(new PneumaticsIORev());
             new Vision(new VisionIOPhotonVision(CAMERA_NAME));
-             gripper = new Gripper();
-             arm = new Arm();
+            gripper = new Gripper();
+            arm = new Arm();
             break;
           }
         case ROBOT_SIMBOT:
@@ -210,6 +209,11 @@ public class RobotContainer {
     configureButtonBindings();
   }
 
+  public void updateEncoders() {
+    SmartDashboard.putNumber("J1 Position", arm.getJ1postition());
+    SmartDashboard.putNumber("J2 Position", arm.getJ2postition());
+  }
+
   /**
    * Factory method to create the singleton robot container object.
    *
@@ -236,12 +240,8 @@ public class RobotContainer {
     oi.getXStanceButton().onTrue(Commands.runOnce(drivetrain::enableXstance, drivetrain));
     oi.getXStanceButton().onFalse(Commands.runOnce(drivetrain::disableXstance, drivetrain));
 
-
-(oi.getCloseButton()).onTrue(Commands.runOnce(gripper::opengrip, gripper));
-(oi.getOpenButton()).onTrue(Commands.runOnce(gripper::closegrip, gripper));
-
-
-
+    (oi.getCloseButton()).onTrue(Commands.runOnce(gripper::opengrip, gripper));
+    (oi.getOpenButton()).onTrue(Commands.runOnce(gripper::closegrip, gripper));
   }
 
   /** Use this method to define your commands for autonomous mode. */
