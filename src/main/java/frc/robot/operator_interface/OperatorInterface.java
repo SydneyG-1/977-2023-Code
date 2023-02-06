@@ -44,4 +44,11 @@ public interface OperatorInterface {
   public default Trigger getOpenButton() {
     return new Trigger(() -> false);
   }
+
+  public default Trigger getmoveJ1Up(){
+    return new Trigger(()->false);
+  }
+  public default Trigger getmoveJ1Down(){
+    return new Trigger(()->false);
+  }
 }

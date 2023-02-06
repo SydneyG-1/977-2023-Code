@@ -54,4 +54,12 @@ public class SingleHandheldOI implements OperatorInterface {
   public Trigger getOpenButton() {
     return new Trigger(controller::getAButton);
   }
+  @Override
+  public Trigger getmoveJ1Up() {
+    return new Trigger(controller::getRightBumper);
+  }
+  @Override
+  public Trigger getmoveJ1Down() {
+    return new Trigger(controller::getLeftBumper);
+  }
 }

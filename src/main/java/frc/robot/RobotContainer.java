@@ -240,8 +240,13 @@ public class RobotContainer {
     oi.getXStanceButton().onTrue(Commands.runOnce(drivetrain::enableXstance, drivetrain));
     oi.getXStanceButton().onFalse(Commands.runOnce(drivetrain::disableXstance, drivetrain));
 
-    (oi.getCloseButton()).onTrue(Commands.runOnce(gripper::opengrip, gripper));
-    (oi.getOpenButton()).onTrue(Commands.runOnce(gripper::closegrip, gripper));
+    oi.getCloseButton().onTrue(Commands.runOnce(gripper::opengrip, gripper));
+    oi.getOpenButton().onTrue(Commands.runOnce(gripper::closegrip, gripper));
+
+    oi.getmoveJ1Down().onTrue(Commands.run(arm::moveJ1Dwn, arm));
+    oi.getmoveJ1Down().onFalse(Commands.run(arm::stopJ1, arm));
+    oi.getmoveJ1Up().onTrue(Commands.run(arm::moveJ1Up, arm));
+    oi.getmoveJ1Up().onFalse(Commands.run(arm::stopJ1, arm));
   }
 
   /** Use this method to define your commands for autonomous mode. */
