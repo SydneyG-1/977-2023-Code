@@ -45,10 +45,11 @@ public interface OperatorInterface {
     return new Trigger(() -> false);
   }
 
-  public default Trigger getmoveJ1Up(){
-    return new Trigger(()->false);
+  public default Trigger getmoveJ1Up() {
+    return new Trigger(() -> false);
   }
-  public default Trigger getmoveJ1Down(){
-    return new Trigger(()->false);
+
+  public default Trigger getmoveJ1Down() {
+    return new Trigger(() -> false);
   }
 }

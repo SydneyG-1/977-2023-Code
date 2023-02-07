@@ -28,7 +28,6 @@ public class Arm extends SubsystemBase {
   private AbsoluteEncoder J3_Encoder = J3_motor.getAbsoluteEncoder(Type.kDutyCycle);
   private AbsoluteEncoder J4_Encoder = J4_motor.getAbsoluteEncoder(Type.kDutyCycle);
 
-
   /** Creates a new Arm. */
   public Arm() {
     super();
@@ -49,16 +48,17 @@ public class Arm extends SubsystemBase {
     return J2_Encoder.getPosition();
   }
 
-  public void moveJ1Up(){
+  public void moveJ1Up() {
     J1_motor.set(.25);
   }
-  public void moveJ1Dwn(){
+
+  public void moveJ1Dwn() {
     J1_motor.set(-.25);
   }
-  public void stopJ1(){
+
+  public void stopJ1() {
     J1_motor.set(0.0);
   }
-
 
   @Override
   public void periodic() {
