@@ -36,6 +36,7 @@ import frc.robot.Constants.Mode;
 import frc.robot.commands.FeedForwardCharacterization;
 import frc.robot.commands.FeedForwardCharacterization.FeedForwardCharacterizationData;
 import frc.robot.commands.FollowPath;
+import frc.robot.commands.MoveJoint1;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.operator_interface.OISelector;
 import frc.robot.operator_interface.OperatorInterface;
@@ -242,10 +243,15 @@ public class RobotContainer {
 
     oi.getCloseButton().onTrue(Commands.runOnce(gripper::opengrip, gripper));
     oi.getOpenButton().onTrue(Commands.runOnce(gripper::closegrip, gripper));
-
-    oi.getmoveJ1Down().onTrue(Commands.run(arm::moveJ1Dwn, arm));
+    /*
+        oi.getmoveJ1Down().onTrue(Commands.run(arm::moveJ1Dwn, arm));
+        oi.getmoveJ1Down().onFalse(Commands.run(arm::stopJ1, arm));
+        oi.getmoveJ1Up().onTrue(Commands.run(arm::moveJ1Up, arm));
+        oi.getmoveJ1Up().onFalse(Commands.run(arm::stopJ1, arm));
+    */
+    oi.getmoveJ1Down().onTrue(new MoveJoint1(100, arm));
     oi.getmoveJ1Down().onFalse(Commands.run(arm::stopJ1, arm));
-    oi.getmoveJ1Up().onTrue(Commands.run(arm::moveJ1Up, arm));
+    oi.getmoveJ1Up().onTrue(new MoveJoint1(120, arm));
     oi.getmoveJ1Up().onFalse(Commands.run(arm::stopJ1, arm));
   }
 
