@@ -12,8 +12,8 @@ public final class ArmConstants {
   public static final int J3_motorSparkMaxID = 3; // Setup ID's Later
   public static final int J4_motorSparkMaxID = 4; // Setup ID's Later
 
-  public static final float J1_Encoder_Max = 0.350f;
-  public static final float J1_Encoder_Min = 0.28f;
+  public static final double J1_Encoder_Max = 0.350;
+  public static final double J1_Encoder_Min = 0.26;
 
   public static final double J2_Encoder_Max = 0.015;
   public static final double J2_Encoder_Min = 0.561;

@@ -26,6 +26,18 @@ public class Gripper extends SubsystemBase {
     grip.set(false);
   }
 
+  public void intakeCube() {
+    intake_motor.set(GripperConstants.intakeSpeed);
+  }
+
+  public void releaseCube() {
+    intake_motor.set(-GripperConstants.releaseSpeed);
+  }
+
+  public void stopIntake() {
+    intake_motor.set(0.0);
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

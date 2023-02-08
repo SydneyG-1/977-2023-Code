@@ -31,11 +31,12 @@ public class Arm extends SubsystemBase {
   /** Creates a new Arm. */
   public Arm() {
     super();
-    J1_motor.enableSoftLimit(SoftLimitDirection.kForward, true);
-    J1_motor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+    // J1_motor.setInverted(true);
+    J1_motor.enableSoftLimit(SoftLimitDirection.kForward, false);
+    J1_motor.enableSoftLimit(SoftLimitDirection.kReverse, false);
 
-    J1_motor.setSoftLimit(SoftLimitDirection.kForward, ArmConstants.J1_Encoder_Max);
-    J1_motor.setSoftLimit(SoftLimitDirection.kReverse, ArmConstants.J1_Encoder_Min);
+    // J1_motor.setSoftLimit(SoftLimitDirection.kForward, ArmConstants.J1_Encoder_Max);
+    // J1_motor.setSoftLimit(SoftLimitDirection.kReverse, ArmConstants.J1_Encoder_Min);
   }
 
   public double getJ1postition() {
@@ -49,11 +50,19 @@ public class Arm extends SubsystemBase {
   }
 
   public void moveJ1Up() {
-    J1_motor.set(.25);
+    if (J1_Encoder.getPosition() < ArmConstants.J1_Encoder_Max) {
+      J1_motor.set(.25);
+    } else {
+      J1_motor.set(0.0);
+    }
   }
 
   public void moveJ1Dwn() {
-    J1_motor.set(-.25);
+    if (J1_Encoder.getPosition() > ArmConstants.J1_Encoder_Min) {
+      J1_motor.set(-.25);
+    } else {
+      J1_motor.set(0.0);
+    }
   }
 
   public void stopJ1() {

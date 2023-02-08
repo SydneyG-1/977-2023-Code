@@ -8,4 +8,6 @@ public final class GripperConstants {
   }
 
   public static final int gripperSparkMaxID = 5;
+  public static final double intakeSpeed = 1.0;
+  public static final double releaseSpeed = 1.0;
 }
