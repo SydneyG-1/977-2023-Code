@@ -8,7 +8,6 @@ import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Arm extends SubsystemBase {
@@ -21,8 +20,8 @@ public class Arm extends SubsystemBase {
   private CANSparkMax J4_motor =
       new CANSparkMax(ArmConstants.J4_motorSparkMaxID, MotorType.kBrushless);
 
-  //private DutyCycleEncoder J1_Encoder = new DutyCycleEncoder(0);
-  //private DutyCycleEncoder J2_Encoder = new DutyCycleEncoder(1);
+  // private DutyCycleEncoder J1_Encoder = new DutyCycleEncoder(0);
+  // private DutyCycleEncoder J2_Encoder = new DutyCycleEncoder(1);
   private AbsoluteEncoder J1_Encoder = J1_motor.getAbsoluteEncoder(Type.kDutyCycle);
   private AbsoluteEncoder J2_Encoder = J2_motor.getAbsoluteEncoder(Type.kDutyCycle);
   private AbsoluteEncoder J3_Encoder = J3_motor.getAbsoluteEncoder(Type.kDutyCycle);
@@ -32,12 +31,12 @@ public class Arm extends SubsystemBase {
   public Arm() {}
 
   public double getJ1postition() {
-    //return J1_Encoder.getAbsolutePosition();
+    // return J1_Encoder.getAbsolutePosition();
     return J1_Encoder.getPosition();
   }
 
   public double getJ2postition() {
-    //return J2_Encoder.getAbsolutePosition();
+    // return J2_Encoder.getAbsolutePosition();
     return J2_Encoder.getPosition();
   }
 
