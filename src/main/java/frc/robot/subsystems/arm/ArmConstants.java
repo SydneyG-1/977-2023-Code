@@ -25,8 +25,8 @@ public final class ArmConstants {
   public static final double j1_allE = 0.5;
 
 
-  public static final double j2_kP = 0.03;
-  public static final double j2_kI = 0.001;
+  public static final double j2_kP = 0.0003;
+  public static final double j2_kI = 0.00001;
   public static final double j2_kD = 0.0;
   public static final double j2_allE = 0.5;
 }

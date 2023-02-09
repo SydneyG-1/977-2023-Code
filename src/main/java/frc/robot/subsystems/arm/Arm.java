@@ -32,11 +32,11 @@ public class Arm extends SubsystemBase {
   private AbsoluteEncoder J4_Encoder = J4_motor.getAbsoluteEncoder(Type.kDutyCycle);
 
   private ProfiledPIDController j1Controller;
-  private TrapezoidProfile.Constraints j1Profile = new TrapezoidProfile.Constraints(10.0, 30.0);
+  private TrapezoidProfile.Constraints j1Profile = new TrapezoidProfile.Constraints(10.0, 1.0);
   private double j1goal = 0.0;
 
   private ProfiledPIDController j2Controller;
-  private TrapezoidProfile.Constraints j2Profile = new TrapezoidProfile.Constraints(10.0, 30.0);
+  private TrapezoidProfile.Constraints j2Profile = new TrapezoidProfile.Constraints(10.0, 1.0);
   private double j2goal = 0.0;
 
   private double temp = 0.0;
@@ -73,22 +73,32 @@ public class Arm extends SubsystemBase {
     return J2_Encoder.getPosition();
   }
 
-  public void moveJ1Up() {
-    if (J1_Encoder.getPosition() < ArmConstants.J1_Encoder_Max) {
-      J1_motor.set(.15);
-    } else {
-      J1_motor.set(0.0);
-    }
+  public void moveArm(double J1pos, double J2pos){
+    j1goal = J1pos;
+    j2goal = J2pos;
+    //j3goal = J3pos;
+    //j4goal = J4pos;
+
+    moveJ1(calcJ1());
+    moveJ2(calcJ2());
+    //moveJ3(calcJ3());
+    //moveJ4(calcJ4());
   }
 
-  public void moveJ1Dwn() {
-    if (J1_Encoder.getPosition() > ArmConstants.J1_Encoder_Min) {
-      J1_motor.set(-.15);
+  public void moveJ1(double speed) {
+    if ((speed>0 && getJ1postition() < ArmConstants.J1_Encoder_Max)||(speed<0 && getJ1postition()>ArmConstants.J1_Encoder_Min)) {
+      J1_motor.set(speed);
     } else {
-      J1_motor.set(0.0);
+      stopJ1();
     }
   }
-
+  public void moveJ2(double speed) {
+    if ((speed>0 && getJ2postition() < ArmConstants.J2_Encoder_Max)||(speed<0 && getJ2postition()>ArmConstants.J2_Encoder_Min)) {
+      J2_motor.set(speed);
+    } else {
+      stopJ2();
+    }
+  }
   public void stopJ1() {
     J1_motor.set(0.0);
   }
@@ -104,24 +114,14 @@ public class Arm extends SubsystemBase {
     j2Controller.reset(getJ2postition());
   }
 
-  public void moveJ1(double positionGoal) {
-
-    if (positionGoal < ArmConstants.J1_Encoder_Max && positionGoal > ArmConstants.J1_Encoder_Min) {
-      j1goal = positionGoal;
-      j1Controller.setGoal(positionGoal);
-    }
-    J1_motor.set(j1Controller.calculate(getJ1postition()));
+  public double calcJ1(){
+    return j1Controller.calculate(getJ1postition());
   }
 
-  public void moveJ2(double positionGoal) {
-
-    if (positionGoal < ArmConstants.J2_Encoder_Max && positionGoal > ArmConstants.J2_Encoder_Min) {
-      j2goal = positionGoal;
-      j2Controller.setGoal(positionGoal);
-    }
-    temp = j2Controller.calculate(getJ2postition());
-    J2_motor.set(temp);
+  public double calcJ2(){
+    return j2Controller.calculate(getJ2postition());
   }
+
 
   @Override
   public void periodic() {
