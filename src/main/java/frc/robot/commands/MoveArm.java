@@ -7,17 +7,14 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.arm.Arm;
 
-public class MoveJoint1 extends CommandBase {
+public class MoveArm extends CommandBase {
   private Arm m_subsystem;
-  private double m_position1;
-  private double m_position2;
+  private double[] m_position;
   /** Creates a new MoveJoint1. */
-  public MoveJoint1(double position1, double position2, Arm subsystem) {
+  public MoveArm(double[] position, Arm subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
 
-    m_position1 = position1;
-    
-    m_position2 = position2;
+    m_position = position;
     m_subsystem = subsystem;
     addRequirements(m_subsystem);
   }
@@ -25,22 +22,19 @@ public class MoveJoint1 extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_subsystem.resetJ1Position();
-    m_subsystem.resetJ2Position();
+    m_subsystem.resetPositions(); //sets the joint controllers to their current positions
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_subsystem.moveJ1(m_position1);
-    m_subsystem.moveJ2(m_position2);
+    m_subsystem.moveArm(m_position);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_subsystem.stopJ1();
-    m_subsystem.stopJ2();
+    m_subsystem.allStop();
   }
 
   // Returns true when the command should end.

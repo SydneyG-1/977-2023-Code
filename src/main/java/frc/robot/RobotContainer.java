@@ -13,7 +13,6 @@ import com.pathplanner.lib.commands.FollowPathWithEvents;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -36,11 +35,12 @@ import frc.robot.Constants.Mode;
 import frc.robot.commands.FeedForwardCharacterization;
 import frc.robot.commands.FeedForwardCharacterization.FeedForwardCharacterizationData;
 import frc.robot.commands.FollowPath;
-import frc.robot.commands.MoveJoint1;
+import frc.robot.commands.MoveArm;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.operator_interface.OISelector;
 import frc.robot.operator_interface.OperatorInterface;
 import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.ArmPositions;
 import frc.robot.subsystems.drivetrain.Drivetrain;
 import frc.robot.subsystems.gripper.Gripper;
 import java.io.IOException;
@@ -210,11 +210,6 @@ public class RobotContainer {
     configureButtonBindings();
   }
 
-  public void updateEncoders() {
-    SmartDashboard.putNumber("J1 Position", arm.getJ1postition());
-    SmartDashboard.putNumber("J2 Position", arm.getJ2postition());
-  }
-
   /**
    * Factory method to create the singleton robot container object.
    *
@@ -256,9 +251,9 @@ public class RobotContainer {
         oi.getmoveJ1Up().onTrue(Commands.run(arm::moveJ1Up, arm));
         oi.getmoveJ1Up().onFalse(Commands.run(arm::stopJ1, arm));
     */
-    oi.getmoveJ1Down().onTrue(new MoveJoint1(100, 310,arm));
+    oi.getmoveJ1Down().onTrue(new MoveArm(ArmPositions.TEST1,arm));
     oi.getmoveJ1Down().onFalse(Commands.run(arm::stopJ1, arm));
-    oi.getmoveJ1Up().onTrue(new MoveJoint1(120, 320, arm));
+    oi.getmoveJ1Up().onTrue(new MoveArm(ArmPositions.TEST2, arm));
     oi.getmoveJ1Up().onFalse(Commands.run(arm::stopJ1, arm));
   }
 

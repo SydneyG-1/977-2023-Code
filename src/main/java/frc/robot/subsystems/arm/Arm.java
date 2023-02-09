@@ -24,33 +24,39 @@ public class Arm extends SubsystemBase {
   private CANSparkMax J4_motor =
       new CANSparkMax(ArmConstants.J4_motorSparkMaxID, MotorType.kBrushless);
 
-  // private DutyCycleEncoder J1_Encoder = new DutyCycleEncoder(0);
-  // private DutyCycleEncoder J2_Encoder = new DutyCycleEncoder(1);
   private AbsoluteEncoder J1_Encoder = J1_motor.getAbsoluteEncoder(Type.kDutyCycle);
   private AbsoluteEncoder J2_Encoder = J2_motor.getAbsoluteEncoder(Type.kDutyCycle);
   private AbsoluteEncoder J3_Encoder = J3_motor.getAbsoluteEncoder(Type.kDutyCycle);
   private AbsoluteEncoder J4_Encoder = J4_motor.getAbsoluteEncoder(Type.kDutyCycle);
 
   private ProfiledPIDController j1Controller;
-  private TrapezoidProfile.Constraints j1Profile = new TrapezoidProfile.Constraints(10.0, 1.0);
-  private double j1goal = 0.0;
+  private TrapezoidProfile.Constraints j1Profile = new TrapezoidProfile.Constraints(ArmConstants.j1_maxV, ArmConstants.j1_maxAcc);
+ 
 
   private ProfiledPIDController j2Controller;
-  private TrapezoidProfile.Constraints j2Profile = new TrapezoidProfile.Constraints(10.0, 1.0);
-  private double j2goal = 0.0;
+  private TrapezoidProfile.Constraints j2Profile = new TrapezoidProfile.Constraints(ArmConstants.j2_maxV, ArmConstants.j2_maxAcc);
 
-  private double temp = 0.0;
+
+  private ProfiledPIDController j3Controller;
+  private TrapezoidProfile.Constraints j3Profile = new TrapezoidProfile.Constraints(ArmConstants.j3_maxV, ArmConstants.j3_maxAcc);
+
+
+  private ProfiledPIDController j4Controller;
+  private TrapezoidProfile.Constraints j4Profile = new TrapezoidProfile.Constraints(ArmConstants.j4_maxV, ArmConstants.j4_maxAcc);
+
   /** Creates a new Arm. */
   public Arm() {
     super();
+
     J1_motor.setInverted(true);
     J1_motor.enableSoftLimit(SoftLimitDirection.kForward, false);
     J1_motor.enableSoftLimit(SoftLimitDirection.kReverse, false);
 
     J1_Encoder.setPositionConversionFactor(360.0);
     J2_Encoder.setPositionConversionFactor(360.0);
-    // J1_motor.setSoftLimit(SoftLimitDirection.kForward, ArmConstants.J1_Encoder_Max);
-    // J1_motor.setSoftLimit(SoftLimitDirection.kReverse, ArmConstants.J1_Encoder_Min);
+    J3_Encoder.setPositionConversionFactor(360.0);
+    J4_Encoder.setPositionConversionFactor(360.0);
+
 
     j1Controller =
         new ProfiledPIDController(
@@ -61,23 +67,44 @@ public class Arm extends SubsystemBase {
         new ProfiledPIDController(
             ArmConstants.j2_kP, ArmConstants.j2_kI, ArmConstants.j2_kD, j2Profile, 0.02);
     j2Controller.setTolerance(ArmConstants.j2_allE);
+
+    j3Controller =
+        new ProfiledPIDController(
+            ArmConstants.j3_kP, ArmConstants.j3_kI, ArmConstants.j3_kD, j3Profile, 0.02);
+    j3Controller.setTolerance(ArmConstants.j3_allE);
+
+    j4Controller =
+        new ProfiledPIDController(
+            ArmConstants.j4_kP, ArmConstants.j4_kI, ArmConstants.j4_kD, j4Profile, 0.02);
+    j4Controller.setTolerance(ArmConstants.j4_allE);
   }
 
-  public double getJ1postition() {
+  public double getJ1position() {
     // return J1_Encoder.getAbsolutePosition();
     return J1_Encoder.getPosition();
   }
 
-  public double getJ2postition() {
+  public double getJ2position() {
     // return J2_Encoder.getAbsolutePosition();
     return J2_Encoder.getPosition();
   }
 
-  public void moveArm(double J1pos, double J2pos){
-    j1goal = J1pos;
-    j2goal = J2pos;
-    //j3goal = J3pos;
-    //j4goal = J4pos;
+  public double getJ3position() {
+    // return J1_Encoder.getAbsolutePosition();
+    return J3_Encoder.getPosition();
+  }
+
+  public double getJ4position() {
+    // return J2_Encoder.getAbsolutePosition();
+    return J4_Encoder.getPosition();
+  }
+
+  public void moveArm(double[] positions){
+
+    j1Controller.setGoal(positions[0]);
+    j2Controller.setGoal(positions[1]);
+    j3Controller.setGoal(positions[2]);
+    j4Controller.setGoal(positions[3]);
 
     moveJ1(calcJ1());
     moveJ2(calcJ2());
@@ -86,17 +113,32 @@ public class Arm extends SubsystemBase {
   }
 
   public void moveJ1(double speed) {
-    if ((speed>0 && getJ1postition() < ArmConstants.J1_Encoder_Max)||(speed<0 && getJ1postition()>ArmConstants.J1_Encoder_Min)) {
+    if ((speed>0 && getJ1position() < ArmConstants.J1_Encoder_Max)||(speed<0 && getJ1position()>ArmConstants.J1_Encoder_Min)) {
       J1_motor.set(speed);
     } else {
       stopJ1();
     }
   }
   public void moveJ2(double speed) {
-    if ((speed>0 && getJ2postition() < ArmConstants.J2_Encoder_Max)||(speed<0 && getJ2postition()>ArmConstants.J2_Encoder_Min)) {
+    if ((speed>0 && getJ2position() < ArmConstants.J2_Encoder_Max)||(speed<0 && getJ2position()>ArmConstants.J2_Encoder_Min)) {
       J2_motor.set(speed);
     } else {
       stopJ2();
+    }
+  }
+
+  public void moveJ3(double speed) {
+    if ((speed>0 && getJ3position() < ArmConstants.J3_Encoder_Max)||(speed<0 && getJ3position()>ArmConstants.J3_Encoder_Min)) {
+      J3_motor.set(speed);
+    } else {
+      stopJ3();
+    }
+  }
+  public void moveJ4(double speed) {
+    if ((speed>0 && getJ4position() < ArmConstants.J4_Encoder_Max)||(speed<0 && getJ4position()>ArmConstants.J4_Encoder_Min)) {
+      J4_motor.set(speed);
+    } else {
+      stopJ4();
     }
   }
   public void stopJ1() {
@@ -105,34 +147,65 @@ public class Arm extends SubsystemBase {
   public void stopJ2() {
     J2_motor.set(0.0);
   }
+  
+  public void stopJ3() {
+    J1_motor.set(0.0);
+  }
+  public void stopJ4() {
+    J2_motor.set(0.0);
+  }
+
+  public void allStop(){
+    stopJ1();
+    stopJ2();
+    stopJ3();
+    stopJ4();
+  }
 
   public void resetJ1Position() {
-    j1Controller.reset(getJ1postition());
+    j1Controller.reset(getJ1position());
   }
 
   public void resetJ2Position() {
-    j2Controller.reset(getJ2postition());
+    j2Controller.reset(getJ2position());
+  }
+  public void resetJ3Position() {
+    j3Controller.reset(getJ3position());
+  }
+
+  public void resetJ4Position() {
+    j4Controller.reset(getJ4position());
+  }
+
+  public void resetPositions(){
+    resetJ1Position();
+    resetJ2Position();
+    resetJ3Position();
+    resetJ4Position();
   }
 
   public double calcJ1(){
-    return j1Controller.calculate(getJ1postition());
+    return j1Controller.calculate(getJ1position());
   }
 
   public double calcJ2(){
-    return j2Controller.calculate(getJ2postition());
+    return j2Controller.calculate(getJ2position());
+  }
+
+  public double calcJ3(){
+    return j3Controller.calculate(getJ3position());
+  }
+
+  public double calcJ4(){
+    return j4Controller.calculate(getJ4position());
   }
 
 
   @Override
   public void periodic() {
     SmartDashboard.putNumber("J1 Output", J1_motor.getAppliedOutput());
-
-    SmartDashboard.putNumber("j1positionSub", getJ1postition());
-    SmartDashboard.putNumber("j1goal", j1goal);
-    SmartDashboard.putNumber("j1pidCalc", temp);
-    SmartDashboard.putNumber("j1piderror", j1Controller.getPositionError());
-
-    SmartDashboard.putNumber("j1pidsetP", j1Controller.getSetpoint().position);
+    SmartDashboard.putNumber("j1positionSub", getJ1position());
+    SmartDashboard.putNumber("J1 Goal", j1Controller.getGoal().position);
     // This method will be called once per scheduler run
   }
 }
