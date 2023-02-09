@@ -3,7 +3,7 @@
     "type": "java",
     "name": "frcJava",
     "port": 8349,
-    "target": "10.9.77.2",
+    "target": "172.22.11.2",
     "project": "977 2023 Code"
   }
 ]
