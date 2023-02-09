@@ -32,13 +32,18 @@ public class Arm extends SubsystemBase {
   private AbsoluteEncoder J4_Encoder = J4_motor.getAbsoluteEncoder(Type.kDutyCycle);
 
   private ProfiledPIDController j1Controller;
-  private TrapezoidProfile.Constraints j1Profile = new TrapezoidProfile.Constraints(5.0, 1.0);
+  private TrapezoidProfile.Constraints j1Profile = new TrapezoidProfile.Constraints(10.0, 30.0);
   private double j1goal = 0.0;
+
+  private ProfiledPIDController j2Controller;
+  private TrapezoidProfile.Constraints j2Profile = new TrapezoidProfile.Constraints(10.0, 30.0);
+  private double j2goal = 0.0;
+
   private double temp = 0.0;
   /** Creates a new Arm. */
   public Arm() {
     super();
-     J1_motor.setInverted(true);
+    J1_motor.setInverted(true);
     J1_motor.enableSoftLimit(SoftLimitDirection.kForward, false);
     J1_motor.enableSoftLimit(SoftLimitDirection.kReverse, false);
 
@@ -51,6 +56,11 @@ public class Arm extends SubsystemBase {
         new ProfiledPIDController(
             ArmConstants.j1_kP, ArmConstants.j1_kI, ArmConstants.j1_kD, j1Profile, 0.02);
     j1Controller.setTolerance(ArmConstants.j1_allE);
+
+    j2Controller =
+        new ProfiledPIDController(
+            ArmConstants.j2_kP, ArmConstants.j2_kI, ArmConstants.j2_kD, j2Profile, 0.02);
+    j2Controller.setTolerance(ArmConstants.j2_allE);
   }
 
   public double getJ1postition() {
@@ -82,9 +92,16 @@ public class Arm extends SubsystemBase {
   public void stopJ1() {
     J1_motor.set(0.0);
   }
+  public void stopJ2() {
+    J2_motor.set(0.0);
+  }
 
   public void resetJ1Position() {
     j1Controller.reset(getJ1postition());
+  }
+
+  public void resetJ2Position() {
+    j2Controller.reset(getJ2postition());
   }
 
   public void moveJ1(double positionGoal) {
@@ -93,8 +110,17 @@ public class Arm extends SubsystemBase {
       j1goal = positionGoal;
       j1Controller.setGoal(positionGoal);
     }
-    temp = j1Controller.calculate(getJ1postition());
-    J1_motor.set(temp);
+    J1_motor.set(j1Controller.calculate(getJ1postition()));
+  }
+
+  public void moveJ2(double positionGoal) {
+
+    if (positionGoal < ArmConstants.J2_Encoder_Max && positionGoal > ArmConstants.J2_Encoder_Min) {
+      j2goal = positionGoal;
+      j2Controller.setGoal(positionGoal);
+    }
+    temp = j2Controller.calculate(getJ2postition());
+    J2_motor.set(temp);
   }
 
   @Override

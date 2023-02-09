@@ -9,12 +9,15 @@ import frc.robot.subsystems.arm.Arm;
 
 public class MoveJoint1 extends CommandBase {
   private Arm m_subsystem;
-  private double m_position;
+  private double m_position1;
+  private double m_position2;
   /** Creates a new MoveJoint1. */
-  public MoveJoint1(double position, Arm subsystem) {
+  public MoveJoint1(double position1, double position2, Arm subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
 
-    m_position = position;
+    m_position1 = position1;
+    
+    m_position2 = position2;
     m_subsystem = subsystem;
     addRequirements(m_subsystem);
   }
@@ -23,18 +26,21 @@ public class MoveJoint1 extends CommandBase {
   @Override
   public void initialize() {
     m_subsystem.resetJ1Position();
+    m_subsystem.resetJ2Position();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_subsystem.moveJ1(m_position);
+    m_subsystem.moveJ1(m_position1);
+    m_subsystem.moveJ2(m_position2);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     m_subsystem.stopJ1();
+    m_subsystem.stopJ2();
   }
 
   // Returns true when the command should end.

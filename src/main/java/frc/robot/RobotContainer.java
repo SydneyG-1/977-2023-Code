@@ -227,31 +227,38 @@ public class RobotContainer {
   /** Use this method to define your button->command mappings. */
   private void configureButtonBindings() {
     // field-relative toggle
-    oi.getFieldRelativeButton()
+    oi.getFieldRelativeButton().onTrue(Commands.runOnce((gripper::releaseCube)));
+    oi.getFieldRelativeButton().onFalse(Commands.runOnce((gripper::stopIntake)));
+
+    /*
         .toggleOnTrue(
             Commands.either(
                 Commands.runOnce(drivetrain::disableFieldRelative, drivetrain),
                 Commands.runOnce(drivetrain::enableFieldRelative, drivetrain),
                 drivetrain::getFieldRelative));
-
+*/
     // reset gyro to 0 degrees
     oi.getResetGyroButton().onTrue(Commands.runOnce(drivetrain::zeroGyroscope, drivetrain));
 
+    oi.getXStanceButton().onTrue(Commands.runOnce(gripper::intakeCube, gripper));
+    oi.getXStanceButton().onFalse(Commands.runOnce(gripper::stopIntake, gripper));
+/* 
     // x-stance
     oi.getXStanceButton().onTrue(Commands.runOnce(drivetrain::enableXstance, drivetrain));
     oi.getXStanceButton().onFalse(Commands.runOnce(drivetrain::disableXstance, drivetrain));
-
+*/
     oi.getCloseButton().onTrue(Commands.runOnce(gripper::opengrip, gripper));
     oi.getOpenButton().onTrue(Commands.runOnce(gripper::closegrip, gripper));
+
     /*
         oi.getmoveJ1Down().onTrue(Commands.run(arm::moveJ1Dwn, arm));
         oi.getmoveJ1Down().onFalse(Commands.run(arm::stopJ1, arm));
         oi.getmoveJ1Up().onTrue(Commands.run(arm::moveJ1Up, arm));
         oi.getmoveJ1Up().onFalse(Commands.run(arm::stopJ1, arm));
     */
-    oi.getmoveJ1Down().onTrue(new MoveJoint1(100, arm));
+    oi.getmoveJ1Down().onTrue(new MoveJoint1(100, 310,arm));
     oi.getmoveJ1Down().onFalse(Commands.run(arm::stopJ1, arm));
-    oi.getmoveJ1Up().onTrue(new MoveJoint1(120, arm));
+    oi.getmoveJ1Up().onTrue(new MoveJoint1(120, 320, arm));
     oi.getmoveJ1Up().onFalse(Commands.run(arm::stopJ1, arm));
   }
 

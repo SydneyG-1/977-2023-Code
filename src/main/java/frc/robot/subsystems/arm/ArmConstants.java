@@ -15,19 +15,18 @@ public final class ArmConstants {
   public static final double J1_Encoder_Max = 0.350 * 360.0;
   public static final double J1_Encoder_Min = 0.26 * 360.0;
 
-  public static final double J2_Encoder_Max = 0.015;
-  public static final double J2_Encoder_Min = 0.561;
+  public static final double J2_Encoder_Max = 330.0;
+  public static final double J2_Encoder_Min = 300.0;
 
   // PID coefficients
-  public static final double j1_kP = 0.01;
+  public static final double j1_kP = 0.03;
   public static final double j1_kI = 0.001;
-  public static final double j1_kD = 0;
-  public static final double j1_kMaxOutput = 0.5;
-  public static final double j1_kMinOutput = -0.5;
-  public static final double j1_maxRPM = 2500;
-
-  // Smart Motion Coefficients
-  public static final double j1_maxVel = 20; // rpm
-  public static final double j1_maxAcc = 15;
+  public static final double j1_kD = 0.0;
   public static final double j1_allE = 0.5;
+
+
+  public static final double j2_kP = 0.03;
+  public static final double j2_kI = 0.001;
+  public static final double j2_kD = 0.0;
+  public static final double j2_allE = 0.5;
 }
