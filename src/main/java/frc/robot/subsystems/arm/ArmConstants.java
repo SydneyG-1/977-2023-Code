@@ -31,7 +31,10 @@ public final class ArmConstants {
   public static final double j1_kI = 0.001;
   public static final double j1_kD = 0.0;
   public static final double j1_allE = 0.5;
-
+  public static final double j1_ks = 0.0;//volts
+  public static final double j1_kg = 2.3; //volts
+  public static final double j1_kv = 2.44;//volts*s/rad
+  public static final double j1_ka = 0.08;//volts*s^2/rad
 
   
   public static final double j2_maxV = 20.0;
@@ -40,6 +43,10 @@ public final class ArmConstants {
   public static final double j2_kI = 0.0012;
   public static final double j2_kD = 0.0;
   public static final double j2_allE = 0.5;
+  public static final double j2_ks = 0.0;
+  public static final double j2_kg = 0.0;
+  public static final double j2_kv = 0.0;
+  public static final double j2_ka = 0.0;
 
   
   public static final double j3_maxV = 10.0;
@@ -48,6 +55,10 @@ public final class ArmConstants {
   public static final double j3_kI = 0.00001;
   public static final double j3_kD = 0.0;
   public static final double j3_allE = 0.5;
+  public static final double j3_ks = 0.0;
+  public static final double j3_kg = 0.0;
+  public static final double j3_kv = 0.0;
+  public static final double j3_ka = 0.0;
   
   
   public static final double j4_maxV = 10.0;
@@ -56,4 +67,8 @@ public final class ArmConstants {
   public static final double j4_kI = 0.00001;
   public static final double j4_kD = 0.0;
   public static final double j4_allE = 0.5;
+  public static final double j4_ks = 0.0;
+  public static final double j4_kg = 0.00;
+  public static final double j4_kv = 0.00;
+  public static final double j4_ka = 0.00;
 }

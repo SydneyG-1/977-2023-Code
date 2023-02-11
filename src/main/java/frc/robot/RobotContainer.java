@@ -121,7 +121,7 @@ public class RobotContainer {
                     3,
                     MAX_VELOCITY_METERS_PER_SECOND);
 
-            drivetrain = new Drivetrain(gyro, flModule, frModule, blModule, brModule);
+            //drivetrain = new Drivetrain(gyro, flModule, frModule, blModule, brModule);
             new Pneumatics(new PneumaticsIORev());
             new Vision(new VisionIOPhotonVision(CAMERA_NAME));
             gripper = new Gripper();
