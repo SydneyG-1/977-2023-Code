@@ -23,13 +23,13 @@ public class Arm extends SubsystemBase {
       new CANSparkMax(ArmConstants.J2_motorSparkMaxID, MotorType.kBrushless);
   private CANSparkMax J3_motor =
       new CANSparkMax(ArmConstants.J3_motorSparkMaxID, MotorType.kBrushless);
-  private CANSparkMax J4_motor =
-      new CANSparkMax(ArmConstants.J4_motorSparkMaxID, MotorType.kBrushless);
+ /*  private CANSparkMax J4_motor =
+      new CANSparkMax(ArmConstants.J4_motorSparkMaxID, MotorType.kBrushless); */
 
   private AbsoluteEncoder J1_Encoder = J1_motor.getAbsoluteEncoder(Type.kDutyCycle);
   private AbsoluteEncoder J2_Encoder = J2_motor.getAbsoluteEncoder(Type.kDutyCycle);
   private AbsoluteEncoder J3_Encoder = J3_motor.getAbsoluteEncoder(Type.kDutyCycle);
-  private AbsoluteEncoder J4_Encoder = J4_motor.getAbsoluteEncoder(Type.kDutyCycle);
+  // private AbsoluteEncoder J4_Encoder = J4_motor.getAbsoluteEncoder(Type.kDutyCycle);
 
   private ProfiledPIDController j1Controller;
   private TrapezoidProfile.Constraints j1Profile = new TrapezoidProfile.Constraints(ArmConstants.j1_maxV, ArmConstants.j1_maxAcc);
@@ -68,10 +68,11 @@ public class Arm extends SubsystemBase {
     J3_Encoder.setPositionConversionFactor(2*Math.PI);
     J3_Encoder.setZeroOffset(0.0);
 
-    
+    /* 
     J4_Encoder.setInverted(false);
     J4_Encoder.setPositionConversionFactor(2*Math.PI);
     J4_Encoder.setZeroOffset(0.0);
+    */
 
 
 
@@ -93,11 +94,12 @@ public class Arm extends SubsystemBase {
     j3Controller.setTolerance(ArmConstants.j3_allE);
     j3ArmFeedforward = new ArmFeedforward(ArmConstants.j3_ks, ArmConstants.j3_kg, ArmConstants.j3_kv, ArmConstants.j3_ka);
 
-    j4Controller =
+    /* j4Controller =
         new ProfiledPIDController(
             ArmConstants.j4_kP, ArmConstants.j4_kI, ArmConstants.j4_kD, j4Profile, 0.02);
     j4Controller.setTolerance(ArmConstants.j4_allE);
     j4ArmFeedforward = new ArmFeedforward(ArmConstants.j4_ks, ArmConstants.j4_kg, ArmConstants.j4_kv, ArmConstants.j4_ka);
+    /* */
 
     
   }
@@ -116,18 +118,19 @@ public class Arm extends SubsystemBase {
     // return J1_Encoder.getAbsolutePosition();
     return J3_Encoder.getPosition();
   }
-
+/* 
   public double getJ4position() {
     // return J2_Encoder.getAbsolutePosition();
     return J4_Encoder.getPosition();
-  }
+    
+  }*/
 
   public void moveArm(double[] positions){
 
     j1Controller.setGoal(positions[0]);
     j2Controller.setGoal(positions[1]);
     j3Controller.setGoal(positions[2]);
-    j4Controller.setGoal(positions[3]);
+    //j4Controller.setGoal(positions[3]);
 
    
     moveJ1(calcJ1());
@@ -158,13 +161,13 @@ public class Arm extends SubsystemBase {
       stopJ3();
     }
   }
-  public void moveJ4(double speed) {
+  /*public void moveJ4(double speed) {
     if ((speed>0 && getJ4position() < ArmConstants.J4_Encoder_Max)||(speed<0 && getJ4position()>ArmConstants.J4_Encoder_Min)) {
       J4_motor.setVoltage(speed);
     } else {
       stopJ4();
     }
-  }
+  }*/
   public void stopJ1() {
     J1_motor.setVoltage(0.0);
   }
@@ -175,15 +178,15 @@ public class Arm extends SubsystemBase {
   public void stopJ3() {
     J3_motor.setVoltage(0.0);
   }
-  public void stopJ4() {
+  /*public void stopJ4() {
     J4_motor.setVoltage(0.0);
-  }
+  }*/
 
   public void allStop(){
     stopJ1();
     stopJ2();
     stopJ3();
-    stopJ4();
+    //stopJ4();
   }
 
   public void resetJ1Position() {
@@ -197,15 +200,15 @@ public class Arm extends SubsystemBase {
     j3Controller.reset(getJ3position());
   }
 
-  public void resetJ4Position() {
+  /*public void resetJ4Position() {
     j4Controller.reset(getJ4position());
-  }
+  }*/
 
   public void resetPositions(){
     resetJ1Position();
     resetJ2Position();
     resetJ3Position();
-    resetJ4Position();
+    //resetJ4Position();
   }
 
   public double calcJ1(){
@@ -220,9 +223,9 @@ public class Arm extends SubsystemBase {
     return j3Controller.calculate(getJ3position())+j3ArmFeedforward.calculate(j3Controller.getSetpoint().position,j3Controller.getSetpoint().velocity);
   }
 
-  public double calcJ4(){
+  /*public double calcJ4(){
     return j4Controller.calculate(getJ4position());
-  }
+  }*/
 
 
   @Override
@@ -242,9 +245,9 @@ public class Arm extends SubsystemBase {
     SmartDashboard.putNumber("J3 Goal", j3Controller.getGoal().position);
 
     
-    SmartDashboard.putNumber("J4 Output", J4_motor.getAppliedOutput());
+    /*SmartDashboard.putNumber("J4 Output", J4_motor.getAppliedOutput());
     SmartDashboard.putNumber("j4positionSub", getJ4position());
-    SmartDashboard.putNumber("J4 Goal", j4Controller.getGoal().position);
+    SmartDashboard.putNumber("J4 Goal", j4Controller.getGoal().position); */
     // This method will be called once per scheduler run
   }
 }

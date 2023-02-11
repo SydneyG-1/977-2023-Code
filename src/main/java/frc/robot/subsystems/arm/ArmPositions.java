@@ -7,14 +7,14 @@ public final class ArmPositions {
     throw new IllegalStateException(CONSTRUCTOR_EXCEPTION);
   }
 
-  //Joint position arrays, {j1, j2, j3, j4} 
+  //Joint position arrays, {j1, j2, j3,} 
 
 
-  public static final double[] TEST1 = {113,240, 290,230};
-  public static final double[] TEST2 = {80,190,320,280};
+  public static final double[] TEST1 = {113,240, 290};
+  public static final double[] TEST2 = {80,190,320};
 
-  public static final double[] HOME = {120,100,0,0};
-  public static final double[] READY = {0,0,0,0};
-  public static final double[] APPROACH = {0,0,0,0};
-  public static final double[] PICKUP = {0,0,0,0};
+  public static final double[] HOME = {120,100,0};
+  public static final double[] READY = {0,0,0};
+  public static final double[] APPROACH = {0,0,0};
+  public static final double[] PICKUP = {0,0,0};
 }
