@@ -4,8 +4,6 @@
 
 package frc.lib.team3061.gyro;
 
-import static frc.robot.Constants.*;
-
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 

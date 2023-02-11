@@ -9,8 +9,6 @@
 package frc.lib.team3061.pneumatics;
 
 import static frc.lib.team3061.pneumatics.PneumaticsConstants.*;
-import static frc.robot.Constants.*;
-
 import edu.wpi.first.wpilibj.PneumaticHub;
 
 /**
