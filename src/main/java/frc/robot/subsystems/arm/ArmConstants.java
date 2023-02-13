@@ -12,8 +12,8 @@ public final class ArmConstants {
   public static final int J3_motorSparkMaxID = 3; // Setup ID's Later
   public static final int J4_motorSparkMaxID = 4; // Setup ID's Later
 
-  public static final double J1_Encoder_Max = 126;
-  public static final double J1_Encoder_Min = 94;
+  public static final double J1_Encoder_Max = 2.1;
+  public static final double J1_Encoder_Min = 1.0;
 
   public static final double J2_Encoder_Max = 270.0;
   public static final double J2_Encoder_Min = 220.0;
@@ -25,16 +25,17 @@ public final class ArmConstants {
   public static final double J4_Encoder_Min = 2200.0;
 
   // PID coefficients
-  public static final double j1_maxV = 10.0;
+  public static final double j1_maxV = 0.50;
   public static final double j1_maxAcc = 1.0;
-  public static final double j1_kP = 0.03;
-  public static final double j1_kI = 0.001;
-  public static final double j1_kD = 0.0;
-  public static final double j1_allE = 0.5;
-  public static final double j1_ks = 0.0;//volts
-  public static final double j1_kg = 2.3; //volts
-  public static final double j1_kv = 2.44;//volts*s/rad
-  public static final double j1_ka = 0.08;//volts*s^2/rad
+  public static final double j1_kP = 8.0; 
+  public static final double j1_kP_DOWN = 5.50; 
+  public static final double j1_kI = 1.0;
+  public static final double j1_kD = 0.4;
+  public static final double j1_allE = 0.0177;
+  public static final double j1_ks = 1.290;//volts
+  public static final double j1_kg = 1.223; //volts
+  public static final double j1_kv = 0.281;//volts*s/rad
+  public static final double j1_ka = 0.361;//volts*s^2/rad
 
   
   public static final double j2_maxV = 20.0;

@@ -76,7 +76,7 @@ public class RobotContainer {
         case ROBOT_2023_SEASON:
           {
             GyroIO gyro = new GyroIOPigeon2(PIGEON_ID);
-
+/*
             SwerveModule flModule =
                 new SwerveModule(
                     new SwerveModuleIOTalonFX(
@@ -120,7 +120,7 @@ public class RobotContainer {
                         BACK_RIGHT_MODULE_STEER_OFFSET),
                     3,
                     MAX_VELOCITY_METERS_PER_SECOND);
-
+*/
             //drivetrain = new Drivetrain(gyro, flModule, frModule, blModule, brModule);
             new Pneumatics(new PneumaticsIORev());
             new Vision(new VisionIOPhotonVision(CAMERA_NAME));
@@ -204,8 +204,8 @@ public class RobotContainer {
      * direction. This is why the left joystick's y axis specifies the velocity in the x direction
      * and the left joystick's x axis specifies the velocity in the y direction.
      */
-    drivetrain.setDefaultCommand(
-        new TeleopSwerve(drivetrain, oi::getTranslateX, oi::getTranslateY, oi::getRotate));
+   // drivetrain.setDefaultCommand(
+     //   new TeleopSwerve(drivetrain, oi::getTranslateX, oi::getTranslateY, oi::getRotate));
 
     configureButtonBindings();
   }
@@ -233,7 +233,7 @@ public class RobotContainer {
                 drivetrain::getFieldRelative));
 */
     // reset gyro to 0 degrees
-    oi.getResetGyroButton().onTrue(Commands.runOnce(drivetrain::zeroGyroscope, drivetrain));
+    //oi.getResetGyroButton().onTrue(Commands.runOnce(drivetrain::zeroGyroscope, drivetrain));
 
     oi.getXStanceButton().onTrue(Commands.runOnce(gripper::intakeCube, gripper));
     oi.getXStanceButton().onFalse(Commands.runOnce(gripper::stopIntake, gripper));
@@ -252,9 +252,9 @@ public class RobotContainer {
         oi.getmoveJ1Up().onFalse(Commands.run(arm::stopJ1, arm));
     */
     oi.getmoveJ1Down().onTrue(new MoveArm(ArmPositions.TEST1,arm));
-    oi.getmoveJ1Down().onFalse(Commands.run(arm::stopJ1, arm));
+    oi.getmoveJ1Down().onFalse(Commands.run(arm::allStop, arm));
     oi.getmoveJ1Up().onTrue(new MoveArm(ArmPositions.TEST2, arm));
-    oi.getmoveJ1Up().onFalse(Commands.run(arm::stopJ1, arm));
+    oi.getmoveJ1Up().onFalse(Commands.run(arm::allStop, arm));
   }
 
   /** Use this method to define your commands for autonomous mode. */
@@ -268,8 +268,8 @@ public class RobotContainer {
             "testPaths1",
             AUTO_MAX_SPEED_METERS_PER_SECOND,
             AUTO_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED);
-    Command autoTest =
-        Commands.sequence(
+    Command autoTest = null;
+       /* Commands.sequence(
             new FollowPathWithEvents(
                 new FollowPath(auto1Paths.get(0), drivetrain, true),
                 auto1Paths.get(0).getMarkers(),
@@ -281,13 +281,13 @@ public class RobotContainer {
                 new FollowPath(auto1Paths.get(1), drivetrain, false),
                 auto1Paths.get(1).getMarkers(),
                 AUTO_EVENT_MAP));
-
+*/
     // add commands to the auto chooser
     autoChooser.addDefaultOption("Do Nothing", new InstantCommand());
 
     // demonstration of PathPlanner path group with event markers
     autoChooser.addOption("Test Path", autoTest);
-
+/*
     // "auto" command for tuning the drive velocity PID
     autoChooser.addOption(
         "Drive Velocity Tuning",
@@ -306,7 +306,7 @@ public class RobotContainer {
             new FeedForwardCharacterizationData("drive"),
             drivetrain::runCharacterizationVolts,
             drivetrain::getCharacterizationVelocity));
-
+*/
     Shuffleboard.getTab("MAIN").add(autoChooser.getSendableChooser());
   }
 

@@ -10,8 +10,8 @@ public final class ArmPositions {
   //Joint position arrays, {j1, j2, j3,} 
 
 
-  public static final double[] TEST1 = {113,240, 290};
-  public static final double[] TEST2 = {80,190,320};
+  public static final double[] TEST1 = {1.97,240, 290};
+  public static final double[] TEST2 = {1.15,190,320};
 
   public static final double[] HOME = {120,100,0};
   public static final double[] READY = {0,0,0};

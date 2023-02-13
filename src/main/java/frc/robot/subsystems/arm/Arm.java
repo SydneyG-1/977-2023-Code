@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems.arm;
 
+import javax.crypto.spec.GCMParameterSpec;
+
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
@@ -43,9 +45,9 @@ public class Arm extends SubsystemBase {
   private TrapezoidProfile.Constraints j3Profile = new TrapezoidProfile.Constraints(ArmConstants.j3_maxV, ArmConstants.j3_maxAcc);
   private ArmFeedforward j3ArmFeedforward;
 
-  private ProfiledPIDController j4Controller;
-  private TrapezoidProfile.Constraints j4Profile = new TrapezoidProfile.Constraints(ArmConstants.j4_maxV, ArmConstants.j4_maxAcc);
-  private ArmFeedforward j4ArmFeedforward;
+  //private ProfiledPIDController j4Controller;
+  //private TrapezoidProfile.Constraints j4Profile = new TrapezoidProfile.Constraints(ArmConstants.j4_maxV, ArmConstants.j4_maxAcc);
+  //private ArmFeedforward j4ArmFeedforward;
   /** Creates a new Arm. */
   public Arm() {
     super();
@@ -212,7 +214,22 @@ public class Arm extends SubsystemBase {
   }
 
   public double calcJ1(){
-    return j1Controller.calculate(getJ1position())+j1ArmFeedforward.calculate(j1Controller.getSetpoint().position,j1Controller.getSetpoint().velocity);
+    if (j1Controller.getGoal().position<getJ1position()){
+      j1Controller.setP(ArmConstants.j1_kP_DOWN);
+    }else{
+      j1Controller.setP(ArmConstants.j1_kP);
+    }
+    double ff = -1.125*getJ1position()+2.19;
+if (ff<0){
+  ff=0;
+}else {
+  if (ff>0.5){
+    ff=0.5;
+  }
+}
+SmartDashboard.putNumber("FF", ff);
+
+    return j1Controller.calculate(getJ1position())+ff;//+j1ArmFeedforward.calculate(j1Controller.getSetpoint().position,j1Controller.getSetpoint().velocity);
   }
 
   public double calcJ2(){
