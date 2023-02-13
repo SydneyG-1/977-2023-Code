@@ -35,15 +35,15 @@ public class Arm extends SubsystemBase {
 
   private ProfiledPIDController j1Controller;
   private TrapezoidProfile.Constraints j1Profile = new TrapezoidProfile.Constraints(ArmConstants.j1_maxV, ArmConstants.j1_maxAcc);
-  private ArmFeedforward j1ArmFeedforward;
+  //private ArmFeedforward j1ArmFeedforward;
 
   private ProfiledPIDController j2Controller;
   private TrapezoidProfile.Constraints j2Profile = new TrapezoidProfile.Constraints(ArmConstants.j2_maxV, ArmConstants.j2_maxAcc);
-  private ArmFeedforward j2ArmFeedforward;
+  //private ArmFeedforward j2ArmFeedforward;
 
   private ProfiledPIDController j3Controller;
   private TrapezoidProfile.Constraints j3Profile = new TrapezoidProfile.Constraints(ArmConstants.j3_maxV, ArmConstants.j3_maxAcc);
-  private ArmFeedforward j3ArmFeedforward;
+  //private ArmFeedforward j3ArmFeedforward;
 
   //private ProfiledPIDController j4Controller;
   //private TrapezoidProfile.Constraints j4Profile = new TrapezoidProfile.Constraints(ArmConstants.j4_maxV, ArmConstants.j4_maxAcc);
@@ -213,7 +213,7 @@ public class Arm extends SubsystemBase {
     //resetJ4Position();
   }
 
-  public double getJ1FF(){
+  public double getJ1FF(){//we need to add J2position into the FF calc, 
     double ff = -1.125*getJ1position()+2.19;
 if (ff<0){
   ff=0;
@@ -238,6 +238,19 @@ if (ff>0.5){
 return ff;
 }
 
+public double getJ3FF(){
+  double ff = 0.0;
+if (ff<0){
+ff=0;
+}else {
+if (ff>0.5){
+  ff=0.5;
+} 
+}
+return ff;
+}
+
+
   public double calcJ1(){
     if (j1Controller.getGoal().position<getJ1position()){
       j1Controller.setP(ArmConstants.j1_kP_DOWN);
@@ -253,7 +266,7 @@ return ff;
   }
 
   public double calcJ3(){
-    return j3Controller.calculate(getJ3position());
+    return j3Controller.calculate(getJ3position())+getJ3FF();
     //+j3ArmFeedforward.calculate(j3Controller.getSetpoint().position,j3Controller.getSetpoint().velocity);
   }
 

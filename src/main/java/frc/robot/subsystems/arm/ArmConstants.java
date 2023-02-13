@@ -25,43 +25,44 @@ public final class ArmConstants {
   public static final double J4_Encoder_Min = 2200.0;
 
   // PID coefficients
-  public static final double j1_maxV = 0.50;
-  public static final double j1_maxAcc = 1.0;
+  public static final double j1_maxV = 0.50;//rad per sec
+  public static final double j1_maxAcc = 1.0;//rad per sec per sec
   public static final double j1_kP = 8.0; 
   public static final double j1_kP_DOWN = 5.50; 
   public static final double j1_kI = 1.0;
   public static final double j1_kD = 0.4;
-  public static final double j1_allE = 0.0177;
+  public static final double j1_allE = 0.02;
   public static final double j1_ks = 1.290;//volts
   public static final double j1_kg = 1.223; //volts
   public static final double j1_kv = 0.281;//volts*s/rad
   public static final double j1_ka = 0.361;//volts*s^2/rad
 
   
-  public static final double j2_maxV = 20.0;
-  public static final double j2_maxAcc = 10.0;
-  public static final double j2_kP = 0.036;
-  public static final double j2_kI = 0.0012;
-  public static final double j2_kD = 0.0;
-  public static final double j2_allE = 0.5;
+  public static final double j2_maxV = .25;
+  public static final double j2_maxAcc = 0.5;
+  public static final double j2_kP = 0.004;
+  public static final double j2_kP_DOWN = 0.002; 
+  public static final double j2_kI = 0.0001;
+  public static final double j2_kD = 0.00001;
+  public static final double j2_allE = 0.02;
   public static final double j2_ks = 0.0;
   public static final double j2_kg = 0.0;
   public static final double j2_kv = 0.0;
   public static final double j2_ka = 0.0;
 
   
-  public static final double j3_maxV = 10.0;
-  public static final double j3_maxAcc = 1.0;
+  public static final double j3_maxV = 0.250;
+  public static final double j3_maxAcc = 0.5;
   public static final double j3_kP = 0.0003;
   public static final double j3_kI = 0.00001;
   public static final double j3_kD = 0.0;
-  public static final double j3_allE = 0.5;
+  public static final double j3_allE = 0.01;
   public static final double j3_ks = 0.0;
   public static final double j3_kg = 0.0;
   public static final double j3_kv = 0.0;
   public static final double j3_ka = 0.0;
   
-  
+  /* 
   public static final double j4_maxV = 10.0;
   public static final double j4_maxAcc = 1.0;
   public static final double j4_kP = 0.003;
@@ -72,4 +73,5 @@ public final class ArmConstants {
   public static final double j4_kg = 0.00;
   public static final double j4_kv = 0.00;
   public static final double j4_ka = 0.00;
+  */
 }
