@@ -82,19 +82,19 @@ public class Arm extends SubsystemBase {
         new ProfiledPIDController(
             ArmConstants.j1_kP, ArmConstants.j1_kI, ArmConstants.j1_kD, j1Profile, 0.02);
     j1Controller.setTolerance(ArmConstants.j1_allE);
-    j1ArmFeedforward = new ArmFeedforward(ArmConstants.j1_ks, ArmConstants.j1_kg, ArmConstants.j1_kv, ArmConstants.j1_ka);
+    //j1ArmFeedforward = new ArmFeedforward(ArmConstants.j1_ks, ArmConstants.j1_kg, ArmConstants.j1_kv, ArmConstants.j1_ka);
 
     j2Controller =
         new ProfiledPIDController(
             ArmConstants.j2_kP, ArmConstants.j2_kI, ArmConstants.j2_kD, j2Profile, 0.02);
     j2Controller.setTolerance(ArmConstants.j2_allE);
-    j2ArmFeedforward = new ArmFeedforward(ArmConstants.j2_ks, ArmConstants.j2_kg, ArmConstants.j2_kv, ArmConstants.j2_ka);
+    //j2ArmFeedforward = new ArmFeedforward(ArmConstants.j2_ks, ArmConstants.j2_kg, ArmConstants.j2_kv, ArmConstants.j2_ka);
 
     j3Controller =
         new ProfiledPIDController(
             ArmConstants.j3_kP, ArmConstants.j3_kI, ArmConstants.j3_kD, j3Profile, 0.02);
     j3Controller.setTolerance(ArmConstants.j3_allE);
-    j3ArmFeedforward = new ArmFeedforward(ArmConstants.j3_ks, ArmConstants.j3_kg, ArmConstants.j3_kv, ArmConstants.j3_ka);
+    //j3ArmFeedforward = new ArmFeedforward(ArmConstants.j3_ks, ArmConstants.j3_kg, ArmConstants.j3_kv, ArmConstants.j3_ka);
 
     /* j4Controller =
         new ProfiledPIDController(
@@ -213,31 +213,48 @@ public class Arm extends SubsystemBase {
     //resetJ4Position();
   }
 
-  public double calcJ1(){
-    if (j1Controller.getGoal().position<getJ1position()){
-      j1Controller.setP(ArmConstants.j1_kP_DOWN);
-    }else{
-      j1Controller.setP(ArmConstants.j1_kP);
-    }
+  public double getJ1FF(){
     double ff = -1.125*getJ1position()+2.19;
 if (ff<0){
   ff=0;
 }else {
   if (ff>0.5){
     ff=0.5;
-  }
+  } 
 }
-SmartDashboard.putNumber("FF", ff);
+return ff;
+}
 
-    return j1Controller.calculate(getJ1position())+ff;//+j1ArmFeedforward.calculate(j1Controller.getSetpoint().position,j1Controller.getSetpoint().velocity);
+
+public double getJ2FF(){
+  double ff = 0.0;
+if (ff<0){
+ff=0;
+}else {
+if (ff>0.5){
+  ff=0.5;
+} 
+}
+return ff;
+}
+
+  public double calcJ1(){
+    if (j1Controller.getGoal().position<getJ1position()){
+      j1Controller.setP(ArmConstants.j1_kP_DOWN);
+    }else{
+      j1Controller.setP(ArmConstants.j1_kP);
+    }
+      return j1Controller.calculate(getJ1position())+getJ1FF();
   }
 
   public double calcJ2(){
-    return j2Controller.calculate(getJ2position())+j2ArmFeedforward.calculate(j2Controller.getSetpoint().position,j2Controller.getSetpoint().velocity);
+    return j2Controller.calculate(getJ2position())+getJ2FF();
+    //+j2ArmFeedforward.calculate(j2Controller.getSetpoint().position,j2Controller.getSetpoint().velocity);
   }
 
   public double calcJ3(){
-    return j3Controller.calculate(getJ3position())+j3ArmFeedforward.calculate(j3Controller.getSetpoint().position,j3Controller.getSetpoint().velocity);
+    return j3Controller.calculate(getJ3position());
+    //+j3ArmFeedforward.calculate(j3Controller.getSetpoint().position,j3Controller.getSetpoint().velocity);
   }
 
   /*public double calcJ4(){
@@ -250,7 +267,7 @@ SmartDashboard.putNumber("FF", ff);
     SmartDashboard.putNumber("J1 Output", J1_motor.getAppliedOutput());
     SmartDashboard.putNumber("j1positionSub", getJ1position());
     SmartDashboard.putNumber("J1 Goal", j1Controller.getGoal().position);
-
+    SmartDashboard.putNumber("FF", getJ1FF());
     
     SmartDashboard.putNumber("J2 Output", J2_motor.getAppliedOutput());
     SmartDashboard.putNumber("j2positionSub", getJ2position());
