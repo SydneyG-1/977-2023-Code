@@ -12,14 +12,14 @@ public final class ArmConstants {
   public static final int J3_motorSparkMaxID = 3; // Setup ID's Later
   public static final int J4_motorSparkMaxID = 4; // Setup ID's Later
 
-  public static final double J1_Encoder_Max = 2.1;
+  public static final double J1_Encoder_Max = 2.05;
   public static final double J1_Encoder_Min = 1.0;
 
-  public static final double J2_Encoder_Max = 270.0;
-  public static final double J2_Encoder_Min = 220.0;
+  public static final double J2_Encoder_Max = 5.3;
+  public static final double J2_Encoder_Min = 3.0;
   
-  public static final double J3_Encoder_Max = 330.0;
-  public static final double J3_Encoder_Min = 300.0;
+  public static final double J3_Encoder_Max = 5.6;
+  public static final double J3_Encoder_Min = 4.0;
   
   public static final double J4_Encoder_Max = 330.0;
   public static final double J4_Encoder_Min = 2200.0;
@@ -38,12 +38,12 @@ public final class ArmConstants {
   public static final double j1_ka = 0.361;//volts*s^2/rad
 
   
-  public static final double j2_maxV = .25;
-  public static final double j2_maxAcc = 0.5;
-  public static final double j2_kP = 0.004;
-  public static final double j2_kP_DOWN = 0.002; 
-  public static final double j2_kI = 0.0001;
-  public static final double j2_kD = 0.00001;
+  public static final double j2_maxV = .75;
+  public static final double j2_maxAcc = 1.0;
+  public static final double j2_kP = 3.0;
+  public static final double j2_kP_DOWN = 0.2; 
+  public static final double j2_kI = 0.5;
+  public static final double j2_kD = 0.4;
   public static final double j2_allE = 0.02;
   public static final double j2_ks = 0.0;
   public static final double j2_kg = 0.0;
@@ -51,10 +51,10 @@ public final class ArmConstants {
   public static final double j2_ka = 0.0;
 
   
-  public static final double j3_maxV = 0.250;
-  public static final double j3_maxAcc = 0.5;
-  public static final double j3_kP = 0.0003;
-  public static final double j3_kI = 0.00001;
+  public static final double j3_maxV = 7.5;
+  public static final double j3_maxAcc = 5.0;
+  public static final double j3_kP = 6.0;
+  public static final double j3_kI = 0.5;
   public static final double j3_kD = 0.0;
   public static final double j3_allE = 0.01;
   public static final double j3_ks = 0.0;

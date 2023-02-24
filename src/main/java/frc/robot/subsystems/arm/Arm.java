@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems.arm;
 
-import javax.crypto.spec.GCMParameterSpec;
-
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
@@ -35,7 +33,7 @@ public class Arm extends SubsystemBase {
 
   private ProfiledPIDController j1Controller;
   private TrapezoidProfile.Constraints j1Profile = new TrapezoidProfile.Constraints(ArmConstants.j1_maxV, ArmConstants.j1_maxAcc);
-  //private ArmFeedforward j1ArmFeedforward;
+  private ArmFeedforward j1ArmFeedforward;
 
   private ProfiledPIDController j2Controller;
   private TrapezoidProfile.Constraints j2Profile = new TrapezoidProfile.Constraints(ArmConstants.j2_maxV, ArmConstants.j2_maxAcc);
@@ -53,6 +51,11 @@ public class Arm extends SubsystemBase {
     super();
 
     J1_motor.setInverted(true);
+
+
+    J2_motor.setInverted(false);
+    J3_motor.setInverted(false);
+
     J1_motor.enableSoftLimit(SoftLimitDirection.kForward, false);
     J1_motor.enableSoftLimit(SoftLimitDirection.kReverse, false);
 
@@ -82,7 +85,7 @@ public class Arm extends SubsystemBase {
         new ProfiledPIDController(
             ArmConstants.j1_kP, ArmConstants.j1_kI, ArmConstants.j1_kD, j1Profile, 0.02);
     j1Controller.setTolerance(ArmConstants.j1_allE);
-    //j1ArmFeedforward = new ArmFeedforward(ArmConstants.j1_ks, ArmConstants.j1_kg, ArmConstants.j1_kv, ArmConstants.j1_ka);
+    j1ArmFeedforward = new ArmFeedforward(ArmConstants.j1_ks, ArmConstants.j1_kg, ArmConstants.j1_kv, ArmConstants.j1_ka);
 
     j2Controller =
         new ProfiledPIDController(
@@ -136,8 +139,8 @@ public class Arm extends SubsystemBase {
 
    
     moveJ1(calcJ1());
-    //moveJ2(calcJ2());
-    //moveJ3(calcJ3());
+    moveJ2(calcJ2());
+    moveJ3(calcJ3());
     //moveJ4(calcJ4());
   }
 
@@ -222,6 +225,9 @@ if (ff<0){
     ff=0.5;
   } 
 }
+
+SmartDashboard.putNumber("FF", ff);
+SmartDashboard.putNumber("WPIAFF", j1ArmFeedforward.calculate(j1Controller.getSetpoint().position,j1Controller.getSetpoint().velocity));
 return ff;
 }
 
@@ -258,6 +264,7 @@ return ff;
       j1Controller.setP(ArmConstants.j1_kP);
     }
       return j1Controller.calculate(getJ1position())+getJ1FF();
+      //+j1ArmFeedforward.calculate(j1Controller.getSetpoint().position,j1Controller.getSetpoint().velocity);
   }
 
   public double calcJ2(){
@@ -280,11 +287,12 @@ return ff;
     SmartDashboard.putNumber("J1 Output", J1_motor.getAppliedOutput());
     SmartDashboard.putNumber("j1positionSub", getJ1position());
     SmartDashboard.putNumber("J1 Goal", j1Controller.getGoal().position);
-    SmartDashboard.putNumber("FF", getJ1FF());
+    SmartDashboard.putNumber("FFJ1", getJ1FF());
     
     SmartDashboard.putNumber("J2 Output", J2_motor.getAppliedOutput());
     SmartDashboard.putNumber("j2positionSub", getJ2position());
     SmartDashboard.putNumber("J2 Goal", j2Controller.getGoal().position);
+    SmartDashboard.putNumber("FFJ2", getJ2FF());
 
     
     SmartDashboard.putNumber("J3 Output", J3_motor.getAppliedOutput());

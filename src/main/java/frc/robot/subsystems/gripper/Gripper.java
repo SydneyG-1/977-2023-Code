@@ -25,6 +25,9 @@ public class Gripper extends SubsystemBase {
   public void opengrip() {
     grip.set(false);
   }
+  public void setGrip(boolean state){
+    grip.set(state);
+  }
 
   public void intakeCube() {
     intake_motor.set(GripperConstants.intakeSpeed);

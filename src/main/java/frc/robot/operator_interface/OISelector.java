@@ -65,7 +65,7 @@ public class OISelector {
     if (firstPort != null && secondPort != null) {
       noOperatorInterfaceWarning.set(false);
       nonCompetitionOperatorInterfaceWarning.set(false);
-      return new DualJoysticksOI(firstPort, secondPort);
+      return new CompetitionControls(firstPort, secondPort);
     } else if (xBoxPort != null) {
       noOperatorInterfaceWarning.set(false);
       nonCompetitionOperatorInterfaceWarning.set(true);

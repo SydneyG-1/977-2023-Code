@@ -48,8 +48,33 @@ public interface OperatorInterface {
   public default Trigger getmoveJ1Up() {
     return new Trigger(() -> false);
   }
-
   public default Trigger getmoveJ1Down() {
     return new Trigger(() -> false);
   }
+
+  public default Trigger getOpBut1() {
+    return new Trigger(() -> false);
+  }
+  
+  public default Trigger getOpBut2() {
+    return new Trigger(() -> false);
+  }
+  public default Trigger getOpBut3() {
+    return new Trigger(() -> false);
+  }
+  public default Trigger getOpBut4() {
+    return new Trigger(() -> false);
+  }
+  public default Trigger getOpBut5() {
+    return new Trigger(() -> false);
+  }
+  
+  public default boolean getPickupLocation() {
+    return true;
+  }
+  
+  public default boolean getGamePieceType() {
+    return true;
+  }
+  
 }
