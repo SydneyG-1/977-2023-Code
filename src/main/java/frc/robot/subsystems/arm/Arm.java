@@ -85,7 +85,7 @@ public class Arm extends SubsystemBase {
         new ProfiledPIDController(
             ArmConstants.j1_kP, ArmConstants.j1_kI, ArmConstants.j1_kD, j1Profile, 0.02);
     j1Controller.setTolerance(ArmConstants.j1_allE);
-    j1ArmFeedforward = new ArmFeedforward(ArmConstants.j1_ks, ArmConstants.j1_kg, ArmConstants.j1_kv, ArmConstants.j1_ka);
+    //j1ArmFeedforward = new ArmFeedforward(ArmConstants.j1_ks, ArmConstants.j1_kg, ArmConstants.j1_kv, ArmConstants.j1_ka);
 
     j2Controller =
         new ProfiledPIDController(
@@ -217,7 +217,9 @@ public class Arm extends SubsystemBase {
   }
 
   public double getJ1FF(){//we need to add J2position into the FF calc, 
-    double ff = -1.125*getJ1position()+2.19;
+    
+    double ff = 0.0;
+    //double ff = -1.125*getJ1position()+2.19;
 if (ff<0){
   ff=0;
 }else {
@@ -258,11 +260,12 @@ return ff;
 
 
   public double calcJ1(){
+    /* 
     if (j1Controller.getGoal().position<getJ1position()){
       j1Controller.setP(ArmConstants.j1_kP_DOWN);
     }else{
       j1Controller.setP(ArmConstants.j1_kP);
-    }
+    }*/
       return j1Controller.calculate(getJ1position())+getJ1FF();
       //+j1ArmFeedforward.calculate(j1Controller.getSetpoint().position,j1Controller.getSetpoint().velocity);
   }
@@ -287,12 +290,12 @@ return ff;
     SmartDashboard.putNumber("J1 Output", J1_motor.getAppliedOutput());
     SmartDashboard.putNumber("j1positionSub", getJ1position());
     SmartDashboard.putNumber("J1 Goal", j1Controller.getGoal().position);
-    SmartDashboard.putNumber("FFJ1", getJ1FF());
+    //SmartDashboard.putNumber("FFJ1", getJ1FF());
     
     SmartDashboard.putNumber("J2 Output", J2_motor.getAppliedOutput());
     SmartDashboard.putNumber("j2positionSub", getJ2position());
     SmartDashboard.putNumber("J2 Goal", j2Controller.getGoal().position);
-    SmartDashboard.putNumber("FFJ2", getJ2FF());
+    //SmartDashboard.putNumber("FFJ2", getJ2FF());
 
     
     SmartDashboard.putNumber("J3 Output", J3_motor.getAppliedOutput());
