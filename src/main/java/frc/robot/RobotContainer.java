@@ -37,6 +37,7 @@ import frc.robot.commands.FeedForwardCharacterization;
 import frc.robot.commands.FeedForwardCharacterization.FeedForwardCharacterizationData;
 import frc.robot.commands.FollowPath;
 import frc.robot.commands.MoveArm;
+import frc.robot.commands.MoveArmToPos;
 import frc.robot.commands.SetGrip;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.operator_interface.OISelector;
@@ -244,15 +245,25 @@ public class RobotContainer {
     oi.getXStanceButton().onFalse(Commands.runOnce(drivetrain::disableXstance, drivetrain));
 
     //intake & gripper controls
-    oi.getCloseButton().onTrue(new ConditionalCommand( Commands.runOnce(gripper::closegrip, gripper), Commands.runOnce(gripper::intakeCube, gripper), ()->oi.getGamePieceType()));
-    oi.getCloseButton().onFalse(Commands.runOnce(gripper::stopIntake, gripper));
-    oi.getOpenButton().onTrue(new ConditionalCommand( Commands.runOnce(gripper::opengrip, gripper), Commands.runOnce(gripper::releaseCube, gripper), ()->oi.getGamePieceType()));
-    oi.getOpenButton().onFalse(Commands.runOnce(gripper::stopIntake, gripper));
+    oi.getCloseButton().onTrue(
+      new ConditionalCommand( 
+        Commands.runOnce(gripper::closegrip, gripper), 
+        Commands.runOnce(gripper::intakeCube, gripper), 
+        ()->oi.getGamePieceType()));
+    oi.getCloseButton().onFalse(
+      Commands.runOnce(gripper::stopIntake, gripper));
+    oi.getOpenButton().onTrue(
+      new ConditionalCommand(
+        Commands.runOnce(gripper::opengrip, gripper),
+        Commands.runOnce(gripper::releaseCube, gripper), 
+        ()->oi.getGamePieceType()));
+    oi.getOpenButton().onFalse(
+      Commands.runOnce(gripper::stopIntake, gripper));
     
     
-    oi.getmoveJ1Down().onTrue(new MoveArm(ArmPositions.TEST1,arm));
+    oi.getmoveJ1Down().onTrue(new MoveArmToPos(ArmPositions.TEST2,arm).withTimeout(3).andThen(new MoveArm(ArmPositions.TEST1, arm)));
     oi.getmoveJ1Down().onFalse(Commands.run(arm::allStop, arm));
-    oi.getmoveJ1Up().onTrue(new MoveArm(ArmPositions.TEST2, arm));
+    oi.getmoveJ1Up().onTrue(new MoveArm(ArmPositions.HOME, arm));
     oi.getmoveJ1Up().onFalse(Commands.run(arm::allStop, arm));
     
   }

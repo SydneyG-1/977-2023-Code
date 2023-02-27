@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
-/** Class for controlling the robot with two Xbox controllers. */
+/** Class for controlling the robot with one Xbox controller and custom operator controller. */
 public class CompetitionControls implements OperatorInterface {
   private final XboxController driverJoystick;
   private final CommandJoystick operatorJoystick;
@@ -59,6 +59,7 @@ public class CompetitionControls implements OperatorInterface {
 
   @Override
   public Trigger getCloseButton() {
+    //return new Trigger(operatorJoystickButtons[6]);
     return new Trigger(operatorJoystick.button(6));
   }
 
@@ -76,6 +77,7 @@ public class CompetitionControls implements OperatorInterface {
   public Trigger getmoveJ1Down() {
     return new Trigger(driverJoystick::getLeftBumper);
   }
+
   @Override
   public Trigger getOpBut1() {
     return operatorJoystick.button(1);

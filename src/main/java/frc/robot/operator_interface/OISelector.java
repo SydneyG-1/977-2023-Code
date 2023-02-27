@@ -45,6 +45,8 @@ public class OISelector {
    * joysticks.
    */
   public static OperatorInterface findOperatorInterface() {
+    return new CompetitionControls(0, 1);
+    /*
     Integer firstPort = null;
     Integer secondPort = null;
     Integer xBoxPort = null;
@@ -70,10 +72,11 @@ public class OISelector {
       noOperatorInterfaceWarning.set(false);
       nonCompetitionOperatorInterfaceWarning.set(true);
       return new SingleHandheldOI(xBoxPort);
+      //return new CompetitionControls(firstPort, secondPort);
     } else {
       noOperatorInterfaceWarning.set(true);
       nonCompetitionOperatorInterfaceWarning.set(false);
       return new OperatorInterface() {};
-    }
+    }*/
   }
 }

@@ -194,6 +194,10 @@ public class Arm extends SubsystemBase {
     //stopJ4();
   }
 
+  public boolean getAtPosition(){
+    return j1Controller.atGoal() && j2Controller.atGoal() && j3Controller.atGoal();
+  }
+
   public void resetJ1Position() {
     j1Controller.reset(getJ1position());
   }
@@ -229,7 +233,7 @@ if (ff<0){
 }
 
 SmartDashboard.putNumber("FF", ff);
-SmartDashboard.putNumber("WPIAFF", j1ArmFeedforward.calculate(j1Controller.getSetpoint().position,j1Controller.getSetpoint().velocity));
+//SmartDashboard.putNumber("WPIAFF", j1ArmFeedforward.calculate(j1Controller.getSetpoint().position,j1Controller.getSetpoint().velocity));
 return ff;
 }
 
@@ -287,6 +291,7 @@ return ff;
 
   @Override
   public void periodic() {
+    
     SmartDashboard.putNumber("J1 Output", J1_motor.getAppliedOutput());
     SmartDashboard.putNumber("j1positionSub", getJ1position());
     SmartDashboard.putNumber("J1 Goal", j1Controller.getGoal().position);
@@ -297,7 +302,7 @@ return ff;
     SmartDashboard.putNumber("J2 Goal", j2Controller.getGoal().position);
     //SmartDashboard.putNumber("FFJ2", getJ2FF());
 
-    
+     
     SmartDashboard.putNumber("J3 Output", J3_motor.getAppliedOutput());
     SmartDashboard.putNumber("j3positionSub", getJ3position());
     SmartDashboard.putNumber("J3 Goal", j3Controller.getGoal().position);
