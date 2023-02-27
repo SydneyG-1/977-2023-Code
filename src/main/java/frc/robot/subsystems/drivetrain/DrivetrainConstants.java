@@ -45,17 +45,17 @@ public final class DrivetrainConstants {
    *
    * <p>Should be measured from center to center.
    */
-  public static final double TRACKWIDTH_METERS = 0.5969; // 22.5 inches
+  public static final double TRACKWIDTH_METERS = 0.6033; // 23.75 inches
 
   /**
    * The front-to-back distance between the drivetrain wheels.
    *
    * <p>Should be measured from center to center.
    */
-  public static final double WHEELBASE_METERS = 0.5969; // 23.5 inches
+  public static final double WHEELBASE_METERS = 0.6033; // 23.75 inches
 
-  public static final double ROBOT_WIDTH_WITH_BUMPERS = 0.94; // meters
-  public static final double ROBOT_LENGTH_WITH_BUMPERS = 0.94; // meters
+  public static final double ROBOT_WIDTH_WITH_BUMPERS = 0.902; // meters
+  public static final double ROBOT_LENGTH_WITH_BUMPERS = 0.902; // meters
 
   /* The geometry and coordinate systems can be confusing. Refer to this document
   for a detailed explanation: https://docs.google.com/document/d/17dg5cIfqVOlQTTbo2ust4QxTZlUoPNzuBu2oe58Ov84/edit#heading=h.x4ppzp81ed1
@@ -85,10 +85,12 @@ public final class DrivetrainConstants {
    * <p>This is a measure of how fast the robot should be able to drive in a straight line.
    */
   public static final double MAX_VELOCITY_METERS_PER_SECOND =
-      6380.0
+    /*   6380.0
           / 60.0
           / SwerveModuleConstants.DRIVE_GEAR_RATIO
           * SwerveModuleConstants.WHEEL_CIRCUMFERENCE;
+          */
+          2.5;
 
   /**
    * The maximum angular velocity of the robot in radians per second.
@@ -96,7 +98,7 @@ public final class DrivetrainConstants {
    * <p>This is a measure of how fast the robot can rotate in place.
    */
   public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND =
-      MAX_VELOCITY_METERS_PER_SECOND / Math.hypot(TRACKWIDTH_METERS / 2.0, WHEELBASE_METERS / 2.0);
+      MAX_VELOCITY_METERS_PER_SECOND / Math.hypot(TRACKWIDTH_METERS / 2.0, WHEELBASE_METERS / 2.0) / 3;
 
   public static final double MAX_COAST_VELOCITY_METERS_PER_SECOND = 0.05;
 
