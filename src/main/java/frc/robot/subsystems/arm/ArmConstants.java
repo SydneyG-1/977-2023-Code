@@ -28,7 +28,7 @@ public final class ArmConstants {
   public static final double j1_kP_DOWN = 5.0; 
   public static final double j1_kI = 4.0;
   public static final double j1_kD = 0.4;
-  public static final double j1_allE = 0.02;
+  public static final double j1_allE = 0.04;
 
   
   public static final double j2_maxV = 1.0;
@@ -37,7 +37,7 @@ public final class ArmConstants {
   public static final double j2_kP_DOWN = 3.0; 
   public static final double j2_kI = 8.5;
   public static final double j2_kD = 0.0;
-  public static final double j2_allE = 0.02;
+  public static final double j2_allE = 0.04;
 
   
   public static final double j3_maxV = 0.75;
@@ -45,6 +45,6 @@ public final class ArmConstants {
   public static final double j3_kP = 8.0;
   public static final double j3_kI = 6.5;
   public static final double j3_kD = 0.0;
-  public static final double j3_allE = 0.02;
+  public static final double j3_allE = 0.04;
   
 }
