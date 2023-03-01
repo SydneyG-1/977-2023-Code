@@ -24,6 +24,7 @@ public class TeleopSwerve extends CommandBase {
   private final DoubleSupplier translationXSupplier;
   private final DoubleSupplier translationYSupplier;
   private final DoubleSupplier rotationSupplier;
+  private double speedMod = 0.25;
 
   /**
    * Create a new TeleopSwerve command object.
@@ -58,10 +59,10 @@ public class TeleopSwerve extends CommandBase {
     double yPercentage = modifyAxis(translationYSupplier.getAsDouble());
     double rotationPercentage = modifyAxis(rotationSupplier.getAsDouble());
 
-    
-    double speedMod = 0.25;
-    if (RobotContainer.safeToDriveFast()){
-      speedMod = 0.5;
+    if (RobotContainer.safeToDriveFast()&&speedMod<0.5){
+      speedMod = speedMod + 0.02;
+    }else{
+      speedMod=0.25;
     }
 
     double xVelocity = xPercentage * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND*speedMod;

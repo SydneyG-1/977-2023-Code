@@ -253,6 +253,7 @@ public class RobotContainer {
         ()->oi.getGamePieceType()));
     oi.getCloseButton().onFalse(
       Commands.runOnce(gripper::stopIntake, gripper));
+      
     oi.getOpenButton().onTrue(
       new ConditionalCommand(
         Commands.runOnce(gripper::opengrip, gripper),
