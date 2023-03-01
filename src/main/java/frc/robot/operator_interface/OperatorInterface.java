@@ -52,20 +52,23 @@ public interface OperatorInterface {
     return new Trigger(() -> false);
   }
 
-  public default Trigger getOpBut1() {
+  public default Trigger getMoveToHigh() {
     return new Trigger(() -> false);
   }
   
-  public default Trigger getOpBut2() {
+  public default Trigger getMoveToMid() {
     return new Trigger(() -> false);
   }
-  public default Trigger getOpBut3() {
+  public default Trigger getMoveToLow() {
     return new Trigger(() -> false);
   }
-  public default Trigger getOpBut4() {
+  public default Trigger getMoveToPickup() {
     return new Trigger(() -> false);
   }
-  public default Trigger getOpBut5() {
+  public default Trigger getSafetyStop() {
+    return new Trigger(() -> false);
+  }
+  public default Trigger getOpBut8() {
     return new Trigger(() -> false);
   }
   
@@ -74,7 +77,7 @@ public interface OperatorInterface {
   }
   
   public default boolean getGamePieceType() {
-    return true;
+    return false;
   }
   
 }

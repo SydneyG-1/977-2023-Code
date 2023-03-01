@@ -85,12 +85,12 @@ public final class DrivetrainConstants {
    * <p>This is a measure of how fast the robot should be able to drive in a straight line.
    */
   public static final double MAX_VELOCITY_METERS_PER_SECOND =
-    /*   6380.0
+       6380.0
           / 60.0
           / SwerveModuleConstants.DRIVE_GEAR_RATIO
           * SwerveModuleConstants.WHEEL_CIRCUMFERENCE;
-          */
-          2.5;
+        
+        
 
   /**
    * The maximum angular velocity of the robot in radians per second.
@@ -98,7 +98,7 @@ public final class DrivetrainConstants {
    * <p>This is a measure of how fast the robot can rotate in place.
    */
   public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND =
-      MAX_VELOCITY_METERS_PER_SECOND / Math.hypot(TRACKWIDTH_METERS / 2.0, WHEELBASE_METERS / 2.0) / 3;
+      MAX_VELOCITY_METERS_PER_SECOND / Math.hypot(TRACKWIDTH_METERS / 2.0, WHEELBASE_METERS / 2.0);
 
   public static final double MAX_COAST_VELOCITY_METERS_PER_SECOND = 0.05;
 

@@ -6,6 +6,7 @@ package frc.robot.subsystems.arm;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
@@ -51,34 +52,27 @@ public class Arm extends SubsystemBase {
     super();
 
     J1_motor.setInverted(true);
-
-
     J2_motor.setInverted(false);
     J3_motor.setInverted(false);
 
+    J1_motor.setIdleMode(IdleMode.kBrake);
+    J2_motor.setIdleMode(IdleMode.kBrake);
+    J3_motor.setIdleMode(IdleMode.kBrake);
+    
     J1_motor.enableSoftLimit(SoftLimitDirection.kForward, false);
     J1_motor.enableSoftLimit(SoftLimitDirection.kReverse, false);
 
     J1_Encoder.setInverted(false);
     J1_Encoder.setPositionConversionFactor(2*Math.PI);
     J1_Encoder.setZeroOffset(0.0);
-
     
     J2_Encoder.setInverted(false);
     J2_Encoder.setPositionConversionFactor(2*Math.PI);
     J2_Encoder.setZeroOffset(0.0);
 
-    
     J3_Encoder.setInverted(false);
     J3_Encoder.setPositionConversionFactor(2*Math.PI);
     J3_Encoder.setZeroOffset(0.0);
-
-    /* 
-    J4_Encoder.setInverted(false);
-    J4_Encoder.setPositionConversionFactor(2*Math.PI);
-    J4_Encoder.setZeroOffset(0.0);
-    */
-
 
 
     j1Controller =
@@ -195,6 +189,7 @@ public class Arm extends SubsystemBase {
   }
 
   public boolean getAtPosition(){
+    
     return j1Controller.atGoal() && j2Controller.atGoal() && j3Controller.atGoal();
   }
 
@@ -231,9 +226,6 @@ if (ff<0){
     ff=0.5;
   } 
 }
-
-SmartDashboard.putNumber("FF", ff);
-//SmartDashboard.putNumber("WPIAFF", j1ArmFeedforward.calculate(j1Controller.getSetpoint().position,j1Controller.getSetpoint().velocity));
 return ff;
 }
 
@@ -288,6 +280,11 @@ return ff;
     return j4Controller.calculate(getJ4position());
   }*/
 
+public boolean safeToDriveFast(){
+  return (getJ1position()>2.0)&&(getJ2position()>5.2);
+}
+
+
 
   @Override
   public void periodic() {
@@ -307,10 +304,9 @@ return ff;
     SmartDashboard.putNumber("j3positionSub", getJ3position());
     SmartDashboard.putNumber("J3 Goal", j3Controller.getGoal().position);
 
-    
-    /*SmartDashboard.putNumber("J4 Output", J4_motor.getAppliedOutput());
-    SmartDashboard.putNumber("j4positionSub", getJ4position());
-    SmartDashboard.putNumber("J4 Goal", j4Controller.getGoal().position); */
-    // This method will be called once per scheduler run
+    SmartDashboard.putBoolean("J1 At Goal", j1Controller.atGoal());
+    SmartDashboard.putBoolean("J2 At Goal", j2Controller.atGoal());
+    SmartDashboard.putBoolean("J3 At Goal", j3Controller.atGoal());
+
   }
 }

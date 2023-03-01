@@ -30,11 +30,11 @@ public class Gripper extends SubsystemBase {
   }
 
   public void intakeCube() {
-    intake_motor.set(GripperConstants.intakeSpeed);
+    intake_motor.set(-GripperConstants.intakeSpeed);
   }
 
   public void releaseCube() {
-    intake_motor.set(-GripperConstants.releaseSpeed);
+    intake_motor.set(GripperConstants.releaseSpeed);
   }
 
   public void stopIntake() {

@@ -62,7 +62,8 @@ public class RobotContainer {
 
   private Drivetrain drivetrain;
   private Gripper gripper;
-  private Arm arm;
+  private static Arm arm;
+  private static double adjustJ3 = 0.0;
 
   // use AdvantageKit's LoggedDashboardChooser instead of SendableChooser to ensure accurate logging
   private final LoggedDashboardChooser<Command> autoChooser =
@@ -260,12 +261,85 @@ public class RobotContainer {
     oi.getOpenButton().onFalse(
       Commands.runOnce(gripper::stopIntake, gripper));
     
+    oi.getMoveToPickup().onTrue(
+      new ConditionalCommand(
+        new ConditionalCommand(
+          new MoveArm(ArmPositions.CONE_SHELF, arm),
+          new MoveArm(ArmPositions.CUBE_SHELF, arm),
+          ()-> oi.getGamePieceType()), 
+        new ConditionalCommand(
+          new MoveArm(ArmPositions.CONE_GROUND,arm),
+          new MoveArm(ArmPositions.CUBE_GROUND,arm),
+          ()-> oi.getGamePieceType()), 
+        ()->oi.getPickupLocation()
+      )
+    );
     
-    oi.getmoveJ1Down().onTrue(new MoveArmToPos(ArmPositions.TEST2,arm).withTimeout(3).andThen(new MoveArm(ArmPositions.TEST1, arm)));
-    oi.getmoveJ1Down().onFalse(Commands.run(arm::allStop, arm));
-    oi.getmoveJ1Up().onTrue(new MoveArm(ArmPositions.HOME, arm));
-    oi.getmoveJ1Up().onFalse(Commands.run(arm::allStop, arm));
+    oi.getMoveToPickup().onFalse(
+      new ConditionalCommand(
+        new ConditionalCommand(
+          new MoveArm(ArmPositions.CONE_HOME, arm),
+          new MoveArm(ArmPositions.CUBE_HOME, arm),
+          ()-> oi.getGamePieceType()), 
+        new ConditionalCommand(
+          new MoveArm(ArmPositions.CONE_HOME,arm),
+          new MoveArm(ArmPositions.CUBE_HOME,arm),
+          ()-> oi.getGamePieceType()), 
+        ()->oi.getPickupLocation()
+      )
+    );
+
+
+    oi.getMoveToHigh().onTrue(
+      new ConditionalCommand(
+        new MoveArmToPos(ArmPositions.CONE_MID_INTERMEDIATE, arm).andThen(new MoveArm(ArmPositions.CONE_HIGH, arm)),
+        new MoveArmToPos(ArmPositions.CUBE_MID_INTERMEDIATE, arm).andThen(new MoveArm(ArmPositions.CUBE_HIGH, arm)),
+        ()->oi.getGamePieceType()
+        )
+    );
     
+    oi.getMoveToHigh().onFalse(
+      new ConditionalCommand(
+        new MoveArmToPos(ArmPositions.CONE_MID_INTERMEDIATE, arm).andThen(new MoveArm(ArmPositions.HOME, arm)),
+        new MoveArmToPos(ArmPositions.CUBE_MID_INTERMEDIATE, arm).andThen(new MoveArm(ArmPositions.HOME, arm)),
+        ()->oi.getGamePieceType()
+        )
+    );
+
+    oi.getMoveToMid().onTrue(
+      new ConditionalCommand(
+        new MoveArmToPos(ArmPositions.CONE_MID_INTERMEDIATE, arm).andThen(new MoveArm(ArmPositions.CONE_MID, arm)),
+        new MoveArm(ArmPositions.CUBE_MID, arm),
+        ()->oi.getGamePieceType()
+        )
+    );
+    
+    oi.getMoveToMid().onFalse(
+      new ConditionalCommand(
+        new MoveArmToPos(ArmPositions.CONE_MID_INTERMEDIATE, arm).andThen(new MoveArm(ArmPositions.HOME, arm)),
+        new MoveArm(ArmPositions.HOME, arm),
+        ()->oi.getGamePieceType()
+        )
+    );
+    
+    oi.getMoveToLow().onTrue(
+      new ConditionalCommand(
+        new MoveArm(ArmPositions.CONE_LOW, arm),
+        new MoveArm(ArmPositions.CUBE_LOW, arm),
+        ()->oi.getGamePieceType()
+        )
+    );
+    
+    oi.getMoveToLow().onFalse(
+      new ConditionalCommand(
+        new MoveArm(ArmPositions.HOME, arm),
+        new MoveArm(ArmPositions.HOME, arm),
+        ()->oi.getGamePieceType()
+        )
+    );
+
+    oi.getSafetyStop().onTrue(Commands.run(arm::allStop, arm));
+    oi.getSafetyStop().onFalse((new MoveArm(ArmPositions.HOME, arm)));
   }
 
 
@@ -329,5 +403,17 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return autoChooser.get();
+  }
+
+  public static boolean safeToDriveFast(){
+    return arm.safeToDriveFast();
+  }
+
+  public static double getAdjustJ3(){
+    return adjustJ3;
+  }
+
+  public static void adjustJ3(double amount){
+    adjustJ3 = adjustJ3 + amount;
   }
 }
