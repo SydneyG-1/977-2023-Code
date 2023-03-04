@@ -78,7 +78,7 @@ public final class SwerveModuleConstants {
 
   /* Drive Motor Characterization Values */
   // divide by 12 to convert from volts to percent output for CTRE
-  public static final double DRIVE_KS = (0.55493 / 12);
+  public static final double DRIVE_KS = (0.67334 / 12);
   public static final double DRIVE_KV = (2.3014 / 12);
   public static final double DRIVE_KA = (0.12872 / 12);
 
@@ -102,4 +102,6 @@ public final class SwerveModuleConstants {
   /* Neutral Modes */
   public static final NeutralMode ANGLE_NEUTRAL_MODE = NeutralMode.Coast;
   public static final NeutralMode DRIVE_NEUTRAL_MODE = NeutralMode.Brake;
+
+
 }

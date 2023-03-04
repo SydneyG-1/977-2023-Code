@@ -59,12 +59,12 @@ public class CompetitionControls implements OperatorInterface {
 
 
   @Override
-  public Trigger getmoveJ1Up() {
+  public Trigger getSpeedOverrideR() {
     return new Trigger(driverJoystick::getRightBumper);
   }
 
   @Override
-  public Trigger getmoveJ1Down() {
+  public Trigger getSpeedOverrideL() {
     return new Trigger(driverJoystick::getLeftBumper);
   }
 

@@ -59,16 +59,31 @@ public class TeleopSwerve extends CommandBase {
     double yPercentage = modifyAxis(translationYSupplier.getAsDouble());
     double rotationPercentage = modifyAxis(rotationSupplier.getAsDouble());
 
-    if (RobotContainer.safeToDriveFast()&&speedMod<0.5){
-      speedMod = speedMod + 0.02;
+//speedMod = 0.5;
+     
+    if (RobotContainer.safeToDriveFast()){
+      if (drivetrain.getSpeedOverride()){
+        if(speedMod<0.99){
+          speedMod = speedMod + 0.02;
+        }
+      }else{
+        if (speedMod<0.65){
+          speedMod = speedMod+0.02;
+        }else{
+        speedMod = speedMod-0.02;
+        }
+      }
     }else{
       speedMod=0.25;
     }
+  
+   
+
 
     double xVelocity = xPercentage * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND*speedMod;
     double yVelocity = yPercentage * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND*speedMod;
     double rotationalVelocity =
-        rotationPercentage * DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND*(speedMod-0.15);
+        rotationPercentage * DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND*(speedMod*0.5);
 
     Logger.getInstance().recordOutput("ActiveCommands/TeleopSwerve", true);
     Logger.getInstance().recordOutput("TeleopSwerve/xVelocity", xVelocity);

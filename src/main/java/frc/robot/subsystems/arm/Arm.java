@@ -53,7 +53,7 @@ public class Arm extends SubsystemBase {
 
     J1_motor.setInverted(true);
     J2_motor.setInverted(false);
-    J3_motor.setInverted(false);
+    J3_motor.setInverted(true);
 
     J1_motor.setIdleMode(IdleMode.kBrake);
     J2_motor.setIdleMode(IdleMode.kBrake);

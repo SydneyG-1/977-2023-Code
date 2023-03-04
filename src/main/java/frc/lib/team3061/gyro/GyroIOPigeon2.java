@@ -25,6 +25,9 @@ public class GyroIOPigeon2 implements GyroIO {
     xyzDps[1] = gyro.getRawGyroY();
     xyzDps[2] = gyro.getRawGyroZ();
     inputs.connected = gyro.isConnected();
+    //gyro.setAngleAdjustment(0);
+    
+    //inputs.positionDeg = -gyro.getAngle();
     inputs.positionDeg = -gyro.getYaw(); // degrees
     inputs.velocityDegPerSec = xyzDps[2]; // degrees per second
   }

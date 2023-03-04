@@ -84,6 +84,8 @@ public class Drivetrain extends SubsystemBase {
 
   private boolean isFieldRelative;
 
+  private boolean speedOverride= false;
+
   private double gyroOffset;
 
   private ChassisSpeeds chassisSpeeds;
@@ -574,5 +576,16 @@ public class Drivetrain extends SubsystemBase {
     NORMAL,
     X,
     CHARACTERIZATION
+  }
+
+  public void setSpeedOverride(){
+    speedOverride = true;
+  }
+  public void endSpeedOverride(){
+    speedOverride = false;
+  }
+
+  public boolean getSpeedOverride(){
+    return speedOverride;
   }
 }

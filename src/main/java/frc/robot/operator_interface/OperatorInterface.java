@@ -45,10 +45,10 @@ public interface OperatorInterface {
     return new Trigger(() -> false);
   }
 
-  public default Trigger getmoveJ1Up() {
+  public default Trigger getSpeedOverrideR() {
     return new Trigger(() -> false);
   }
-  public default Trigger getmoveJ1Down() {
+  public default Trigger getSpeedOverrideL() {
     return new Trigger(() -> false);
   }
 

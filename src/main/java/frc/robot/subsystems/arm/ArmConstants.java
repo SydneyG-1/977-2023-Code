@@ -40,10 +40,10 @@ public final class ArmConstants {
   public static final double j2_allE = 0.04;
 
   
-  public static final double j3_maxV = 0.75;
+  public static final double j3_maxV = 0.5;
   public static final double j3_maxAcc = 1.0;
-  public static final double j3_kP = 8.0;
-  public static final double j3_kI = 6.5;
+  public static final double j3_kP = 4.0;
+  public static final double j3_kI = 2.5;
   public static final double j3_kD = 0.0;
   public static final double j3_allE = 0.04;
   

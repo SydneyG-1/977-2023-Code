@@ -13,11 +13,13 @@ import com.pathplanner.lib.commands.FollowPathWithEvents;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.lib.team3061.gyro.GyroIO;
 import frc.lib.team3061.gyro.GyroIOPigeon2;
 import frc.lib.team3061.pneumatics.Pneumatics;
@@ -33,6 +35,7 @@ import frc.lib.team3061.vision.VisionIO;
 import frc.lib.team3061.vision.VisionIOPhotonVision;
 import frc.lib.team3061.vision.VisionIOSim;
 import frc.robot.Constants.Mode;
+import frc.robot.commands.AutoMove1;
 import frc.robot.commands.FeedForwardCharacterization;
 import frc.robot.commands.FeedForwardCharacterization.FeedForwardCharacterizationData;
 import frc.robot.commands.FollowPath;
@@ -58,12 +61,13 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  private OperatorInterface oi = new OperatorInterface() {};
+  private static OperatorInterface oi = new OperatorInterface() {};
 
   private Drivetrain drivetrain;
   private Gripper gripper;
   private static Arm arm;
   private static double adjustJ3 = 0.0;
+  private static boolean speedOverride = false;
 
   // use AdvantageKit's LoggedDashboardChooser instead of SendableChooser to ensure accurate logging
   private final LoggedDashboardChooser<Command> autoChooser =
@@ -245,6 +249,9 @@ public class RobotContainer {
     oi.getXStanceButton().onTrue(Commands.runOnce(drivetrain::enableXstance, drivetrain));
     oi.getXStanceButton().onFalse(Commands.runOnce(drivetrain::disableXstance, drivetrain));
 
+    oi.getSpeedOverrideL().onTrue(Commands.runOnce(drivetrain::setSpeedOverride));
+    oi.getSpeedOverrideL().onFalse(Commands.runOnce(drivetrain::endSpeedOverride));
+
     //intake & gripper controls
     oi.getCloseButton().onTrue(
       new ConditionalCommand( 
@@ -283,7 +290,7 @@ public class RobotContainer {
           new MoveArm(ArmPositions.CUBE_HOME, arm),
           ()-> oi.getGamePieceType()), 
         new ConditionalCommand(
-          new MoveArm(ArmPositions.CONE_HOME,arm),
+          new MoveArmToPos(ArmPositions.CONE_GROUND_INTERMEDIATE, arm).andThen(new MoveArm(ArmPositions.CONE_HOME,arm)),
           new MoveArm(ArmPositions.CUBE_HOME,arm),
           ()-> oi.getGamePieceType()), 
         ()->oi.getPickupLocation()
@@ -352,10 +359,10 @@ public class RobotContainer {
     // build auto path commands
     List<PathPlannerTrajectory> auto1Paths =
         PathPlanner.loadPathGroup(
-            "testPaths1",
+            "StraightAhead",
             AUTO_MAX_SPEED_METERS_PER_SECOND,
             AUTO_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED);
-    Command autoTest = null;
+    Command autoTest = 
         Commands.sequence(
             new FollowPathWithEvents(
                 new FollowPath(auto1Paths.get(0), drivetrain, true),
@@ -369,8 +376,17 @@ public class RobotContainer {
                 auto1Paths.get(1).getMarkers(),
                 AUTO_EVENT_MAP));
 
+    Command auto2 = new MoveArmToPos(ArmPositions.CUBE_MID, arm).andThen(new MoveArmToPos(ArmPositions.HOME, arm).alongWith( new AutoMove1(drivetrain, gripper).withTimeout(3)));
+
     // add commands to the auto chooser
     autoChooser.addDefaultOption("Do Nothing", new InstantCommand());
+
+    autoChooser.addOption("MoveStraight", new AutoMove1(drivetrain, gripper).withTimeout(4)
+    //Commands.runOnce(gripper::releaseCube, gripper).withTimeout(2).andThen(Commands.runOnce(gripper::stopIntake, gripper)).andThen( new AutoMove1(drivetrain).withTimeout(3) 
+     );
+     autoChooser.addDefaultOption("Cube Mid Auto", auto2);
+
+    
 
     // demonstration of PathPlanner path group with event markers
     autoChooser.addOption("Test Path", autoTest);
@@ -409,6 +425,18 @@ public class RobotContainer {
   public static boolean safeToDriveFast(){
     return arm.safeToDriveFast();
   }
+/*
+  public boolean speedOverridePressed(){
+    SmartDashboard.putBoolean("speed Mcde",oi.getSpeedOverrideL().getAsBoolean() || oi.getSpeedOverrideR().getAsBoolean());
+    return oi.getSpeedOverrideL().getAsBoolean() || oi.getSpeedOverrideR().getAsBoolean();
+      
+  }
+
+  private void setSpeedOverride(boolean state){
+    speedOverride = state;
+
+  }
+  */
 
   public static double getAdjustJ3(){
     return adjustJ3;
