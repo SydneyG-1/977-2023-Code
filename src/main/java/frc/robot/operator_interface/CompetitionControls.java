@@ -57,6 +57,13 @@ public class CompetitionControls implements OperatorInterface {
     return new Trigger(driverJoystick::getYButton);
   }
 
+  
+  @Override
+  public Trigger getTestButton() {
+    return new Trigger(driverJoystick::getAButton);
+  }
+
+
 
   @Override
   public Trigger getSpeedOverrideR() {

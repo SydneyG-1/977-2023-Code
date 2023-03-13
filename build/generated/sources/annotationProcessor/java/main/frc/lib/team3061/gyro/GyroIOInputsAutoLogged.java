@@ -11,6 +11,8 @@ public class GyroIOInputsAutoLogged extends GyroIO.GyroIOInputs implements Logga
     table.put("Connected", connected);
     table.put("PositionDeg", positionDeg);
     table.put("VelocityDegPerSec", velocityDegPerSec);
+    table.put("PitchDeg", pitchDeg);
+    table.put("RollDeg", rollDeg);
   }
 
   @Override
@@ -18,6 +20,8 @@ public class GyroIOInputsAutoLogged extends GyroIO.GyroIOInputs implements Logga
     connected = table.getBoolean("Connected", connected);
     positionDeg = table.getDouble("PositionDeg", positionDeg);
     velocityDegPerSec = table.getDouble("VelocityDegPerSec", velocityDegPerSec);
+    pitchDeg = table.getDouble("PitchDeg", pitchDeg);
+    rollDeg = table.getDouble("RollDeg", rollDeg);
   }
 
   public GyroIOInputsAutoLogged clone() {
@@ -25,6 +29,8 @@ public class GyroIOInputsAutoLogged extends GyroIO.GyroIOInputs implements Logga
     copy.connected = this.connected;
     copy.positionDeg = this.positionDeg;
     copy.velocityDegPerSec = this.velocityDegPerSec;
+    copy.pitchDeg = this.pitchDeg;
+    copy.rollDeg = this.rollDeg;
     return copy;
   }
 }

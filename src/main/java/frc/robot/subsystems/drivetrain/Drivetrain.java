@@ -18,10 +18,13 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.interfaces.Accelerometer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.team3061.gyro.GyroIO;
@@ -37,6 +40,7 @@ import org.littletonrobotics.junction.Logger;
  * robot's rotation.
  */
 public class Drivetrain extends SubsystemBase {
+
   private final GyroIO gyroIO;
   private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
 
@@ -84,7 +88,9 @@ public class Drivetrain extends SubsystemBase {
 
   private boolean isFieldRelative;
 
-  private boolean speedOverride= false;
+  private boolean speedOverride = false;
+
+  private boolean PrecisionMode = false; 
 
   private double gyroOffset;
 
@@ -126,6 +132,7 @@ public class Drivetrain extends SubsystemBase {
     this.chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
 
     this.poseEstimator = RobotOdometry.getInstance().getPoseEstimator();
+
 
     ShuffleboardTab tabMain = Shuffleboard.getTab("MAIN");
     tabMain.addNumber("Gyroscope Angle", () -> getRotation().getDegrees());
@@ -179,6 +186,8 @@ public class Drivetrain extends SubsystemBase {
     }
   }
 
+
+
   /**
    * Sets the rotation of the robot to the specified value. This method should only be invoked when
    * the rotation of the robot is known (e.g., at the start of an autonomous path). Zero degrees is
@@ -201,6 +210,18 @@ public class Drivetrain extends SubsystemBase {
               Rotation2d.fromDegrees(expectedYaw));
     }
   }
+
+public double getPitch(){
+  return gyroInputs.pitchDeg;
+}
+public double getRoll(){
+  return gyroInputs.rollDeg;
+}
+
+
+//public double getAccelValue(){
+ // return gyroInputs.zaccel;
+//}
 
   /**
    * Returns the pose of the robot (e.g., x and y position of the robot on the field and the robot's
@@ -319,9 +340,14 @@ public class Drivetrain extends SubsystemBase {
   @Override
   public void periodic() {
 
+
+    
     // update and log gyro inputs
     gyroIO.updateInputs(gyroInputs);
     Logger.getInstance().processInputs("Drive/Gyro", gyroInputs);
+
+SmartDashboard.putNumber("Pitch Degrees", getPitch());
+SmartDashboard.putNumber("Roll Degrees", getRoll());
 
     // update and log the swerve moudles inputs
     for (SwerveModule swerveModule : swerveModules) {
@@ -408,6 +434,8 @@ public class Drivetrain extends SubsystemBase {
       mod.setDriveBrakeMode(enable);
     }
   }
+
+
 
   /**
    * Sets each of the swerve modules based on the specified corresponding swerve module state.
@@ -577,6 +605,13 @@ public class Drivetrain extends SubsystemBase {
     X,
     CHARACTERIZATION
   }
+  public void setPrecisionMode(){
+    PrecisionMode = true;}
+  
+  public void endPrecisionMode(){
+    PrecisionMode = false;
+  }
+    
 
   public void setSpeedOverride(){
     speedOverride = true;
@@ -587,5 +622,8 @@ public class Drivetrain extends SubsystemBase {
 
   public boolean getSpeedOverride(){
     return speedOverride;
+  }
+  public boolean getPrecisionMode(){
+    return PrecisionMode;
   }
 }

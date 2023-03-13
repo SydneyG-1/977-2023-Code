@@ -11,6 +11,7 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.FollowPathWithEvents;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import frc.robot.subsystems.accelerometer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -35,7 +36,10 @@ import frc.lib.team3061.vision.VisionIO;
 import frc.lib.team3061.vision.VisionIOPhotonVision;
 import frc.lib.team3061.vision.VisionIOSim;
 import frc.robot.Constants.Mode;
+import frc.robot.commands.AutoBalanceMove;
 import frc.robot.commands.AutoMove1;
+import frc.robot.commands.AutoMoveSpeed;
+import frc.robot.commands.DriveReset;
 import frc.robot.commands.FeedForwardCharacterization;
 import frc.robot.commands.FeedForwardCharacterization.FeedForwardCharacterizationData;
 import frc.robot.commands.FollowPath;
@@ -43,6 +47,8 @@ import frc.robot.commands.MoveArm;
 import frc.robot.commands.MoveArmToPos;
 import frc.robot.commands.SetGrip;
 import frc.robot.commands.TeleopSwerve;
+import frc.robot.commands.WaitCommand;
+import frc.robot.commands.runIntake;
 import frc.robot.operator_interface.OISelector;
 import frc.robot.operator_interface.OperatorInterface;
 import frc.robot.subsystems.arm.Arm;
@@ -64,6 +70,7 @@ public class RobotContainer {
   private static OperatorInterface oi = new OperatorInterface() {};
 
   private Drivetrain drivetrain;
+  private frc.robot.subsystems.accelerometer accelerometer;
   private Gripper gripper;
   private static Arm arm;
   private static double adjustJ3 = 0.0;
@@ -130,6 +137,7 @@ public class RobotContainer {
                     MAX_VELOCITY_METERS_PER_SECOND);
 
             drivetrain = new Drivetrain(gyro, flModule, frModule, blModule, brModule);
+            accelerometer = new accelerometer();
             new Pneumatics(new PneumaticsIORev());
             new Vision(new VisionIOPhotonVision(CAMERA_NAME));
             gripper = new Gripper();
@@ -235,12 +243,24 @@ public class RobotContainer {
   /** Use this method to define your button->command mappings. */
   private void configureButtonBindings() {
     // field-relative toggle
-    oi.getFieldRelativeButton()
+    /*oi.getFieldRelativeButton()
         .toggleOnTrue(
             Commands.either(
                 Commands.runOnce(drivetrain::disableFieldRelative, drivetrain),
                 Commands.runOnce(drivetrain::enableFieldRelative, drivetrain),
-                drivetrain::getFieldRelative));
+                drivetrain::getFieldRelative)); 
+                 */
+
+                oi.getFieldRelativeButton()
+        .onTrue(
+      
+                Commands.runOnce(drivetrain::disableFieldRelative, drivetrain));
+
+                oi.getFieldRelativeButton()
+                .onFalse(
+                Commands.runOnce(drivetrain::enableFieldRelative, drivetrain));
+        
+
 
     // reset gyro to 0 degrees
     oi.getResetGyroButton().onTrue(Commands.runOnce(drivetrain::zeroGyroscope, drivetrain));
@@ -251,6 +271,9 @@ public class RobotContainer {
 
     oi.getSpeedOverrideL().onTrue(Commands.runOnce(drivetrain::setSpeedOverride));
     oi.getSpeedOverrideL().onFalse(Commands.runOnce(drivetrain::endSpeedOverride));
+
+    oi.getSpeedOverrideR().onTrue(Commands.runOnce(drivetrain::setPrecisionMode));
+    oi.getSpeedOverrideR().onFalse(Commands.runOnce(drivetrain::endPrecisionMode));
 
     //intake & gripper controls
     oi.getCloseButton().onTrue(
@@ -348,6 +371,11 @@ public class RobotContainer {
 
     oi.getSafetyStop().onTrue(Commands.run(arm::allStop, arm));
     oi.getSafetyStop().onFalse((new MoveArm(ArmPositions.HOME, arm)));
+
+
+    oi.getTestButton().onTrue(new DriveReset(drivetrain)
+    );
+
   }
 
 
@@ -376,7 +404,29 @@ public class RobotContainer {
                 auto1Paths.get(1).getMarkers(),
                 AUTO_EVENT_MAP));
 
-    Command auto2 = new MoveArmToPos(ArmPositions.CUBE_MID, arm).andThen(new MoveArmToPos(ArmPositions.HOME, arm).alongWith( new AutoMove1(drivetrain, gripper).withTimeout(3)));
+    Command auto2 = new MoveArmToPos(ArmPositions.CUBE_MID, arm).andThen(new MoveArmToPos(ArmPositions.HOME, arm).alongWith( new AutoMove1(drivetrain, gripper).withTimeout(4.25)));
+
+    /*Command autoHighCube = new MoveArmToPos(ArmPositions.CUBE_MID_INTERMEDIATE, arm)
+    .andThen(new MoveArm(ArmPositions.CUBE_HIGH, arm))
+    .andThen(new MoveArmToPos(ArmPositions.HOME, arm).alongWith( new AutoMove1(drivetrain, gripper)).withTimeout(5.25)); */
+    
+    
+    Command balanceAuto = 
+    new MoveArmToPos(ArmPositions.CUBE_MID, arm)
+    .andThen(new runIntake(gripper).withTimeout(1))
+    //.andThen(new WaitCommand().withTimeout(0.5))
+    .andThen(new MoveArm(ArmPositions.HOME, arm).withTimeout(2.0))
+    .andThen(new AutoMoveSpeed(2.5, drivetrain).withTimeout(1.2))
+    .andThen(new AutoBalanceMove(drivetrain, accelerometer).withTimeout(4));
+
+    
+    //.andThen(Commands.runOnce(drivetrain::enableXstance, drivetrain)).withTimeout(1);
+    //new MoveArmToPos(ArmPositions.CUBE_MID, arm)
+    //.andThen(new MoveArmToPos(ArmPositions.HOME, arm))
+    //.alongWith(new AutoMoveSpeed(1.2, drivetrain, gripper).withTimeout(1.0))
+    ;
+    //.andThen(new AutoBalanceMove(drivetrain, accelerometer)).withTimeout(3));
+
 
     // add commands to the auto chooser
     autoChooser.addDefaultOption("Do Nothing", new InstantCommand());
@@ -386,6 +436,7 @@ public class RobotContainer {
      );
      autoChooser.addDefaultOption("Cube Mid Auto", auto2);
 
+     autoChooser.addOption("Balance Auto", balanceAuto);
     
 
     // demonstration of PathPlanner path group with event markers
@@ -437,6 +488,7 @@ public class RobotContainer {
 
   }
   */
+
 
   public static double getAdjustJ3(){
     return adjustJ3;
