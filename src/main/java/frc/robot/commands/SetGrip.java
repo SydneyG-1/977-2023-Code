@@ -13,16 +13,18 @@ import frc.robot.subsystems.gripper.Gripper;
 public class SetGrip extends InstantCommand {
   Gripper m_subsystem;
   boolean m_state;
-  public SetGrip(boolean state,Gripper subsystem) {
+
+  public SetGrip(boolean state, Gripper subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_subsystem = subsystem;
-    m_state=state;
+    m_state = state;
     addRequirements(m_subsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_subsystem.setGrip(m_state);;
+    m_subsystem.setGrip(m_state);
+    ;
   }
 }

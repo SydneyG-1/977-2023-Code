@@ -8,12 +8,10 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.drivetrain.Drivetrain;
 import frc.robot.subsystems.gripper.Gripper;
 
-
 public class AutoMove1 extends CommandBase {
 
-  
-private Drivetrain drivetrain;
-private Gripper gripper;
+  private Drivetrain drivetrain;
+  private Gripper gripper;
   /** Creates a new AutoMove1. */
   public AutoMove1(Drivetrain subsystem, Gripper subsystem2) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -25,7 +23,7 @@ private Gripper gripper;
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    //drivetrain.resetOdometry(null);
+    // drivetrain.resetOdometry(null);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

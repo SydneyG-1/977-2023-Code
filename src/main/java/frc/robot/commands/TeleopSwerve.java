@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.drivetrain.Drivetrain;
@@ -60,27 +59,26 @@ public class TeleopSwerve extends CommandBase {
     double yPercentage = modifyAxis(translationYSupplier.getAsDouble());
     double rotationPercentage = modifyAxis(rotationSupplier.getAsDouble());
 
-//speedMod = 0.5;
-     
-double target_speed = 0.50;
-if (drivetrain.getSpeedOverride()){
-  target_speed = 0.85;
-}
-if (drivetrain.getPrecisionMode()){
-  target_speed = 0.35;
-}
-if (!RobotContainer.safeToDriveFast()){
-  target_speed = 0.25;
-}
+    // speedMod = 0.5;
 
-    if (speedMod<target_speed){
-      speedMod = speedMod+0.02;
-    }else{
-    speedMod = speedMod-0.02;
+    double target_speed = 0.50;
+    if (drivetrain.getSpeedOverride()) {
+      target_speed = 0.85;
+    }
+    if (drivetrain.getPrecisionMode()) {
+      target_speed = 0.35;
+    }
+    if (!RobotContainer.safeToDriveFast()) {
+      target_speed = 0.25;
     }
 
+    if (speedMod < target_speed) {
+      speedMod = speedMod + 0.02;
+    } else {
+      speedMod = speedMod - 0.02;
+    }
 
-/* 
+    /*
 
     if (RobotContainer.safeToDriveFast()){
       if (drivetrain.getSpeedOverride()){
@@ -88,7 +86,7 @@ if (!RobotContainer.safeToDriveFast()){
           speedMod = speedMod + 0.02;
         }
       }else
-      
+
       {
         if (speedMod<0.50){
           speedMod = speedMod+0.02;
@@ -100,13 +98,13 @@ if (!RobotContainer.safeToDriveFast()){
       speedMod=0.25;
     }
     */
-  
 
-
-    double xVelocity = xPercentage * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND*speedMod;
-    double yVelocity = yPercentage * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND*speedMod;
+    double xVelocity = xPercentage * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND * speedMod;
+    double yVelocity = yPercentage * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND * speedMod;
     double rotationalVelocity =
-        rotationPercentage * DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND*(speedMod*0.5);
+        rotationPercentage
+            * DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
+            * (speedMod * 0.5);
 
     Logger.getInstance().recordOutput("ActiveCommands/TeleopSwerve", true);
     Logger.getInstance().recordOutput("TeleopSwerve/xVelocity", xVelocity);

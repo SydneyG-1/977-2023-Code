@@ -128,7 +128,6 @@ public class Robot extends LoggedRobot {
      * for anything in the Command-based framework to work.
      */
     CommandScheduler.getInstance().run();
-    
 
     logReceiverQueueAlert.set(Logger.getInstance().getReceiverQueueFault());
   }

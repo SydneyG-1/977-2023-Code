@@ -18,10 +18,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.interfaces.Accelerometer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -90,7 +88,7 @@ public class Drivetrain extends SubsystemBase {
 
   private boolean speedOverride = false;
 
-  private boolean PrecisionMode = false; 
+  private boolean PrecisionMode = false;
 
   private double gyroOffset;
 
@@ -133,7 +131,6 @@ public class Drivetrain extends SubsystemBase {
 
     this.poseEstimator = RobotOdometry.getInstance().getPoseEstimator();
 
-
     ShuffleboardTab tabMain = Shuffleboard.getTab("MAIN");
     tabMain.addNumber("Gyroscope Angle", () -> getRotation().getDegrees());
     tabMain.addBoolean("X-Stance On?", this::isXstance);
@@ -170,6 +167,7 @@ public class Drivetrain extends SubsystemBase {
     setGyroOffset(0.0);
   }
 
+  // FIXME Gyro: returns odometry instead of gyro when not connected
   /**
    * Returns the rotation of the robot. Zero degrees is facing away from the driver station; CCW is
    * positive. This method should always be invoked instead of obtaining the yaw directly from the
@@ -186,8 +184,7 @@ public class Drivetrain extends SubsystemBase {
     }
   }
 
-
-
+  // FIXME Gyro: the offset may be causing issues
   /**
    * Sets the rotation of the robot to the specified value. This method should only be invoked when
    * the rotation of the robot is known (e.g., at the start of an autonomous path). Zero degrees is
@@ -211,17 +208,17 @@ public class Drivetrain extends SubsystemBase {
     }
   }
 
-public double getPitch(){
-  return gyroInputs.pitchDeg;
-}
-public double getRoll(){
-  return gyroInputs.rollDeg;
-}
+  public double getPitch() {
+    return gyroInputs.pitchDeg;
+  }
 
+  public double getRoll() {
+    return gyroInputs.rollDeg;
+  }
 
-//public double getAccelValue(){
- // return gyroInputs.zaccel;
-//}
+  // public double getAccelValue(){
+  // return gyroInputs.zaccel;
+  // }
 
   /**
    * Returns the pose of the robot (e.g., x and y position of the robot on the field and the robot's
@@ -340,14 +337,12 @@ public double getRoll(){
   @Override
   public void periodic() {
 
-
-    
     // update and log gyro inputs
     gyroIO.updateInputs(gyroInputs);
     Logger.getInstance().processInputs("Drive/Gyro", gyroInputs);
 
-SmartDashboard.putNumber("Pitch Degrees", getPitch());
-SmartDashboard.putNumber("Roll Degrees", getRoll());
+    SmartDashboard.putNumber("Pitch Degrees", getPitch());
+    SmartDashboard.putNumber("Roll Degrees", getRoll());
 
     // update and log the swerve moudles inputs
     for (SwerveModule swerveModule : swerveModules) {
@@ -434,8 +429,6 @@ SmartDashboard.putNumber("Roll Degrees", getRoll());
       mod.setDriveBrakeMode(enable);
     }
   }
-
-
 
   /**
    * Sets each of the swerve modules based on the specified corresponding swerve module state.
@@ -605,25 +598,28 @@ SmartDashboard.putNumber("Roll Degrees", getRoll());
     X,
     CHARACTERIZATION
   }
-  public void setPrecisionMode(){
-    PrecisionMode = true;}
-  
-  public void endPrecisionMode(){
+
+  public void setPrecisionMode() {
+    PrecisionMode = true;
+  }
+
+  public void endPrecisionMode() {
     PrecisionMode = false;
   }
-    
 
-  public void setSpeedOverride(){
+  public void setSpeedOverride() {
     speedOverride = true;
   }
-  public void endSpeedOverride(){
+
+  public void endSpeedOverride() {
     speedOverride = false;
   }
 
-  public boolean getSpeedOverride(){
+  public boolean getSpeedOverride() {
     return speedOverride;
   }
-  public boolean getPrecisionMode(){
+
+  public boolean getPrecisionMode() {
     return PrecisionMode;
   }
 }

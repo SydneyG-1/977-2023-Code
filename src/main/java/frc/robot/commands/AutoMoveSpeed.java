@@ -6,15 +6,11 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.drivetrain.Drivetrain;
-import frc.robot.subsystems.gripper.Gripper;
-
 
 public class AutoMoveSpeed extends CommandBase {
 
-  
-private Drivetrain drivetrain;
-private Gripper gripper;
-private double speed;
+  private Drivetrain drivetrain;
+  private double speed;
   /** Creates a new AutoMove1. */
   public AutoMoveSpeed(double value, Drivetrain subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -26,7 +22,7 @@ private double speed;
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    //drivetrain.resetOdometry(null);
+    // drivetrain.resetOdometry(null);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -39,7 +35,6 @@ private double speed;
   @Override
   public void end(boolean interrupted) {
     drivetrain.drive(0.0, 0.0, 0.0);
-   
   }
 
   // Returns true when the command should end.

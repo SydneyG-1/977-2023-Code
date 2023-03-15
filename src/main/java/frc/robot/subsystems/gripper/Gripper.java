@@ -25,7 +25,8 @@ public class Gripper extends SubsystemBase {
   public void opengrip() {
     grip.set(false);
   }
-  public void setGrip(boolean state){
+
+  public void setGrip(boolean state) {
     grip.set(state);
   }
 

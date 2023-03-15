@@ -15,7 +15,7 @@ public class AutoSideMove extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
     drivetrain = subsystem;
     speed = speedvalue;
-    
+
     addRequirements(drivetrain);
   }
 

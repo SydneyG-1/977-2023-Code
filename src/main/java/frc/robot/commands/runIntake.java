@@ -10,6 +10,7 @@ import frc.robot.subsystems.gripper.Gripper;
 public class runIntake extends CommandBase {
   /** Creates a new runIntake. */
   private Gripper grip;
+
   public runIntake(Gripper subsystem) {
     grip = subsystem;
     addRequirements(grip);

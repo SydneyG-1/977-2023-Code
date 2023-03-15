@@ -36,6 +36,7 @@ public interface OperatorInterface {
   public default Trigger getXStanceButton() {
     return new Trigger(() -> false);
   }
+
   public default Trigger getTestButton() {
     return new Trigger(() -> false);
   }
@@ -51,6 +52,7 @@ public interface OperatorInterface {
   public default Trigger getSpeedOverrideR() {
     return new Trigger(() -> false);
   }
+
   public default Trigger getSpeedOverrideL() {
     return new Trigger(() -> false);
   }
@@ -58,29 +60,32 @@ public interface OperatorInterface {
   public default Trigger getMoveToHigh() {
     return new Trigger(() -> false);
   }
-  
+
   public default Trigger getMoveToMid() {
     return new Trigger(() -> false);
   }
+
   public default Trigger getMoveToLow() {
     return new Trigger(() -> false);
   }
+
   public default Trigger getMoveToPickup() {
     return new Trigger(() -> false);
   }
+
   public default Trigger getSafetyStop() {
     return new Trigger(() -> false);
   }
+
   public default Trigger getOpBut8() {
     return new Trigger(() -> false);
   }
-  
+
   public default boolean getPickupLocation() {
     return true;
   }
-  
+
   public default boolean getGamePieceType() {
     return false;
   }
-  
 }

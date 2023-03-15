@@ -102,6 +102,4 @@ public final class SwerveModuleConstants {
   /* Neutral Modes */
   public static final NeutralMode ANGLE_NEUTRAL_MODE = NeutralMode.Coast;
   public static final NeutralMode DRIVE_NEUTRAL_MODE = NeutralMode.Brake;
-
-
 }

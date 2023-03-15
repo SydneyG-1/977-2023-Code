@@ -4,8 +4,6 @@
 
 package frc.robot.operator_interface;
 
-import java.util.function.BooleanSupplier;
-
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -28,6 +26,7 @@ public class CompetitionControls implements OperatorInterface {
       operatorJoystickButtons[i] = operatorJoystick.button(i);
     }
   }
+
   public double getTranslateX() {
     return driverJoystick.getLeftY();
   }
@@ -57,13 +56,10 @@ public class CompetitionControls implements OperatorInterface {
     return new Trigger(driverJoystick::getYButton);
   }
 
-  
   @Override
   public Trigger getTestButton() {
     return new Trigger(driverJoystick::getAButton);
   }
-
-
 
   @Override
   public Trigger getSpeedOverrideR() {
@@ -86,18 +82,18 @@ public class CompetitionControls implements OperatorInterface {
   }
 
   @Override
-    public Trigger getMoveToLow() {
-      return operatorJoystick.button(3);
-    }
+  public Trigger getMoveToLow() {
+    return operatorJoystick.button(3);
+  }
 
-    @Override
-    public Trigger getMoveToPickup() {
-      return operatorJoystick.button(4);
-    }
-    
+  @Override
+  public Trigger getMoveToPickup() {
+    return operatorJoystick.button(4);
+  }
+
   @Override
   public Trigger getCloseButton() {
-    //return new Trigger(operatorJoystickButtons[6]);
+    // return new Trigger(operatorJoystickButtons[6]);
     return new Trigger(operatorJoystick.button(5));
   }
 
@@ -105,23 +101,24 @@ public class CompetitionControls implements OperatorInterface {
   public Trigger getOpenButton() {
     return new Trigger(operatorJoystick.button(6));
   }
-    
-    @Override
-    public Trigger getSafetyStop() {
-      return operatorJoystick.button(7);
-    }
-
-    @Override
-    public Trigger getOpBut8() {
-      return operatorJoystick.button(8);
-    }
 
   @Override
-    public boolean getPickupLocation(){
-      return operatorJoystick.button(11).getAsBoolean();
-    }
-@Override
-    public boolean getGamePieceType(){
-      return !operatorJoystick.button(13).getAsBoolean();
-    }
+  public Trigger getSafetyStop() {
+    return operatorJoystick.button(7);
+  }
+
+  @Override
+  public Trigger getOpBut8() {
+    return operatorJoystick.button(8);
+  }
+
+  @Override
+  public boolean getPickupLocation() {
+    return operatorJoystick.button(11).getAsBoolean();
+  }
+
+  @Override
+  public boolean getGamePieceType() {
+    return !operatorJoystick.button(13).getAsBoolean();
+  }
 }
