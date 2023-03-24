@@ -32,7 +32,7 @@ public class AutoBalanceMove extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double output = controller.calculate(-drivetrain.getPitch());
+    double output = controller.calculate(drivetrain.getPitch());
     // error = drivetrain.getPitch() - setPoint;
 
     // double output = kP * error;

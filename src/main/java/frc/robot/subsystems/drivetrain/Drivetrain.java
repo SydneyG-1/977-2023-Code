@@ -117,13 +117,13 @@ public class Drivetrain extends SubsystemBase {
     this.swerveModules[2] = blModule;
     this.swerveModules[3] = brModule;
 
-    this.autoThetaController.enableContinuousInput(-Math.PI, Math.PI);
+    this.autoThetaController.enableContinuousInput(-180, 180); // (-Math.PI, Math.PI);
 
     this.centerGravity = new Translation2d(); // default to (0,0)
 
     this.zeroGyroscope();
 
-    this.isFieldRelative = false;
+    this.isFieldRelative = true;
 
     this.gyroOffset = 0;
 
@@ -292,6 +292,7 @@ public class Drivetrain extends SubsystemBase {
             .recordOutput("Drivetrain/chassisSpeedVy", chassisSpeeds.vyMetersPerSecond);
         Logger.getInstance()
             .recordOutput("Drivetrain/chassisSpeedVo", chassisSpeeds.omegaRadiansPerSecond);
+        Logger.getInstance().recordOutput("Drivetrain/pose2d", getPose());
 
         SwerveModuleState[] swerveModuleStates =
             KINEMATICS.toSwerveModuleStates(chassisSpeeds, centerGravity);
@@ -343,6 +344,10 @@ public class Drivetrain extends SubsystemBase {
 
     SmartDashboard.putNumber("Pitch Degrees", getPitch());
     SmartDashboard.putNumber("Roll Degrees", getRoll());
+
+    SmartDashboard.putNumber("pose Angle", getPose().getRotation().getDegrees());
+
+    SmartDashboard.putNumber("Gyro offset", this.gyroOffset);
 
     // update and log the swerve moudles inputs
     for (SwerveModule swerveModule : swerveModules) {

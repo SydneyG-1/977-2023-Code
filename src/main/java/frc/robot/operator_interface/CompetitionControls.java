@@ -28,17 +28,17 @@ public class CompetitionControls implements OperatorInterface {
   }
 
   public double getTranslateX() {
-    return driverJoystick.getLeftY();
+    return -driverJoystick.getLeftY();
   }
 
   @Override
   public double getTranslateY() {
-    return driverJoystick.getLeftX();
+    return -driverJoystick.getLeftX();
   }
 
   @Override
   public double getRotate() {
-    return driverJoystick.getRightX();
+    return -driverJoystick.getRightX();
   }
 
   @Override
@@ -48,7 +48,7 @@ public class CompetitionControls implements OperatorInterface {
 
   @Override
   public Trigger getResetGyroButton() {
-    return new Trigger(driverJoystick::getStartButton);
+    return new Trigger(driverJoystick::getBackButton);
   }
 
   @Override
@@ -112,6 +112,16 @@ public class CompetitionControls implements OperatorInterface {
     return operatorJoystick.button(8);
   }
 
+@Override
+public Trigger getHighScoreButton(){
+  return operatorJoystick.button(9);
+}
+
+@Override
+public Trigger getMidScoreButton(){
+  return operatorJoystick.button(10);
+}
+
   @Override
   public boolean getPickupLocation() {
     return operatorJoystick.button(11).getAsBoolean();
@@ -121,4 +131,6 @@ public class CompetitionControls implements OperatorInterface {
   public boolean getGamePieceType() {
     return !operatorJoystick.button(13).getAsBoolean();
   }
+
+  
 }

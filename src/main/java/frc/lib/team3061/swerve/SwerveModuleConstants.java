@@ -19,7 +19,7 @@ public final class SwerveModuleConstants {
   public static final double MK4I_L2_WHEEL_CIRCUMFERENCE = MK4I_L2_WHEEL_DIAMETER_METERS * Math.PI;
   public static final double MK4I_L2_DRIVE_GEAR_RATIO =
       1 / ((14.0 / 50.0) * (27.0 / 17.0) * (15.0 / 45.0));
-  public static final boolean MK4I_L2_DRIVE_MOTOR_INVERTED = true;
+  public static final boolean MK4I_L2_DRIVE_MOTOR_INVERTED = false;
   public static final double MK4I_L2_ANGLE_GEAR_RATIO = 1 / ((14.0 / 50.0) * (10.0 / 60.0));
   public static final boolean MK4I_L2_ANGLE_MOTOR_INVERTED = true;
   public static final boolean MK4I_L2_CAN_CODER_INVERTED = false;

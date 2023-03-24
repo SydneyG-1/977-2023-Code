@@ -6,8 +6,12 @@ package frc.robot.subsystems.gripper;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.ColorSensorV3;
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Gripper extends SubsystemBase {
@@ -15,10 +19,21 @@ public class Gripper extends SubsystemBase {
       new CANSparkMax(GripperConstants.gripperSparkMaxID, MotorType.kBrushed);
   private PneumaticHub ph = new PneumaticHub(20);
   private Solenoid grip = ph.makeSolenoid(1);
+  private Timer time = new Timer();
+  private boolean distBool = false;
+
+  // private ColorSensorV3 distanceSensor = new ColorSensorV3(I2C.Port.kOnboard);
+  private ColorSensorV3 distanceSensor = new ColorSensorV3(I2C.Port.kMXP);
+
   /** Creates a new Gripper. */
-  public Gripper() {}
+  public Gripper() {
+    time.start();
+  }
 
   public void closegrip() {
+    if (!getDistanceTrigger()) {
+      intake_motor.set(-GripperConstants.intakeSpeed);
+    }
     grip.set(true);
   }
 
@@ -31,7 +46,10 @@ public class Gripper extends SubsystemBase {
   }
 
   public void intakeCube() {
-    intake_motor.set(-GripperConstants.intakeSpeed);
+    if (!getDistanceTrigger()) {
+      intake_motor.set(-GripperConstants.intakeSpeed);
+    }
+    grip.set(false);
   }
 
   public void releaseCube() {
@@ -42,8 +60,19 @@ public class Gripper extends SubsystemBase {
     intake_motor.set(0.0);
   }
 
+  public boolean getDistanceTrigger() {
+    if (time.advanceIfElapsed(0.2)) {
+      distBool = distanceSensor.getProximity() > GripperConstants.distanceValue;
+      SmartDashboard.putNumber("Distance", distanceSensor.getProximity());
+    }
+
+    return (distBool);
+  }
+
   @Override
   public void periodic() {
+    // SmartDashboard.putNumber("Distance", distanceSensor.getProximity());
+    //SmartDashboard.putBoolean("Gripper", getDistanceTrigger());
     // This method will be called once per scheduler run
   }
 }

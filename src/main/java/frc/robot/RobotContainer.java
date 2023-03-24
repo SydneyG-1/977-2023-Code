@@ -41,7 +41,9 @@ import frc.robot.commands.FeedForwardCharacterization;
 import frc.robot.commands.FeedForwardCharacterization.FeedForwardCharacterizationData;
 import frc.robot.commands.FollowPath;
 import frc.robot.commands.MoveArm;
+import frc.robot.commands.MoveArmN;
 import frc.robot.commands.MoveArmToPos;
+import frc.robot.commands.MoveArmToPosN;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.runIntake;
 import frc.robot.operator_interface.OISelector;
@@ -182,6 +184,7 @@ public class RobotContainer {
       new Vision(new VisionIO() {});
     }
 
+
     // disable all telemetry in the LiveWindow to reduce the processing during each iteration
     LiveWindow.disableAllTelemetry();
 
@@ -272,7 +275,7 @@ public class RobotContainer {
     oi.getOpenButton()
         .onTrue(
             new ConditionalCommand(
-                Commands.runOnce(gripper::opengrip, gripper),
+                Commands.runOnce(gripper::releaseCube, gripper),
                 Commands.runOnce(gripper::releaseCube, gripper),
                 () -> oi.getGamePieceType()));
     oi.getOpenButton().onFalse(Commands.runOnce(gripper::stopIntake, gripper));
@@ -285,8 +288,10 @@ public class RobotContainer {
                     new MoveArm(ArmPositions.CUBE_SHELF, arm),
                     () -> oi.getGamePieceType()),
                 new ConditionalCommand(
-                    new MoveArm(ArmPositions.CONE_GROUND, arm),
-                    new MoveArm(ArmPositions.CUBE_GROUND, arm),
+                    new MoveArmToPos(ArmPositions.CONE_GROUND_INTERMEDIATE, arm)
+                        .andThen(new MoveArm(ArmPositions.CONE_GROUND, arm)),
+                    new MoveArmToPos(ArmPositions.CONE_GROUND_INTERMEDIATE, arm)
+                        .andThen(new MoveArm(ArmPositions.CUBE_GROUND, arm)),
                     () -> oi.getGamePieceType()),
                 () -> oi.getPickupLocation()));
 
@@ -300,17 +305,20 @@ public class RobotContainer {
                 new ConditionalCommand(
                     new MoveArmToPos(ArmPositions.CONE_GROUND_INTERMEDIATE, arm)
                         .andThen(new MoveArm(ArmPositions.CONE_HOME, arm)),
-                    new MoveArm(ArmPositions.CUBE_HOME, arm),
+                    new MoveArmToPos(ArmPositions.CUBE_GROUND_INTERMEDIATE, arm)
+                        .andThen(new MoveArm(ArmPositions.CUBE_HOME, arm)),
                     () -> oi.getGamePieceType()),
                 () -> oi.getPickupLocation()));
 
     oi.getMoveToHigh()
         .onTrue(
             new ConditionalCommand(
-                new MoveArmToPos(ArmPositions.CONE_MID_INTERMEDIATE, arm)
+                new MoveArmToPos(ArmPositions.CONE_MID_INTERMEDIATE_WAY_UP, arm)
                     .andThen(new MoveArm(ArmPositions.CONE_HIGH, arm)),
-                new MoveArmToPos(ArmPositions.CUBE_MID_INTERMEDIATE, arm)
-                    .andThen(new MoveArm(ArmPositions.CUBE_HIGH, arm)),
+                    //new MoveArm(ArmPositions.CUBE_HIGH_SHOT, arm),
+                   
+                    new MoveArmToPos(ArmPositions.CUBE_HIGH_INTERMEDIATE, arm)
+                   .andThen(new MoveArmN(ArmPositions.CUBE_HIGH, arm)),
                 () -> oi.getGamePieceType()));
 
     oi.getMoveToHigh()
@@ -318,30 +326,58 @@ public class RobotContainer {
             new ConditionalCommand(
                 new MoveArmToPos(ArmPositions.CONE_MID_INTERMEDIATE, arm)
                     .andThen(new MoveArm(ArmPositions.HOME, arm)),
-                new MoveArmToPos(ArmPositions.CUBE_MID_INTERMEDIATE, arm)
+                    //new MoveArm(ArmPositions.HOME, arm),
+                new MoveArmToPos(ArmPositions.CUBE_HIGH_INTERMEDIATE_WAY_DOWN, arm)
                     .andThen(new MoveArm(ArmPositions.HOME, arm)),
                 () -> oi.getGamePieceType()));
+
+    oi.getHighScoreButton()
+        .onTrue(
+            new MoveArmToPos(ArmPositions.CONE_HIGH_SCORE, arm)
+                .andThen(Commands.runOnce(gripper::releaseCube, gripper)
+                .alongWith(new MoveArm(ArmPositions.CONE_HIGH_SCORE, arm)))
+        );
+
+        oi.getHighScoreButton()
+        .onFalse(
+            Commands.runOnce(gripper::opengrip, gripper)
+            .andThen(Commands.runOnce(gripper::stopIntake, gripper))
+            .andThen(new MoveArm(ArmPositions.CONE_MID_INTERMEDIATE, arm))
+        );
 
     oi.getMoveToMid()
         .onTrue(
             new ConditionalCommand(
-                new MoveArmToPos(ArmPositions.CONE_MID_INTERMEDIATE, arm)
-                    .andThen(new MoveArm(ArmPositions.CONE_MID, arm)),
+                new MoveArm(ArmPositions.CONE_MID, arm),
                 new MoveArm(ArmPositions.CUBE_MID, arm),
                 () -> oi.getGamePieceType()));
 
     oi.getMoveToMid()
         .onFalse(
             new ConditionalCommand(
-                new MoveArmToPos(ArmPositions.CONE_MID_INTERMEDIATE, arm)
-                    .andThen(new MoveArm(ArmPositions.HOME, arm)),
+                new MoveArm(ArmPositions.HOME, arm),
                 new MoveArm(ArmPositions.HOME, arm),
                 () -> oi.getGamePieceType()));
+
+    oi.getMidScoreButton()
+        .onTrue(
+            new MoveArmToPos(ArmPositions.CONE_MID_SCORE, arm)
+            .andThen(Commands.runOnce(gripper::releaseCube, gripper)
+            .alongWith(new MoveArm(ArmPositions.CONE_MID_SCORE, arm)))
+        );
+        
+    oi.getMidScoreButton()
+    .onFalse(
+        Commands.runOnce(gripper::opengrip, gripper)
+        .andThen(Commands.runOnce(gripper::stopIntake, gripper))
+        .andThen(new MoveArm(ArmPositions.HOME, arm))
+        );
 
     oi.getMoveToLow()
         .onTrue(
             new ConditionalCommand(
-                new MoveArm(ArmPositions.CONE_LOW, arm),
+                new MoveArmToPos(ArmPositions.CONE_LOW_INTERMEDIATE, arm)
+                    .andThen(new MoveArm(ArmPositions.CONE_LOW, arm)),
                 new MoveArm(ArmPositions.CUBE_LOW, arm),
                 () -> oi.getGamePieceType()));
 
@@ -352,36 +388,214 @@ public class RobotContainer {
                 new MoveArm(ArmPositions.HOME, arm),
                 () -> oi.getGamePieceType()));
 
+    oi.getOpBut8()
+        .onTrue(
+            Commands.runOnce(gripper::opengrip, gripper)
+        );
+
+
     oi.getSafetyStop().onTrue(Commands.run(arm::allStop, arm));
     oi.getSafetyStop().onFalse((new MoveArm(ArmPositions.HOME, arm)));
 
     oi.getTestButton().onTrue(new DriveReset(drivetrain));
   }
 
+  /*
+  Command ConeHigh = Commands.sequence(
+    new MoveArmToPos(ArmPositions.CONE_MID_INTERMEDIATE_WAY_UP, arm),
+    new MoveArmToPos(ArmPositions.CONE_HIGH, arm),
+    new MoveArmToPos(ArmPositions.CONE_HIGH_SCORE, arm),
+    Commands.runOnce(gripper::releaseCube, gripper).withTimeout(1)
+    .raceWith(new MoveArm(ArmPositions.CONE_HIGH_SCORE, arm)),
+    new MoveArmToPos(ArmPositions.CONE_MID_INTERMEDIATE, arm),
+    new MoveArm(ArmPositions.HOME, arm)
+);
+
+Command CubeHigh = Commands.sequence(
+    new MoveArmToPos(ArmPositions.CUBE_HIGH_INTERMEDIATE, arm),
+    new MoveArmToPos(ArmPositions.CUBE_HIGH, arm),
+    Commands.runOnce(gripper::releaseCube, gripper).withTimeout(1)
+    .raceWith(new MoveArm(ArmPositions.CUBE_HIGH, arm)),
+    new MoveArmToPos(ArmPositions.CUBE_HIGH_INTERMEDIATE_WAY_DOWN, arm),
+    new MoveArm(ArmPositions.HOME, arm)
+);
+
+Command MoveToCubeGround = Commands.sequence(
+    new MoveArmToPos(ArmPositions.CUBE_GROUND_INTERMEDIATE,arm),
+    new MoveArm(ArmPositions.CUBE_GROUND,arm)
+);
+
+Command PickupCubeGround = Commands.sequence(
+    new MoveArm(ArmPositions.CUBE_GROUND,arm)
+    .raceWith(Commands.runOnce(gripper::intakeCube, gripper).withTimeout(2.0)),
+    new MoveArmToPos(ArmPositions.CUBE_GROUND_INTERMEDIATE, arm),
+    new MoveArm(ArmPositions.HOME, arm)
+);
+*/
   /** Use this method to define your commands for autonomous mode. */
   private void configureAutoCommands() {
+
     AUTO_EVENT_MAP.put("event1", Commands.print("passed marker 1"));
     AUTO_EVENT_MAP.put("event2", Commands.print("passed marker 2"));
+    AUTO_EVENT_MAP.put("ExtendArm", Commands.print("Extending arm for ground pickup"));
+    AUTO_EVENT_MAP.put("RunIntake", Commands.print("Running the intake wheels"));
+    AUTO_EVENT_MAP.put("StopIntake", Commands.print("Stopping intake wheels"));
+    AUTO_EVENT_MAP.put("CubeMid", Commands.print("Moving Arm to Cube Mid position"));
+    AUTO_EVENT_MAP.put("CubeHigh", Commands.print("Moving Arm to Cube High position"));
+    AUTO_EVENT_MAP.put("RunOutput", Commands.print("Shoot out the game piece"));
+    //AUTO_EVENT_MAP.put("ExtendArmGroundInter", Commands.MoveArmToPos(ArmPositions.CUBE_GROUND_INTERMEDIATE));
 
     // build auto path commands
     List<PathPlannerTrajectory> auto1Paths =
         PathPlanner.loadPathGroup(
-            "StraightAhead",
+            "BarrierPath1cone1cube",
             AUTO_MAX_SPEED_METERS_PER_SECOND,
             AUTO_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED);
     Command autoTest =
         Commands.sequence(
-            new FollowPathWithEvents(
-                new FollowPath(auto1Paths.get(0), drivetrain, true),
-                auto1Paths.get(0).getMarkers(),
-                AUTO_EVENT_MAP),
-            Commands.runOnce(drivetrain::enableXstance, drivetrain),
-            Commands.waitSeconds(5.0),
-            Commands.runOnce(drivetrain::disableXstance, drivetrain),
-            new FollowPathWithEvents(
-                new FollowPath(auto1Paths.get(1), drivetrain, false),
-                auto1Paths.get(1).getMarkers(),
-                AUTO_EVENT_MAP));
+            //ConeHigh,
+            Commands.run(gripper::closegrip, gripper).withTimeout(0.5),
+            Commands.runOnce(gripper::stopIntake, gripper),
+            new MoveArmToPos(ArmPositions.CONE_MID_INTERMEDIATE_WAY_UP, arm),
+            new MoveArmToPos(ArmPositions.CONE_HIGH, arm),
+            new MoveArmToPos(ArmPositions.CONE_HIGH_SCORE, arm),
+            Commands.run(gripper::releaseCube, gripper).withTimeout(1)
+            .raceWith(new MoveArm(ArmPositions.CONE_HIGH_SCORE, arm)),
+            Commands.runOnce(gripper::stopIntake, gripper),
+            Commands.runOnce(gripper::opengrip, gripper),
+            new MoveArmToPos(ArmPositions.CONE_MID_INTERMEDIATE, arm),
+
+            new MoveArmToPos(ArmPositions.HOME, arm).withTimeout(2.5),
+
+        new FollowPath(auto1Paths.get(0), drivetrain, true),
+
+       // MoveToCubeGround,
+       new MoveArmToPos(ArmPositions.CUBE_GROUND_INTERMEDIATE,arm),
+       new MoveArm(ArmPositions.CUBE_GROUND,arm).withTimeout(2.0),
+
+        new FollowPath(auto1Paths.get(1), drivetrain, false)
+       .alongWith(
+            new MoveArm(ArmPositions.CUBE_GROUND,arm)
+                .raceWith(Commands.run(gripper::intakeCube, gripper).withTimeout(2.0))),
+            Commands.runOnce(gripper::stopIntake, gripper),
+        new MoveArmToPos(ArmPositions.CUBE_GROUND_INTERMEDIATE, arm),
+        new MoveArmToPos(ArmPositions.HOME, arm).withTimeout(1.5)
+        
+         //   .alongWith(PickupCubeGround).withTimeout(5.0)
+         ,
+        new FollowPath(auto1Paths.get(2), drivetrain, false),
+
+        new FollowPath(auto1Paths.get(3), drivetrain, false),
+        new MoveArmToPos(ArmPositions.CUBE_HIGH_INTERMEDIATE, arm),
+    new MoveArmToPosN(ArmPositions.CUBE_HIGH, arm).withTimeout(1.0),
+    Commands.run(gripper::releaseCube, gripper).withTimeout(1)
+    .raceWith(new MoveArm(ArmPositions.CUBE_HIGH, arm)),
+    Commands.runOnce(gripper::stopIntake, gripper),
+    new MoveArmToPos(ArmPositions.CUBE_HIGH_INTERMEDIATE_WAY_DOWN, arm),
+    new MoveArmToPos(ArmPositions.HOME, arm),
+       //     CubeHigh,
+        Commands.runOnce(drivetrain::enableFieldRelative, drivetrain));
+        //    new FollowPathWithEvents(
+      //          new FollowPath(auto1Paths.get(0), drivetrain, true),
+//auto1Paths.get(0).getMarkers(),
+      ////          AUTO_EVENT_MAP),
+      //      Commands.runOnce(drivetrain::enableXstance, drivetrain),
+     //       Commands.waitSeconds(5.0),
+     //       Commands.runOnce(drivetrain::disableXstance, drivetrain)); // ,
+    // new FollowPathWithEvents(
+    ///new FollowPath(auto1Paths.get(1), drivetrain, false),
+    //auto1Paths.get(1).getMarkers(),
+    //AUTO_EVENT_MAP));
+
+    List<PathPlannerTrajectory> P_balanceAutoPaths =
+    PathPlanner.loadPathGroup(
+        "BalancePath",
+        AUTO_MAX_SPEED_METERS_PER_SECOND,
+        AUTO_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED);
+    Command P_balanceAuto = 
+        Commands.sequence(
+          //  ConeHigh,
+          Commands.run(gripper::closegrip, gripper).withTimeout(0.5),
+          Commands.runOnce(gripper::stopIntake, gripper),
+          new MoveArmToPos(ArmPositions.CONE_MID_INTERMEDIATE_WAY_UP, arm),
+          new MoveArmToPos(ArmPositions.CONE_HIGH, arm),
+          new MoveArmToPos(ArmPositions.CONE_HIGH_SCORE, arm),
+          Commands.run(gripper::releaseCube, gripper).withTimeout(1)
+          .raceWith(new MoveArm(ArmPositions.CONE_HIGH_SCORE, arm)),
+          Commands.runOnce(gripper::stopIntake, gripper),
+          new MoveArmToPos(ArmPositions.CONE_MID_INTERMEDIATE, arm),
+          new MoveArmToPos(ArmPositions.HOME, arm).withTimeout(2.5),
+
+
+        new FollowPath(P_balanceAutoPaths.get(0), drivetrain, true),
+        new FollowPath(P_balanceAutoPaths.get(1), drivetrain, false),
+
+        new AutoBalanceMove(drivetrain).withTimeout(4),
+        Commands.runOnce(drivetrain::enableFieldRelative, drivetrain)   
+        );
+
+        
+    List<PathPlannerTrajectory> P_balancePathwithPickupAutoPaths =
+    PathPlanner.loadPathGroup(
+        "BalancePathWithPickup",
+        AUTO_MAX_SPEED_METERS_PER_SECOND,
+        AUTO_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED);
+    Command P_balanceWithAuto = 
+        Commands.sequence(
+            //ConeHigh,
+            new FollowPath(P_balancePathwithPickupAutoPaths.get(0), drivetrain, true),
+           // MoveToCubeGround,
+            new FollowPath(P_balancePathwithPickupAutoPaths.get(1), drivetrain, false)
+           // .alongWith(PickupCubeGround).withTimeout(5.0)
+           ,
+            new FollowPath(P_balancePathwithPickupAutoPaths.get(2), drivetrain, false),
+            new AutoBalanceMove(drivetrain).withTimeout(4)     
+            );
+
+
+        List<PathPlannerTrajectory> P_balancePathBarrier =
+        PathPlanner.loadPathGroup(
+            "BalanceBarrier",
+            AUTO_MAX_SPEED_METERS_PER_SECOND,
+            AUTO_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED);
+        Command P_balanceWithAutoBarrier =
+        Commands.sequence(
+
+        //ConeHigh,
+        
+        Commands.run(gripper::closegrip, gripper).withTimeout(0.5),
+        Commands.runOnce(gripper::stopIntake, gripper),
+        new MoveArmToPos(ArmPositions.CONE_MID_INTERMEDIATE_WAY_UP, arm),
+        new MoveArmToPos(ArmPositions.CONE_HIGH, arm),
+        new MoveArmToPos(ArmPositions.CONE_HIGH_SCORE, arm),
+        Commands.run(gripper::releaseCube, gripper).withTimeout(1)
+        .raceWith(new MoveArm(ArmPositions.CONE_HIGH_SCORE, arm)),
+        Commands.runOnce(gripper::stopIntake, gripper),
+        Commands.runOnce(gripper::opengrip, gripper),
+        new MoveArmToPos(ArmPositions.CONE_MID_INTERMEDIATE, arm),
+        new MoveArmToPos(ArmPositions.HOME, arm).withTimeout(2.5),
+
+                new FollowPath(P_balancePathBarrier.get(0), drivetrain, true),
+        
+       new MoveArmToPos(ArmPositions.CUBE_GROUND_INTERMEDIATE,arm),
+       new MoveArm(ArmPositions.CUBE_GROUND,arm).withTimeout(2.0),
+
+      
+        new FollowPath(P_balancePathBarrier.get(1), drivetrain, false)
+        .alongWith(
+             new MoveArm(ArmPositions.CUBE_GROUND,arm)
+                 .raceWith(Commands.run(gripper::intakeCube, gripper).withTimeout(2.0))),
+             Commands.runOnce(gripper::stopIntake, gripper),
+
+             new MoveArmToPos(ArmPositions.CUBE_GROUND_INTERMEDIATE, arm),
+             new MoveArmToPos(ArmPositions.HOME, arm),
+
+            new FollowPath(P_balancePathBarrier.get(2), drivetrain, false),
+            new FollowPath(P_balancePathBarrier.get(3), drivetrain, false),
+            new AutoBalanceMove(drivetrain).withTimeout(4)
+
+            );
+        
 
     Command auto2 =
         new MoveArmToPos(ArmPositions.CUBE_MID, arm)
@@ -389,23 +603,37 @@ public class RobotContainer {
                 new MoveArmToPos(ArmPositions.HOME, arm)
                     .alongWith(new AutoMove1(drivetrain, gripper).withTimeout(4.25)));
 
-    /*Command autoHighCube = new MoveArmToPos(ArmPositions.CUBE_MID_INTERMEDIATE, arm)
-    .andThen(new MoveArm(ArmPositions.CUBE_HIGH, arm))
-    .andThen(new MoveArmToPos(ArmPositions.HOME, arm).alongWith( new AutoMove1(drivetrain, gripper)).withTimeout(5.25)); */
+    Command autoHighCube =
+        new MoveArmToPos(ArmPositions.CUBE_MID_INTERMEDIATE, arm)
+            .withTimeout(2.0)
+            .andThen(new MoveArm(ArmPositions.CUBE_HIGH, arm).withTimeout(2.0))
+            .andThen(new runIntake(gripper).withTimeout(0.5))
+            .andThen(new MoveArmToPos(ArmPositions.CUBE_MID_INTERMEDIATE, arm).withTimeout(2.0))
+            .andThen(new MoveArmToPos(ArmPositions.HOME, arm))
+            .alongWith(new AutoMoveSpeed(2.5, drivetrain).withTimeout(1.2))
+            .andThen(new AutoBalanceMove(drivetrain).withTimeout(4.0));
 
     Command balanceAuto =
-        new MoveArmToPos(ArmPositions.CUBE_MID, arm)
-            .andThen(new runIntake(gripper).withTimeout(1))
-            // .andThen(new WaitCommand().withTimeout(0.5))
-            .andThen(new MoveArm(ArmPositions.HOME, arm).withTimeout(2.0))
-            .andThen(new AutoMoveSpeed(2.5, drivetrain).withTimeout(1.2))
-            .andThen(new AutoBalanceMove(drivetrain).withTimeout(4));
+        //new MoveArmToPos(ArmPositions.CUBE_MID, arm)
+           // .andThen(new runIntake(gripper).withTimeout(1))
+            //.andThen(
+                
+           // new MoveArm(ArmPositions.HOME, arm).withTimeout(2.0)),
+            //(new AutoMoveSpeed(-2.5, drivetrain).withTimeout(1.2))
+            new AutoBalanceMove(drivetrain).withTimeout(4);
+
+    Command autoHighCone = 
+        new MoveArmToPos(ArmPositions.CONE_MID_INTERMEDIATE, arm)
+        .andThen(new MoveArm(ArmPositions.CONE_HIGH, arm).withTimeout(2.0))
+        .andThen(Commands.runOnce(gripper::releaseCube, gripper)).withTimeout(1)
+        .andThen(new MoveArmToPos(ArmPositions.CONE_MID_INTERMEDIATE, arm))
+        .andThen(new MoveArm(ArmPositions.HOME, arm));
 
     // .andThen(Commands.runOnce(drivetrain::enableXstance, drivetrain)).withTimeout(1);
     // new MoveArmToPos(ArmPositions.CUBE_MID, arm)
     // .andThen(new MoveArmToPos(ArmPositions.HOME, arm))
     // .alongWith(new AutoMoveSpeed(1.2, drivetrain, gripper).withTimeout(1.0))
-    ;
+    
     // .andThen(new AutoBalanceMove(drivetrain, accelerometer)).withTimeout(3));
 
     // add commands to the auto chooser
@@ -417,6 +645,8 @@ public class RobotContainer {
         // gripper).withTimeout(2).andThen(Commands.runOnce(gripper::stopIntake, gripper)).andThen(
         // new AutoMove1(drivetrain).withTimeout(3)
         );
+
+        autoChooser.addDefaultOption("Balance Barrier", P_balanceWithAutoBarrier);
     autoChooser.addDefaultOption("Cube Mid Auto", auto2);
 
     autoChooser.addOption("Balance Auto", balanceAuto);

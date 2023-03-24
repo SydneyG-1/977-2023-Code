@@ -14,8 +14,23 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.team6328.util.TunableNumber;
+import static frc.robot.subsystems.arm.ArmConstants.*;
 
 public class Arm extends SubsystemBase {
+
+  private final TunableNumber j1Kp = new TunableNumber("J1 kP", j1_kP);
+  private final TunableNumber j1Ki = new TunableNumber("J1 kI", j1_kI);
+  private final TunableNumber j1Kd = new TunableNumber("J1 kD", j1_kD);
+  
+  private final TunableNumber j2Kp = new TunableNumber("J2 kP", j2_kP);
+  private final TunableNumber j2Ki = new TunableNumber("J2 kI", j2_kI);
+  private final TunableNumber j2Kd = new TunableNumber("J2 kD", j2_kD);
+  
+  private final TunableNumber j3Kp = new TunableNumber("J3 kP", j3_kP);
+  private final TunableNumber j3Ki = new TunableNumber("J3 kI", j3_kI);
+  private final TunableNumber j3Kd = new TunableNumber("J3 kD", j3_kD);
+  
   private CANSparkMax J1_motor =
       new CANSparkMax(ArmConstants.J1_motorSparkMaxID, MotorType.kBrushless);
   private CANSparkMax J2_motor =
@@ -63,6 +78,10 @@ public class Arm extends SubsystemBase {
     J3_motor.enableSoftLimit(SoftLimitDirection.kForward, false);
     J3_motor.enableSoftLimit(SoftLimitDirection.kReverse, false);
 
+    J1_motor.setSmartCurrentLimit(40);
+    J2_motor.setSmartCurrentLimit(20);
+    J3_motor.setSmartCurrentLimit(20);
+
     J1_Encoder.setInverted(false);
     J1_Encoder.setPositionConversionFactor(2 * Math.PI);
     J1_Encoder.setZeroOffset(0.0);
@@ -74,24 +93,47 @@ public class Arm extends SubsystemBase {
     J3_Encoder.setInverted(false);
     J3_Encoder.setPositionConversionFactor(2 * Math.PI);
     J3_Encoder.setZeroOffset(0.0);
+   
+   /* j1Controller =
+    new ProfiledPIDController(
+        ArmConstants.j1_kP, ArmConstants.j1_kI, ArmConstants.j1_kD, j1Profile, 0.02);
+j1Controller.setTolerance(ArmConstants.j1_allE);
+// j1ArmFeedforward = new ArmFeedforward(ArmConstants.j1_ks, ArmConstants.j1_kg,
+// ArmConstants.j1_kv, ArmConstants.j1_ka);
 
+j2Controller =
+    new ProfiledPIDController(
+        ArmConstants.j2_kP, ArmConstants.j2_kI, ArmConstants.j2_kD, j2Profile, 0.02);
+j2Controller.setTolerance(ArmConstants.j2_allE);
+// j2ArmFeedforward = new ArmFeedforward(ArmConstants.j2_ks, ArmConstants.j2_kg,
+// ArmConstants.j2_kv, ArmConstants.j2_ka);
+
+j3Controller =
+    new ProfiledPIDController(
+        ArmConstants.j3_kP, ArmConstants.j3_kI, ArmConstants.j3_kD, j3Profile, 0.02);
+j3Controller.setTolerance(ArmConstants.j3_allE);
+// j3ArmFeedforward = new ArmFeedforward(ArmConstants.j3_ks, ArmConstants.j3_kg,
+// ArmConstants.j3_kv, ArmConstants.j3_ka);
+
+*/
     j1Controller =
         new ProfiledPIDController(
-            ArmConstants.j1_kP, ArmConstants.j1_kI, ArmConstants.j1_kD, j1Profile, 0.02);
+            j1Kp.get(), j1Ki.get(), j1Kd.get(), j1Profile, 0.02);
+
     j1Controller.setTolerance(ArmConstants.j1_allE);
     // j1ArmFeedforward = new ArmFeedforward(ArmConstants.j1_ks, ArmConstants.j1_kg,
     // ArmConstants.j1_kv, ArmConstants.j1_ka);
 
     j2Controller =
         new ProfiledPIDController(
-            ArmConstants.j2_kP, ArmConstants.j2_kI, ArmConstants.j2_kD, j2Profile, 0.02);
+          j2Kp.get(), j2Ki.get(), j2Kd.get(), j2Profile, 0.02);
     j2Controller.setTolerance(ArmConstants.j2_allE);
     // j2ArmFeedforward = new ArmFeedforward(ArmConstants.j2_ks, ArmConstants.j2_kg,
     // ArmConstants.j2_kv, ArmConstants.j2_ka);
 
     j3Controller =
         new ProfiledPIDController(
-            ArmConstants.j3_kP, ArmConstants.j3_kI, ArmConstants.j3_kD, j3Profile, 0.02);
+          j3Kp.get(), j3Ki.get(), j3Kd.get(), j3Profile, 0.02);
     j3Controller.setTolerance(ArmConstants.j3_allE);
     // j3ArmFeedforward = new ArmFeedforward(ArmConstants.j3_ks, ArmConstants.j3_kg,
     // ArmConstants.j3_kv, ArmConstants.j3_ka);
@@ -114,9 +156,13 @@ public class Arm extends SubsystemBase {
 
   public void moveArm(double[] positions) {
 
+    
     j1Controller.setGoal(positions[0]);
     j2Controller.setGoal(positions[1]);
+
     j3Controller.setGoal(positions[2]);
+
+    // j3Controller.setGoal(positions[1]-ArmConstants.J2_J3_Interaction_Offset);
 
     moveJ1(calcJ1());
     moveJ2(calcJ2());
@@ -128,6 +174,8 @@ public class Arm extends SubsystemBase {
         || (speed < 0 && getJ1position() > ArmConstants.J1_Encoder_Min)) {
       J1_motor.setVoltage(speed);
     } else {
+      //reset the error so integral won't accumulate while at limit
+      //j1Controller.reset(getJ1position());
       stopJ1();
     }
   }
@@ -137,6 +185,7 @@ public class Arm extends SubsystemBase {
         || (speed < 0 && getJ2position() > ArmConstants.J2_Encoder_Min)) {
       J2_motor.setVoltage(speed);
     } else {
+      //j2Controller.reset(getJ2position());
       stopJ2();
     }
   }
@@ -146,6 +195,8 @@ public class Arm extends SubsystemBase {
         || (speed < 0 && getJ3position() > ArmConstants.J3_Encoder_Min)) {
       J3_motor.setVoltage(speed);
     } else {
+
+      //j3Controller.reset(getJ3position());
       stopJ3();
     }
   }
@@ -168,6 +219,10 @@ public class Arm extends SubsystemBase {
     stopJ3();
   }
 
+public boolean passedGoal(){
+  return getAtPosition() || (getJ1position()<j1Controller.getGoal().position && getJ2position()>j2Controller.getGoal().position && getJ3position()>j3Controller.getGoal().position);
+}
+
   public boolean getAtPosition() {
 
     return j1Controller.atGoal() && j2Controller.atGoal() && j3Controller.atGoal();
@@ -179,6 +234,7 @@ public class Arm extends SubsystemBase {
 
   public void resetJ2Position() {
     j2Controller.reset(getJ2position());
+    
   }
 
   public void resetJ3Position() {
@@ -191,24 +247,49 @@ public class Arm extends SubsystemBase {
     resetJ3Position();
   }
 
+  public void updateTunables(){
+
+    if (j1Kp.hasChanged()
+    || j1Ki.hasChanged()
+    || j1Kd.hasChanged()
+    || j2Kp.hasChanged()
+    || j2Ki.hasChanged()
+    || j2Kd.hasChanged()
+    || j3Kp.hasChanged()
+    || j3Ki.hasChanged()
+    || j3Kd.hasChanged()) {
+  j1Controller.setP(j1Kp.get());
+  j1Controller.setI(j1Ki.get());
+  j1Controller.setD(j1Kd.get());
+  j2Controller.setP(j2Kp.get());
+  j2Controller.setI(j2Ki.get());
+  j2Controller.setD(j2Kd.get());
+  j3Controller.setP(j3Kp.get());
+  j3Controller.setI(j3Ki.get());
+  j3Controller.setD(j3Kd.get());
+  }
+  }
+
   public double getJ1FF() {
 
-    double ff = 0.0;
-    // double ff = -1.125*getJ1position()+2.19;
-    if (ff < 0) {
-      ff = 0;
-    } else {
-      if (ff > 0.5) {
-        ff = 0.5;
-      }
-    }
-    return ff;
+    //double ff = -0.05;
+    double ff = -0.33*getJ1position()+0.051;
+    //if (ff < -0.5) {
+   //   ff = 0-0.5;
+   // } else {
+  //    if (ff > 0.5) {
+ //       ff = 0.5;
+ //     }
+ //   }
+    //return ff;
+    return 0.0;
   }
 
   public double getJ2FF() {
-    double ff = 0.0;
-    if (ff < 0) {
-      ff = 0;
+    //double ff = 0.0;//0.05;
+    double ff = 0.27*getJ2position()-0.33;
+    if (ff < -0.5) {
+      ff = -0.5;
     } else {
       if (ff > 0.5) {
         ff = 0.5;
@@ -218,9 +299,10 @@ public class Arm extends SubsystemBase {
   }
 
   public double getJ3FF() {
-    double ff = 0.0;
-    if (ff < 0) {
-      ff = 0;
+    //double ff = 0.0;
+    double ff = -J2_motor.getAppliedOutput();
+    if (ff < -0.5) {
+      ff = -.50;
     } else {
       if (ff > 0.5) {
         ff = 0.5;
@@ -246,12 +328,13 @@ public class Arm extends SubsystemBase {
   }
 
   public boolean safeToDriveFast() {
-    return (getJ1position() > 2.0) && (getJ2position() > 5.2);
+    return (getJ1position() >3.1) && (getJ2position() <1.7);
   }
 
   @Override
   public void periodic() {
 
+    updateTunables();
     SmartDashboard.putNumber("J1 Output", J1_motor.getAppliedOutput());
     SmartDashboard.putNumber("j1positionSub", getJ1position());
     SmartDashboard.putNumber("J1 Goal", j1Controller.getGoal().position);

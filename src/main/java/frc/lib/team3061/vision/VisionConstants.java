@@ -21,7 +21,7 @@ public final class VisionConstants {
 
   // FIXME: update this with the real transform from the robot to the camera
   public static final Transform3d ROBOT_TO_CAMERA =
-      new Transform3d(new Translation3d(0, 0, 0), new Rotation3d(0, 0, 0));
+      new Transform3d(new Translation3d(0.1524, 0.3048, 0.816), new Rotation3d(0, 0.025, 0));
 
   public static final double MAXIMUM_AMBIGUITY = 0.2;
   public static final double MAX_POSE_DIFFERENCE_METERS = 1.0;

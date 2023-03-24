@@ -81,6 +81,14 @@ public interface OperatorInterface {
     return new Trigger(() -> false);
   }
 
+  public default Trigger getHighScoreButton(){
+    return new Trigger(() -> false);
+  }
+  
+  public default Trigger getMidScoreButton(){
+    return new Trigger(() -> false);
+  }
+  
   public default boolean getPickupLocation() {
     return true;
   }

@@ -102,17 +102,17 @@ public final class DrivetrainConstants {
 
   public static final int TIMEOUT_MS = 30;
 
-  public static final double AUTO_MAX_SPEED_METERS_PER_SECOND = 0.5;
-  public static final double AUTO_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 0.5;
-  public static final double AUTO_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND = .50 * Math.PI;
-  public static final double AUTO_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND_SQUARED = .50 * Math.PI;
+  public static final double AUTO_MAX_SPEED_METERS_PER_SECOND = 1.5;
+  public static final double AUTO_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 1.5;
+  public static final double AUTO_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND = 10.50 * Math.PI;
+  public static final double AUTO_MAX_ANGULAR_SPEED_RADIANS_PER_SECOND_SQUARED = 5.50 * Math.PI;
 
   // FIXME: tune PID values for auto paths
 
   public static final double AUTO_DRIVE_P_CONTROLLER = 6.0;
   public static final double AUTO_DRIVE_I_CONTROLLER = 0.0;
   public static final double AUTO_DRIVE_D_CONTROLLER = 0.0;
-  public static final double AUTO_TURN_P_CONTROLLER = 5.0;
+  public static final double AUTO_TURN_P_CONTROLLER = 12.0;
   public static final double AUTO_TURN_I_CONTROLLER = 0.0;
   public static final double AUTO_TURN_D_CONTROLLER = 0.0;
 

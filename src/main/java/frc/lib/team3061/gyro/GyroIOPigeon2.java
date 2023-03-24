@@ -16,6 +16,7 @@ public class GyroIOPigeon2 implements GyroIO {
     // gyro = new AHRS(SerialPort.Port.kUSB);
     gyro = new AHRS(SPI.Port.kMXP, (byte) 50);
     // gyro = new Pigeon2(id, CAN_BUS_NAME);
+
   }
 
   @Override
@@ -30,7 +31,7 @@ public class GyroIOPigeon2 implements GyroIO {
     // gyro.setAngleAdjustment(0);
 
     // inputs.positionDeg = -gyro.getAngle();
-    inputs.positionDeg = -gyro.getYaw(); // degrees
+    inputs.positionDeg = -gyro.getYaw(); // -gyro.getYaw(); // degrees
     inputs.velocityDegPerSec = xyzDps[2];
     inputs.pitchDeg = gyro.getPitch();
     inputs.rollDeg = gyro.getRoll();
