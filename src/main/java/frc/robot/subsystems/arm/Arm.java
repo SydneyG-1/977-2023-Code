@@ -328,7 +328,7 @@ public boolean passedGoal(){
   }
 
   public boolean safeToDriveFast() {
-    return (getJ1position() >3.1) && (getJ2position() <1.7);
+    return (getJ1position() >3.1) && (getJ2position() <1.77);
   }
 
   @Override

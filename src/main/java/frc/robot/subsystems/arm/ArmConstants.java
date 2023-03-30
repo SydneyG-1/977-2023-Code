@@ -16,7 +16,7 @@ public final class ArmConstants {
   public static final double J1_Encoder_Min = 2.421;
 
   public static final double J2_Encoder_Max = 4.04;
-  public static final double J2_Encoder_Min = 1.67;
+  public static final double J2_Encoder_Min = 1.6;
 
   public static final double J3_Encoder_Max = 5.9;
   public static final double J3_Encoder_Min = 3.522;

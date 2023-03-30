@@ -216,6 +216,10 @@ public class Drivetrain extends SubsystemBase {
     return gyroInputs.rollDeg;
   }
 
+  public double getYaw() {
+    return gyroInputs.positionDeg;
+  }
+
   // public double getAccelValue(){
   // return gyroInputs.zaccel;
   // }
