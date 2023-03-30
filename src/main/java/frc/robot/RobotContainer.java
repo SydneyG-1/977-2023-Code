@@ -635,9 +635,9 @@ Command PickupCubeGround = Commands.sequence(
             //ConeHigh,
             new FollowPath(P_balancePathwithPickupAutoPaths.get(0), drivetrain, true),
            // MoveToCubeGround,
-            new FollowPath(P_balancePathwithPickupAutoPaths.get(1), drivetrain, false)
+            new FollowPath(P_balancePathwithPickupAutoPaths.get(1), drivetrain, false),
            // .alongWith(PickupCubeGround).withTimeout(5.0)
-           ,
+           
             new FollowPath(P_balancePathwithPickupAutoPaths.get(2), drivetrain, false),
             new AutoBalanceMove(drivetrain).withTimeout(4)     
             );
@@ -653,7 +653,7 @@ Command PickupCubeGround = Commands.sequence(
 
         //ConeHigh,
         
-        Commands.run(gripper::closegrip, gripper).withTimeout(0.5),
+       /*  Commands.run(gripper::closegrip, gripper).withTimeout(0.5),
         Commands.runOnce(gripper::stopIntake, gripper),
         new MoveArmToPos(ArmPositions.CONE_MID_INTERMEDIATE_WAY_UP, arm),
         new MoveArmToPos(ArmPositions.CONE_HIGH, arm),
@@ -663,7 +663,7 @@ Command PickupCubeGround = Commands.sequence(
         Commands.runOnce(gripper::stopIntake, gripper),
         Commands.runOnce(gripper::opengrip, gripper),
         new MoveArmToPos(ArmPositions.CONE_MID_INTERMEDIATE, arm),
-        new MoveArmToPos(ArmPositions.HOME, arm).withTimeout(2.5),
+        new MoveArmToPos(ArmPositions.HOME, arm).withTimeout(2.5), */
 
                 new FollowPath(P_balancePathBarrier.get(0), drivetrain, true),
         
