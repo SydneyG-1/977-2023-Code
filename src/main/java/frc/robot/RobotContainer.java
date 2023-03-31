@@ -461,7 +461,7 @@ Command PickupCubeGround = Commands.sequence(
         Commands.run(gripper::closegrip, gripper).withTimeout(0.5),
             Commands.runOnce(gripper::stopIntake, gripper),
             new MoveArmToPos(ArmPositions.CONE_MID_INTERMEDIATE_WAY_UP, arm),
-            new MoveArmToPos(ArmPositions.CONE_HIGH, arm),
+         new MoveArmToPos(ArmPositions.CONE_HIGH, arm),
             new MoveArmToPos(ArmPositions.CONE_HIGH_SCORE, arm),
             Commands.run(gripper::releaseCube, gripper).withTimeout(1)
             .raceWith(new MoveArm(ArmPositions.CONE_HIGH_SCORE, arm)),
@@ -510,7 +510,7 @@ Command PickupCubeGround = Commands.sequence(
             new MoveArmToPos(ArmPositions.CONE_HIGH_SCORE, arm),
             Commands.run(gripper::releaseCube, gripper).withTimeout(1)
             .raceWith(new MoveArm(ArmPositions.CONE_HIGH_SCORE, arm)),
-            Commands.runOnce(gripper::stopIntake, gripper),
+           Commands.runOnce(gripper::stopIntake, gripper),
             Commands.runOnce(gripper::opengrip, gripper),
             new MoveArmToPos(ArmPositions.CONE_MID_INTERMEDIATE, arm),
             new MoveArmToPos(ArmPositions.HOME, arm).withTimeout(2.5),
@@ -551,45 +551,46 @@ Command PickupCubeGround = Commands.sequence(
     Command autoTest =
         Commands.sequence(
             //ConeHigh,
-            Commands.run(gripper::closegrip, gripper).withTimeout(0.5),
-            Commands.runOnce(gripper::stopIntake, gripper),
-            new MoveArmToPos(ArmPositions.CONE_MID_INTERMEDIATE_WAY_UP, arm),
-            new MoveArmToPos(ArmPositions.CONE_HIGH, arm),
-            new MoveArmToPos(ArmPositions.CONE_HIGH_SCORE, arm),
-            Commands.run(gripper::releaseCube, gripper).withTimeout(1)
-            .raceWith(new MoveArm(ArmPositions.CONE_HIGH_SCORE, arm)),
-            Commands.runOnce(gripper::stopIntake, gripper),
-            Commands.runOnce(gripper::opengrip, gripper),
-            new MoveArmToPos(ArmPositions.CONE_MID_INTERMEDIATE, arm),
-            new MoveArmToPos(ArmPositions.HOME, arm).withTimeout(2.5),
+            //Commands.run(gripper::closegrip, gripper).withTimeout(0.5),
+            //Commands.runOnce(gripper::stopIntake, gripper),
+            //new MoveArmToPos(ArmPositions.CONE_MID_INTERMEDIATE_WAY_UP, arm),
+            //new MoveArmToPos(ArmPositions.CONE_HIGH, arm),
+            //new MoveArmToPos(ArmPositions.CONE_HIGH_SCORE, arm),
+            //Commands.run(gripper::releaseCube, gripper).withTimeout(1)
+            //.raceWith(new MoveArm(ArmPositions.CONE_HIGH_SCORE, arm)),
+            //Commands.runOnce(gripper::stopIntake, gripper),
+           // Commands.runOnce(gripper::opengrip, gripper),
+            //new MoveArmToPos(ArmPositions.CONE_MID_INTERMEDIATE, arm),
+            //new MoveArmToPos(ArmPositions.HOME, arm).withTimeout(2.5),
 
         new FollowPath(auto1Paths.get(0), drivetrain, true),
 
        // MoveToCubeGround,
-       new MoveArmToPos(ArmPositions.CUBE_GROUND_INTERMEDIATE,arm),
-       new MoveArm(ArmPositions.CUBE_GROUND,arm).withTimeout(2.0),
+      // new MoveArmToPos(ArmPositions.CUBE_GROUND_INTERMEDIATE,arm),
+      // new MoveArm(ArmPositions.CUBE_GROUND,arm).withTimeout(2.0),
 
         new FollowPath(auto1Paths.get(1), drivetrain, false)
-       .alongWith(
-            new MoveArm(ArmPositions.CUBE_GROUND,arm)
-                .raceWith(Commands.run(gripper::intakeCube, gripper).withTimeout(2.0))),
-            Commands.runOnce(gripper::stopIntake, gripper),
-        new MoveArmToPos(ArmPositions.CUBE_GROUND_INTERMEDIATE, arm),
-        new MoveArmToPos(ArmPositions.HOME, arm).withTimeout(1.5)
+     //  .alongWith(
+         //   new MoveArm(ArmPositions.CUBE_GROUND,arm)
+          //      .raceWith(Commands.run(gripper::intakeCube, gripper).withTimeout(2.0))),
+          //  Commands.runOnce(gripper::stopIntake, gripper),
+       // new MoveArmToPos(ArmPositions.CUBE_GROUND_INTERMEDIATE, arm),
+      //  new MoveArmToPos(ArmPositions.HOME, arm).withTimeout(1.5)
         
          //   .alongWith(PickupCubeGround).withTimeout(5.0)
          ,
         new FollowPath(auto1Paths.get(2), drivetrain, false),
-
-        new FollowPath(auto1Paths.get(3), drivetrain, false),
-        new MoveArmToPos(ArmPositions.CUBE_HIGH_INTERMEDIATE, arm),
-    new MoveArmToPosN(ArmPositions.CUBE_HIGH, arm).withTimeout(1.0),
-    Commands.run(gripper::releaseCube, gripper).withTimeout(1)
-    .raceWith(new MoveArm(ArmPositions.CUBE_HIGH, arm)),
-    Commands.runOnce(gripper::stopIntake, gripper),
-    new MoveArmToPos(ArmPositions.CUBE_HIGH_INTERMEDIATE_WAY_DOWN, arm),
-    new MoveArmToPos(ArmPositions.HOME, arm),
+    //    new MoveArmToPos(ArmPositions.CUBE_HIGH_INTERMEDIATE, arm),
+   // new MoveArmToPosN(ArmPositions.CUBE_HIGH, arm).withTimeout(1.0),
+  //  Commands.run(gripper::releaseCube, gripper).withTimeout(1)
+  //  .raceWith(new MoveArm(ArmPositions.CUBE_HIGH, arm)),
+  //  Commands.runOnce(gripper::stopIntake, gripper),
+  //  new MoveArmToPos(ArmPositions.CUBE_HIGH_INTERMEDIATE_WAY_DOWN, arm),
+  //  new MoveArmToPos(ArmPositions.HOME, arm),
        //     CubeHigh,
+       new FollowPath(auto1Paths.get(3), drivetrain, false),
+
+       
         Commands.runOnce(drivetrain::enableFieldRelative, drivetrain));
         //    new FollowPathWithEvents(
       //          new FollowPath(auto1Paths.get(0), drivetrain, true),
@@ -653,7 +654,7 @@ Command PickupCubeGround = Commands.sequence(
 
         //ConeHigh,
         
-       /*  Commands.run(gripper::closegrip, gripper).withTimeout(0.5),
+      Commands.run(gripper::closegrip, gripper).withTimeout(0.5),
         Commands.runOnce(gripper::stopIntake, gripper),
         new MoveArmToPos(ArmPositions.CONE_MID_INTERMEDIATE_WAY_UP, arm),
         new MoveArmToPos(ArmPositions.CONE_HIGH, arm),
@@ -663,7 +664,7 @@ Command PickupCubeGround = Commands.sequence(
         Commands.runOnce(gripper::stopIntake, gripper),
         Commands.runOnce(gripper::opengrip, gripper),
         new MoveArmToPos(ArmPositions.CONE_MID_INTERMEDIATE, arm),
-        new MoveArmToPos(ArmPositions.HOME, arm).withTimeout(2.5), */
+        new MoveArmToPos(ArmPositions.HOME, arm).withTimeout(2.5), 
 
                 new FollowPath(P_balancePathBarrier.get(0), drivetrain, true),
         
