@@ -44,4 +44,17 @@ public final class ArmConstants {
   public static final double j3_kI = 0.0;
   public static final double j3_kD = 0.0;
   public static final double j3_allE = 0.04;
+
+  public static final double j1_ks = 0.0;
+  public static final double j1_kv = 0.0;
+  public static final double j1_kg = 0.0;
+  public static final double j1_ka = 0.0;
+  public static final double j2_ks = 0.0;
+  public static final double j2_kv = 0.0;
+  public static final double j2_kg = 0.0;
+  public static final double j2_ka = 0.0;
+  public static final double j3_ks = 0.0;
+  public static final double j3_kv = 0.0;
+  public static final double j3_kg = 0.0;
+  public static final double j3_ka = 0.0;
 }

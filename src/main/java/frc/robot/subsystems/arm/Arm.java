@@ -10,6 +10,8 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
+
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -22,14 +24,20 @@ public class Arm extends SubsystemBase {
   private final TunableNumber j1Kp = new TunableNumber("J1 kP", j1_kP);
   private final TunableNumber j1Ki = new TunableNumber("J1 kI", j1_kI);
   private final TunableNumber j1Kd = new TunableNumber("J1 kD", j1_kD);
+  private final TunableNumber j1maxV = new TunableNumber("J1 Max V", j1_maxV);
+  private final TunableNumber j1maxAcc = new TunableNumber("J1 Max A", j1_maxAcc);
   
   private final TunableNumber j2Kp = new TunableNumber("J2 kP", j2_kP);
   private final TunableNumber j2Ki = new TunableNumber("J2 kI", j2_kI);
   private final TunableNumber j2Kd = new TunableNumber("J2 kD", j2_kD);
+  private final TunableNumber j2maxV = new TunableNumber("J2 Max V", j2_maxV);
+  private final TunableNumber j2maxAcc = new TunableNumber("J2 Max A", j2_maxAcc);
   
   private final TunableNumber j3Kp = new TunableNumber("J3 kP", j3_kP);
   private final TunableNumber j3Ki = new TunableNumber("J3 kI", j3_kI);
   private final TunableNumber j3Kd = new TunableNumber("J3 kD", j3_kD);
+  private final TunableNumber j3maxV = new TunableNumber("J3 Max V", j3_maxV);
+  private final TunableNumber j3maxAcc = new TunableNumber("J3 Max A", j3_maxAcc);
   
   private CANSparkMax J1_motor =
       new CANSparkMax(ArmConstants.J1_motorSparkMaxID, MotorType.kBrushless);
@@ -45,17 +53,17 @@ public class Arm extends SubsystemBase {
   private ProfiledPIDController j1Controller;
   private TrapezoidProfile.Constraints j1Profile =
       new TrapezoidProfile.Constraints(ArmConstants.j1_maxV, ArmConstants.j1_maxAcc);
-  // private ArmFeedforward j1ArmFeedforward;
+  private ArmFeedforward j1ArmFeedforward;
 
   private ProfiledPIDController j2Controller;
   private TrapezoidProfile.Constraints j2Profile =
       new TrapezoidProfile.Constraints(ArmConstants.j2_maxV, ArmConstants.j2_maxAcc);
-  // private ArmFeedforward j2ArmFeedforward;
+  private ArmFeedforward j2ArmFeedforward;
 
   private ProfiledPIDController j3Controller;
   private TrapezoidProfile.Constraints j3Profile =
       new TrapezoidProfile.Constraints(ArmConstants.j3_maxV, ArmConstants.j3_maxAcc);
-  // private ArmFeedforward j3ArmFeedforward;
+  private ArmFeedforward j3ArmFeedforward;
 
   /** Creates a new Arm. */
   public Arm() {
@@ -121,22 +129,19 @@ j3Controller.setTolerance(ArmConstants.j3_allE);
             j1Kp.get(), j1Ki.get(), j1Kd.get(), j1Profile, 0.02);
 
     j1Controller.setTolerance(ArmConstants.j1_allE);
-    // j1ArmFeedforward = new ArmFeedforward(ArmConstants.j1_ks, ArmConstants.j1_kg,
-    // ArmConstants.j1_kv, ArmConstants.j1_ka);
+    j1ArmFeedforward = new ArmFeedforward(ArmConstants.j1_ks, ArmConstants.j1_kg, ArmConstants.j1_kv, ArmConstants.j1_ka);
 
     j2Controller =
         new ProfiledPIDController(
           j2Kp.get(), j2Ki.get(), j2Kd.get(), j2Profile, 0.02);
     j2Controller.setTolerance(ArmConstants.j2_allE);
-    // j2ArmFeedforward = new ArmFeedforward(ArmConstants.j2_ks, ArmConstants.j2_kg,
-    // ArmConstants.j2_kv, ArmConstants.j2_ka);
+    j2ArmFeedforward = new ArmFeedforward(ArmConstants.j2_ks, ArmConstants.j2_kg, ArmConstants.j2_kv, ArmConstants.j2_ka);
 
     j3Controller =
         new ProfiledPIDController(
           j3Kp.get(), j3Ki.get(), j3Kd.get(), j3Profile, 0.02);
     j3Controller.setTolerance(ArmConstants.j3_allE);
-    // j3ArmFeedforward = new ArmFeedforward(ArmConstants.j3_ks, ArmConstants.j3_kg,
-    // ArmConstants.j3_kv, ArmConstants.j3_ka);
+    j3ArmFeedforward = new ArmFeedforward(ArmConstants.j3_ks, ArmConstants.j3_kg, ArmConstants.j3_kv, ArmConstants.j3_ka);
   }
 
   public double getJ1position() {
@@ -257,16 +262,27 @@ public boolean passedGoal(){
     || j2Kd.hasChanged()
     || j3Kp.hasChanged()
     || j3Ki.hasChanged()
-    || j3Kd.hasChanged()) {
+    || j3Kd.hasChanged()
+    || j1maxV.hasChanged()
+    || j1maxAcc.hasChanged()
+    || j2maxV.hasChanged()
+    || j2maxAcc.hasChanged()
+    || j3maxV.hasChanged()
+    || j3maxAcc.hasChanged()
+    ) {
   j1Controller.setP(j1Kp.get());
   j1Controller.setI(j1Ki.get());
   j1Controller.setD(j1Kd.get());
+  j1Controller.setConstraints(new TrapezoidProfile.Constraints(j1maxV.get(), j1maxAcc.get()));
   j2Controller.setP(j2Kp.get());
   j2Controller.setI(j2Ki.get());
   j2Controller.setD(j2Kd.get());
+  j2Controller.setConstraints(new TrapezoidProfile.Constraints(j2maxV.get(), j2maxAcc.get()));
   j3Controller.setP(j3Kp.get());
   j3Controller.setI(j3Ki.get());
   j3Controller.setD(j3Kd.get());
+  j3Controller.setConstraints(new TrapezoidProfile.Constraints(j3maxV.get(), j3maxAcc.get()));
+  
   }
   }
 
