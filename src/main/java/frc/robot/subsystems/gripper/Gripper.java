@@ -17,13 +17,16 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Gripper extends SubsystemBase {
   private CANSparkMax intake_motor =
       new CANSparkMax(GripperConstants.gripperSparkMaxID, MotorType.kBrushed);
+      
+  private CANSparkMax intake_motor2 =
+  new CANSparkMax(5, MotorType.kBrushed);
   private PneumaticHub ph = new PneumaticHub(20);
   private Solenoid grip = ph.makeSolenoid(1);
   private Timer time = new Timer();
   private boolean distBool = false;
 
   // private ColorSensorV3 distanceSensor = new ColorSensorV3(I2C.Port.kOnboard);
-  private ColorSensorV3 distanceSensor = new ColorSensorV3(I2C.Port.kMXP);
+  //private ColorSensorV3 distanceSensor = new ColorSensorV3(I2C.Port.kMXP);
 
   /** Creates a new Gripper. */
   public Gripper() {
@@ -31,14 +34,15 @@ public class Gripper extends SubsystemBase {
   }
 
   public void closegrip() {
-    if (!getDistanceTrigger()) {
+    //if (!getDistanceTrigger()) {
       intake_motor.set(-GripperConstants.intakeSpeed);
-    }
+      intake_motor2.set(-GripperConstants.intakeSpeed);
+   // }
     grip.set(true);
   }
 
   public void opengrip() {
-    grip.set(false);
+    grip.set(true);
   }
 
   public void setGrip(boolean state) {
@@ -46,20 +50,46 @@ public class Gripper extends SubsystemBase {
   }
 
   public void intakeCube() {
-    if (!getDistanceTrigger()) {
-      intake_motor.set(-GripperConstants.intakeSpeed);
-    }
+   // if (!getDistanceTrigger()) {
+      intake_motor.set(-GripperConstants.intakeSpeedCube);
+      intake_motor2.set(-GripperConstants.intakeSpeedCube);
+   // }
     grip.set(false);
   }
 
+
+  public void intakeCone() {
+    // if (!getDistanceTrigger()) {
+       intake_motor.set(-GripperConstants.intakeSpeedCone);
+       intake_motor2.set(-GripperConstants.intakeSpeedCone);
+    // }
+     grip.set(false);
+   }
+
   public void releaseCube() {
     intake_motor.set(GripperConstants.releaseSpeed);
+    intake_motor2.set(GripperConstants.intakeSpeed);
+  }
+
+  public void newRelease() {
+    intake_motor.set(GripperConstants.releaseSpeed);
+    intake_motor2.set(GripperConstants.releaseSpeed);
+  }
+  public void newIntake() {
+    intake_motor.set(-GripperConstants.intakeSpeed);
+    intake_motor2.set(-GripperConstants.intakeSpeed);
+  }
+
+  public void newIdleIntake(){
+    intake_motor.set(-0.1);
+    intake_motor2.set(-0.1);
   }
 
   public void stopIntake() {
     intake_motor.set(0.0);
+    intake_motor2.set(0.0);
   }
-
+/*
   public boolean getDistanceTrigger() {
     if (time.advanceIfElapsed(0.2)) {
       distBool = distanceSensor.getProximity() > GripperConstants.distanceValue;
@@ -67,7 +97,7 @@ public class Gripper extends SubsystemBase {
     }
 
     return (distBool);
-  }
+  }*/
 
   @Override
   public void periodic() {

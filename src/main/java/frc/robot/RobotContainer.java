@@ -34,10 +34,13 @@ import frc.lib.team3061.vision.VisionIO;
 import frc.lib.team3061.vision.VisionIOPhotonVision;
 import frc.lib.team3061.vision.VisionIOSim;
 import frc.robot.Constants.Mode;
+import frc.robot.commands.ArmMoveHome;
 import frc.robot.commands.AutoBalanceMove;
 import frc.robot.commands.AutoMove1;
 import frc.robot.commands.AutoMoveSpeed;
 import frc.robot.commands.AutoTurnMove;
+import frc.robot.commands.CoordinatedArmMove;
+import frc.robot.commands.CoordinatedArmMovePos;
 import frc.robot.commands.DriveReset;
 import frc.robot.commands.FeedForwardCharacterization;
 import frc.robot.commands.FeedForwardCharacterization.FeedForwardCharacterizationData;
@@ -273,10 +276,12 @@ public class RobotContainer {
     oi.getCloseButton()
         .onTrue(
             new ConditionalCommand(
-                Commands.runOnce(gripper::closegrip, gripper),
+                Commands.runOnce(gripper::intakeCone, gripper),
                 Commands.runOnce(gripper::intakeCube, gripper),
                 () -> oi.getGamePieceType()));
-    oi.getCloseButton().onFalse(Commands.runOnce(gripper::stopIntake, gripper));
+    oi.getCloseButton()
+        .onFalse(
+            Commands.runOnce(gripper::newIdleIntake, gripper));
 
     oi.getOpenButton()
         .onTrue(
@@ -284,8 +289,42 @@ public class RobotContainer {
                 Commands.runOnce(gripper::releaseCube, gripper),
                 Commands.runOnce(gripper::releaseCube, gripper),
                 () -> oi.getGamePieceType()));
-    oi.getOpenButton().onFalse(Commands.runOnce(gripper::stopIntake, gripper));
+    oi.getOpenButton()
+        .onFalse(
+            Commands.runOnce(gripper::stopIntake, gripper));
 
+
+
+    oi.getMoveToPickup()
+    .onTrue(
+        new ConditionalCommand(
+            new ConditionalCommand(
+                new CoordinatedArmMove(ArmPositions.N_CONE_SHELF, arm),
+                new CoordinatedArmMove(ArmPositions.N_CUBE_SHELF, arm),
+                () -> oi.getGamePieceType()),
+            new ConditionalCommand(
+                new CoordinatedArmMovePos(ArmPositions.N_CONE_GROUND_INTERMEDIATE, arm)
+                    .andThen(new CoordinatedArmMove(ArmPositions.N_CONE_GROUND, arm)),
+                new CoordinatedArmMovePos(ArmPositions.N_CUBE_GROUND_INTERMEDIATE, arm)
+                    .andThen(new CoordinatedArmMove(ArmPositions.N_CUBE_GROUND, arm)),
+                () -> oi.getGamePieceType()),
+            () -> oi.getPickupLocation()));
+
+oi.getMoveToPickup()
+    .onFalse(
+        new ConditionalCommand(
+            new ConditionalCommand(
+                    new CoordinatedArmMove(ArmPositions.N_CONE_HOME, arm),
+                    new CoordinatedArmMove(ArmPositions.N_CUBE_HOME, arm),
+                () -> oi.getGamePieceType()),
+            new ConditionalCommand(
+                new CoordinatedArmMovePos(ArmPositions.N_CONE_GROUND_INTERMEDIATE, arm)
+                    .andThen(new CoordinatedArmMove(ArmPositions.N_CONE_HOME, arm)),
+                new CoordinatedArmMovePos(ArmPositions.N_CUBE_GROUND_INTERMEDIATE, arm)
+                    .andThen(new CoordinatedArmMove(ArmPositions.N_CUBE_HOME, arm)),
+                () -> oi.getGamePieceType()),
+            () -> oi.getPickupLocation()));
+/*
     oi.getMoveToPickup()
         .onTrue(
             new ConditionalCommand(
@@ -306,8 +345,12 @@ public class RobotContainer {
         .onFalse(
             new ConditionalCommand(
                 new ConditionalCommand(
-                    new MoveArm(ArmPositions.CONE_HOME, arm),
-                    new MoveArm(ArmPositions.CUBE_HOME, arm),
+                    Commands.runOnce(gripper::newIdleIntake, gripper).alongWith(
+                        new MoveArm(ArmPositions.CONE_HOME, arm)
+                    )
+                    ,
+                    Commands.runOnce(gripper::newIdleIntake, gripper).alongWith(
+                    new MoveArm(ArmPositions.CUBE_HOME, arm)),
                     () -> oi.getGamePieceType()),
                 new ConditionalCommand(
                     new MoveArmToPos(ArmPositions.CONE_GROUND_INTERMEDIATE, arm)
@@ -316,29 +359,62 @@ public class RobotContainer {
                         .andThen(new MoveArm(ArmPositions.CUBE_HOME, arm)),
                     () -> oi.getGamePieceType()),
                 () -> oi.getPickupLocation()));
+*/
 
-    oi.getMoveToHigh()
+/*
+oi.getMoveToHigh()
+.onTrue(
+    new ConditionalCommand(
+        new MoveArmToPos(ArmPositions.CONE_MID_INTERMEDIATE_WAY_UP, arm)
+            .andThen(new MoveArm(ArmPositions.CONE_HIGH, arm)),
+            //new MoveArm(ArmPositions.CUBE_HIGH_SHOT, arm),
+           
+            new MoveArmToPos(ArmPositions.CUBE_HIGH_INTERMEDIATE, arm)
+           .andThen(new MoveArmN(ArmPositions.CUBE_HIGH, arm)),
+        () -> oi.getGamePieceType()));
+
+oi.getMoveToHigh()
+.onFalse(
+    new ConditionalCommand(
+        new MoveArmToPosN(ArmPositions.CONE_MID_INTERMEDIATE, arm)
+            .andThen(new MoveArm(ArmPositions.HOME, arm)),
+            //new MoveArm(ArmPositions.HOME, arm),
+        new MoveArmToPos(ArmPositions.CUBE_HIGH_INTERMEDIATE_WAY_DOWN, arm)
+            .andThen(new MoveArm(ArmPositions.HOME, arm)),
+        () -> oi.getGamePieceType()));
+
+        */
+oi.getMoveToHigh()
         .onTrue(
             new ConditionalCommand(
-                new MoveArmToPos(ArmPositions.CONE_MID_INTERMEDIATE_WAY_UP, arm)
-                    .andThen(new MoveArm(ArmPositions.CONE_HIGH, arm)),
-                    //new MoveArm(ArmPositions.CUBE_HIGH_SHOT, arm),
-                   
-                    new MoveArmToPos(ArmPositions.CUBE_HIGH_INTERMEDIATE, arm)
-                   .andThen(new MoveArmN(ArmPositions.CUBE_HIGH, arm)),
+                new CoordinatedArmMovePos(ArmPositions.N_CONE_HIGH_INTERMEDIATE, arm)
+                    .andThen(new CoordinatedArmMove(ArmPositions.N_CONE_HIGH, arm)),
+                    new CoordinatedArmMovePos(ArmPositions.N_CUBE_HIGH_INTERMEDIATE, arm)
+                   .andThen(new CoordinatedArmMove(ArmPositions.N_CUBE_HIGH, arm)),
                 () -> oi.getGamePieceType()));
 
-    oi.getMoveToHigh()
+oi.getMoveToHigh()
         .onFalse(
             new ConditionalCommand(
-                new MoveArmToPos(ArmPositions.CONE_MID_INTERMEDIATE, arm)
-                    .andThen(new MoveArm(ArmPositions.HOME, arm)),
-                    //new MoveArm(ArmPositions.HOME, arm),
-                new MoveArmToPos(ArmPositions.CUBE_HIGH_INTERMEDIATE_WAY_DOWN, arm)
-                    .andThen(new MoveArm(ArmPositions.HOME, arm)),
+                new CoordinatedArmMovePos(ArmPositions.N_CONE_HIGH_INTERMEDIATE, arm)
+                    .andThen(new CoordinatedArmMove(ArmPositions.N_HOME, arm)),
+                new CoordinatedArmMovePos(ArmPositions.N_CUBE_HIGH_INTERMEDIATE, arm)
+                    .andThen(new CoordinatedArmMove(ArmPositions.N_HOME, arm)),
                 () -> oi.getGamePieceType()));
 
-    oi.getHighScoreButton()
+/*
+        oi.getHighScoreButton()
+                .onTrue(
+                    new CoordinatedArmMovePos(ArmPositions.N_CONE_SHELF, arm)
+                    .andThen(new CoordinatedArmMove(ArmPositions.N_CONE_HIGH, arm)));
+
+        oi.getHighScoreButton()
+                .onFalse(
+                    new CoordinatedArmMovePos(ArmPositions.N_CONE_SHELF, arm)
+                    .andThen(new CoordinatedArmMove(ArmPositions.N_HOME, arm)));
+
+                    */
+   /* oi.getHighScoreButton()
         .onTrue(
             new MoveArmToPos(ArmPositions.CONE_HIGH_SCORE, arm)
                 .andThen(Commands.runOnce(gripper::releaseCube, gripper)
@@ -352,7 +428,9 @@ public class RobotContainer {
             .andThen(new MoveArm(ArmPositions.CONE_MID_INTERMEDIATE, arm))
         );
 
-    oi.getMoveToMid()
+        */
+/*
+        oi.getMoveToMid()
         .onTrue(
             new ConditionalCommand(
                 new MoveArm(ArmPositions.CONE_MID, arm),
@@ -394,17 +472,51 @@ public class RobotContainer {
                 new MoveArm(ArmPositions.HOME, arm),
                 new MoveArm(ArmPositions.HOME, arm),
                 () -> oi.getGamePieceType()));
+*/
+    oi.getMoveToMid()
+        .onTrue(
+            new ConditionalCommand(
+                new CoordinatedArmMove(ArmPositions.N_CONE_MID, arm),
+                new CoordinatedArmMove(ArmPositions.N_CUBE_MID, arm),
+                () -> oi.getGamePieceType()));
 
+    oi.getMoveToMid()
+        .onFalse(
+            new ConditionalCommand(
+                new CoordinatedArmMove(ArmPositions.N_HOME, arm),
+                new CoordinatedArmMove(ArmPositions.N_HOME, arm),
+                () -> oi.getGamePieceType()));
+
+    oi.getMoveToLow()
+        .onTrue(
+            new ConditionalCommand(
+                new CoordinatedArmMove(ArmPositions.N_CONE_LOW, arm),
+                new CoordinatedArmMove(ArmPositions.N_CUBE_LOW, arm),
+                () -> oi.getGamePieceType()));
+
+    oi.getMoveToLow()
+        .onFalse(
+            new ConditionalCommand(
+                new CoordinatedArmMove(ArmPositions.N_HOME, arm),
+                new CoordinatedArmMove(ArmPositions.N_HOME, arm),
+                () -> oi.getGamePieceType()));
+/*
     oi.getOpBut8()
         .onTrue(
             Commands.runOnce(gripper::opengrip, gripper)
         );
+*/
 
+    oi.getSafetyStop()
+        .onTrue(
+            Commands.run(arm::allStop, arm)
+            .alongWith(Commands.runOnce(gripper::stopIntake, gripper)));
 
-    oi.getSafetyStop().onTrue(Commands.run(arm::allStop, arm));
-    oi.getSafetyStop().onFalse((new MoveArm(ArmPositions.HOME, arm)));
+    oi.getSafetyStop()
+        .onFalse(
+            new ArmMoveHome(arm));
 
-    oi.getTestButton().onTrue(new DriveReset(drivetrain));
+   // oi.getTestButton().onTrue(new DriveReset(drivetrain));
   }
 
   /*
@@ -588,10 +700,9 @@ Command PickupCubeGround = Commands.sequence(
   //  new MoveArmToPos(ArmPositions.CUBE_HIGH_INTERMEDIATE_WAY_DOWN, arm),
   //  new MoveArmToPos(ArmPositions.HOME, arm),
        //     CubeHigh,
-       new FollowPath(auto1Paths.get(3), drivetrain, false),
+       new FollowPath(auto1Paths.get(3), drivetrain, false)
 
-       
-        Commands.runOnce(drivetrain::enableFieldRelative, drivetrain));
+       );
         //    new FollowPathWithEvents(
       //          new FollowPath(auto1Paths.get(0), drivetrain, true),
 //auto1Paths.get(0).getMarkers(),

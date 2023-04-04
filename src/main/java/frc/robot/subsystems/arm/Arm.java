@@ -70,7 +70,7 @@ public class Arm extends SubsystemBase {
     super();
 
     J1_motor.setInverted(true);
-    J2_motor.setInverted(true);
+    J2_motor.setInverted(false);
     J3_motor.setInverted(false);
 
     J1_motor.setIdleMode(IdleMode.kBrake);
@@ -87,7 +87,7 @@ public class Arm extends SubsystemBase {
     J3_motor.enableSoftLimit(SoftLimitDirection.kReverse, false);
 
     J1_motor.setSmartCurrentLimit(40);
-    J2_motor.setSmartCurrentLimit(20);
+    J2_motor.setSmartCurrentLimit(30);
     J3_motor.setSmartCurrentLimit(20);
 
     J1_Encoder.setInverted(false);
@@ -303,7 +303,10 @@ public boolean passedGoal(){
 
   public double getJ2FF() {
     //double ff = 0.0;//0.05;
+
+   SmartDashboard.putNumber("J2 FeedForward", j2Controller.calculate(getJ2position()) +j2ArmFeedforward.calculate(j2Controller.getSetpoint().position + -3.0,j2Controller.getSetpoint().velocity));
     double ff = 0.27*getJ2position()-0.33;
+    SmartDashboard.putNumber("J2MyFF", ff);
     if (ff < -0.5) {
       ff = -0.5;
     } else {
@@ -312,11 +315,12 @@ public boolean passedGoal(){
       }
     }
     return ff;
+
   }
 
   public double getJ3FF() {
-    //double ff = 0.0;
-    double ff = -J2_motor.getAppliedOutput();
+    double ff = 0.0;
+    //double ff = -J2_motor.getAppliedOutput();
     if (ff < -0.5) {
       ff = -.50;
     } else {
@@ -335,7 +339,7 @@ public boolean passedGoal(){
 
   public double calcJ2() {
     return j2Controller.calculate(getJ2position()) + getJ2FF();
-    // +j2ArmFeedforward.calculate(j2Controller.getSetpoint().position,j2Controller.getSetpoint().velocity);
+    //return j2Controller.calculate(getJ2position()) +j2ArmFeedforward.calculate(j2Controller.getSetpoint().position + -3.0,j2Controller.getSetpoint().velocity);
   }
 
   public double calcJ3() {
@@ -345,6 +349,10 @@ public boolean passedGoal(){
 
   public boolean safeToDriveFast() {
     return (getJ1position() >3.1) && (getJ2position() <1.77);
+  }
+
+  public double getJ1goal(){
+    return j1Controller.getGoal().position;
   }
 
   @Override
