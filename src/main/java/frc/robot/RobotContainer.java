@@ -7,6 +7,7 @@ package frc.robot;
 import static frc.robot.Constants.*;
 import static frc.robot.subsystems.drivetrain.DrivetrainConstants.*;
 
+import com.fasterxml.jackson.databind.deser.DeserializerCache;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.FollowPathWithEvents;
@@ -58,6 +59,7 @@ import frc.robot.subsystems.arm.ArmPositions;
 import frc.robot.subsystems.drivetrain.Drivetrain;
 import frc.robot.subsystems.gripper.Gripper;
 import java.io.IOException;
+import java.time.Clock;
 import java.util.ArrayList;
 import java.util.List;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -603,11 +605,155 @@ Command PickupCubeGround = Commands.sequence(
             new MoveArmToPos(ArmPositions.CONE_MID_INTERMEDIATE, arm),
             new MoveArmToPos(ArmPositions.HOME, arm).withTimeout(2.5),
 
-            
+ 
             new FollowPath(simpleBumpPathsB.get(0), drivetrain, true)
             //new AutoMoveSpeed(1.2, drivetrain).withTimeout(4.5)
         
     );
+
+
+
+    List<PathPlannerTrajectory> Barrier2M =
+    PathPlanner.loadPathGroup(
+        "barrier2M",
+        AUTO_MAX_SPEED_METERS_PER_SECOND,
+        AUTO_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED);
+    Command barrier2M = Commands.sequence(
+        Commands.run(gripper::closegrip, gripper).withTimeout(0.5),
+        Commands.runOnce(gripper::stopIntake, gripper),
+        new CoordinatedArmMovePos(ArmPositions.N_CUBE_MID, arm),
+        Commands.run(gripper::releaseCube, gripper).withTimeout(1),
+        Commands.runOnce(gripper::stopIntake, gripper),
+        Commands.runOnce(gripper::opengrip, gripper),
+        new CoordinatedArmMovePos(ArmPositions.N_HOME, arm).withTimeout(2.5),
+
+            new FollowPath(Barrier2M.get(0), drivetrain, true),
+            new CoordinatedArmMovePos(ArmPositions.N_CUBE_GROUND_INTERMEDIATE,arm),
+            new CoordinatedArmMove(ArmPositions.N_CUBE_GROUND,arm).withTimeout(2.0),
+
+            new FollowPath(Barrier2M.get(1), drivetrain, false)
+            .alongWith(
+                new CoordinatedArmMovePos(ArmPositions.N_CUBE_GROUND_INTERMEDIATE, arm),
+            new CoordinatedArmMovePos(ArmPositions.N_CUBE_GROUND,arm)
+                .raceWith(Commands.run(gripper::intakeCube, gripper).withTimeout(2.0))),
+            Commands.runOnce(gripper::stopIntake, gripper),
+        new CoordinatedArmMovePos(ArmPositions.N_CUBE_GROUND_INTERMEDIATE, arm),
+        new CoordinatedArmMovePos(ArmPositions.N_HOME, arm).withTimeout(1.5),
+
+        new FollowPath(Barrier2M.get(2), drivetrain, false),
+
+        new FollowPath(Barrier2M.get(3), drivetrain, false),
+        Commands.run(gripper::closegrip, gripper).withTimeout(0.5),
+        Commands.runOnce(gripper::stopIntake, gripper),
+        new CoordinatedArmMovePos(ArmPositions.N_CUBE_MID, arm),
+        Commands.run(gripper::releaseCube, gripper).withTimeout(1),
+        Commands.runOnce(gripper::stopIntake, gripper),
+        Commands.runOnce(gripper::opengrip, gripper),
+        new CoordinatedArmMovePos(ArmPositions.N_HOME, arm).withTimeout(2.5)
+        
+    );
+
+    List<PathPlannerTrajectory> BarrierML =
+    PathPlanner.loadPathGroup(
+        "barrierML",
+        AUTO_MAX_SPEED_METERS_PER_SECOND,
+        AUTO_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED);
+    Command barrierML = Commands.sequence(
+        Commands.run(gripper::closegrip, gripper).withTimeout(0.5),
+        Commands.runOnce(gripper::stopIntake, gripper),
+        new CoordinatedArmMovePos(ArmPositions.N_CUBE_MID, arm),
+        Commands.run(gripper::releaseCube, gripper).withTimeout(1),
+        Commands.runOnce(gripper::stopIntake, gripper),
+        Commands.runOnce(gripper::opengrip, gripper),
+        new CoordinatedArmMovePos(ArmPositions.N_HOME, arm).withTimeout(2.5),
+
+        new FollowPath(BarrierML.get(0), drivetrain, true),
+
+        new FollowPath(BarrierML.get(1), drivetrain, false)
+        .alongWith(
+            new CoordinatedArmMovePos(ArmPositions.N_CUBE_GROUND_INTERMEDIATE, arm),
+        new CoordinatedArmMove(ArmPositions.N_CUBE_GROUND,arm)
+            .raceWith(Commands.run(gripper::intakeCube, gripper).withTimeout(2.0))),
+        Commands.runOnce(gripper::stopIntake, gripper),
+    new CoordinatedArmMovePos(ArmPositions.N_CUBE_GROUND_INTERMEDIATE, arm),
+    new CoordinatedArmMovePos(ArmPositions.N_HOME, arm).withTimeout(1.5),
+
+    new FollowPath(BarrierML.get(2), drivetrain, false),
+    new CoordinatedArmMovePos(ArmPositions.N_CUBE_LOW, arm),
+    Commands.run(gripper::releaseCube, gripper).withTimeout(1),
+    Commands.run(gripper::closegrip, gripper).withTimeout(0.5),
+    new CoordinatedArmMovePos(ArmPositions.N_HOME, arm).withTimeout(2.5)
+
+    );
+
+    List<PathPlannerTrajectory> bumpML =
+    PathPlanner.loadPathGroup(
+        "bumpML",
+        AUTO_MAX_SPEED_METERS_PER_SECOND,
+        AUTO_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED);
+    Command BumpML = Commands.sequence(
+        Commands.run(gripper::closegrip, gripper).withTimeout(0.5),
+        Commands.runOnce(gripper::stopIntake, gripper),
+        new CoordinatedArmMovePos(ArmPositions.N_HOME, arm),
+        new CoordinatedArmMovePos(ArmPositions.N_CUBE_MID, arm),
+        Commands.run(gripper::releaseCube, gripper).withTimeout(1),
+        Commands.runOnce(gripper::stopIntake, gripper),
+        Commands.runOnce(gripper::opengrip, gripper),
+        new CoordinatedArmMovePos(ArmPositions.N_HOME, arm).withTimeout(2.5),
+
+        new FollowPath(bumpML.get(0), drivetrain, true),
+
+        new FollowPath(bumpML.get(1), drivetrain, false)
+        .alongWith(
+            new CoordinatedArmMovePos(ArmPositions.N_CUBE_GROUND_INTERMEDIATE, arm),
+        new CoordinatedArmMove(ArmPositions.N_CUBE_GROUND,arm)
+            .raceWith(Commands.run(gripper::intakeCube, gripper).withTimeout(2.0))),
+        Commands.runOnce(gripper::stopIntake, gripper),
+    new CoordinatedArmMovePos(ArmPositions.N_CUBE_GROUND_INTERMEDIATE, arm),
+    new CoordinatedArmMovePos(ArmPositions.N_HOME, arm).withTimeout(1.5),
+    
+    new FollowPath(bumpML.get(2), drivetrain, false),
+    new CoordinatedArmMovePos(ArmPositions.N_CUBE_LOW, arm),
+    Commands.run(gripper::releaseCube, gripper).withTimeout(1),
+    Commands.run(gripper::closegrip, gripper).withTimeout(0.5),
+    new CoordinatedArmMovePos(ArmPositions.N_HOME, arm).withTimeout(2.5)
+    );
+
+    List<PathPlannerTrajectory> Bump2M =
+    PathPlanner.loadPathGroup(
+        "Bump2M",
+        AUTO_MAX_SPEED_METERS_PER_SECOND,
+        AUTO_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED);
+    Command bump2M = Commands.sequence(
+        Commands.run(gripper::closegrip, gripper).withTimeout(0.5),
+        Commands.runOnce(gripper::stopIntake, gripper),
+        new CoordinatedArmMovePos(ArmPositions.N_CUBE_MID, arm),
+        Commands.run(gripper::releaseCube, gripper).withTimeout(1),
+        Commands.runOnce(gripper::stopIntake, gripper),
+        Commands.runOnce(gripper::opengrip, gripper),
+        new CoordinatedArmMovePos(ArmPositions.N_CUBE_MID, arm),
+        new CoordinatedArmMovePos(ArmPositions.N_HOME, arm).withTimeout(2.5),
+
+        new FollowPath(Bump2M.get(0), drivetrain, true),
+
+        new FollowPath(Bump2M.get(1), drivetrain, false)
+        .alongWith(
+            new CoordinatedArmMovePos(ArmPositions.N_CUBE_GROUND_INTERMEDIATE, arm),
+        new CoordinatedArmMovePos(ArmPositions.N_CUBE_GROUND,arm)
+            .raceWith(Commands.run(gripper::intakeCube, gripper).withTimeout(2.0))),
+        Commands.runOnce(gripper::stopIntake, gripper),
+    new CoordinatedArmMovePos(ArmPositions.N_CUBE_GROUND_INTERMEDIATE, arm),
+    new CoordinatedArmMovePos(ArmPositions.N_HOME, arm).withTimeout(1.5),
+
+    new FollowPath(Bump2M.get(2), drivetrain, false),
+        new CoordinatedArmMovePos(ArmPositions.N_CUBE_MID, arm),
+        Commands.run(gripper::releaseCube, gripper).withTimeout(1),
+     Commands.runOnce(gripper::stopIntake, gripper),
+     Commands.runOnce(gripper::opengrip, gripper),
+     new CoordinatedArmMovePos(ArmPositions.N_CUBE_MID, arm),
+     new CoordinatedArmMovePos(ArmPositions.N_HOME, arm).withTimeout(2.5)
+    );
+
     List<PathPlannerTrajectory> simpleBarrierPathsR =
     PathPlanner.loadPathGroup(
         "Simple Barrier R",
@@ -615,7 +761,7 @@ Command PickupCubeGround = Commands.sequence(
         AUTO_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED);
 
     Command simpleConeBarrierR = Commands.sequence(
-        Commands.run(gripper::closegrip, gripper).withTimeout(0.5),
+      /*   Commands.run(gripper::closegrip, gripper).withTimeout(0.5),
             Commands.runOnce(gripper::stopIntake, gripper),
             new MoveArmToPos(ArmPositions.CONE_MID_INTERMEDIATE_WAY_UP, arm),
             new MoveArmToPos(ArmPositions.CONE_HIGH, arm),
@@ -625,7 +771,7 @@ Command PickupCubeGround = Commands.sequence(
            Commands.runOnce(gripper::stopIntake, gripper),
             Commands.runOnce(gripper::opengrip, gripper),
             new MoveArmToPos(ArmPositions.CONE_MID_INTERMEDIATE, arm),
-            new MoveArmToPos(ArmPositions.HOME, arm).withTimeout(2.5),
+            new MoveArmToPos(ArmPositions.HOME, arm).withTimeout(2.5), */ 
 
             new FollowPath(simpleBarrierPathsR.get(0), drivetrain, true)
            // new AutoMoveSpeed(1.2, drivetrain).withTimeout(2.5)
@@ -754,7 +900,8 @@ Command PickupCubeGround = Commands.sequence(
             new AutoBalanceMove(drivetrain).withTimeout(4)     
             );
 
-
+    
+    
         List<PathPlannerTrajectory> P_balancePathBarrier =
         PathPlanner.loadPathGroup(
             "BalanceBarrier",
@@ -809,22 +956,23 @@ Command PickupCubeGround = Commands.sequence(
 
 
     
-    new MoveArmToPos(ArmPositions.CUBE_HIGH_INTERMEDIATE, arm)
-    .andThen(new MoveArmN(ArmPositions.CUBE_HIGH, arm).withTimeout(2.5))
+    new CoordinatedArmMovePos(ArmPositions.N_CUBE_HIGH_INTERMEDIATE, arm)
+    .andThen(new CoordinatedArmMovePos(ArmPositions.N_CUBE_HIGH, arm).withTimeout(2.5))
     .andThen(Commands.run(gripper::releaseCube, gripper).withTimeout(1))
     .andThen(Commands.runOnce(gripper::stopIntake, gripper))
-    .andThen(new MoveArmToPos(ArmPositions.HOME, arm).withTimeout(1.0))
-    .andThen(new MoveArmToPos(ArmPositions.HOME, arm)
+    .andThen(new CoordinatedArmMovePos(ArmPositions.N_HOME, arm).withTimeout(1.0))
+    .andThen(new CoordinatedArmMovePos(ArmPositions.N_HOME, arm)
         .alongWith(new AutoMoveSpeed(-2.5, drivetrain).withTimeout(2.5)));
     
 
     Command balanceAuto = Commands.sequence(
 
-    new MoveArmToPos(ArmPositions.CUBE_MID, arm),
+    new CoordinatedArmMovePos(ArmPositions.N_CUBE_HIGH_INTERMEDIATE, arm),
+    new CoordinatedArmMovePos(ArmPositions.N_CUBE_HIGH, arm),
     Commands.run(gripper::releaseCube, gripper).withTimeout(1),
     Commands.runOnce(gripper::stopIntake, gripper),
     Commands.runOnce(gripper::opengrip, gripper),
-    new MoveArmToPos(ArmPositions.HOME, arm).withTimeout(2),
+    new CoordinatedArmMovePos(ArmPositions.N_HOME, arm).withTimeout(2),
 
             new AutoMoveSpeed(-2.5, drivetrain).withTimeout(1.2),
             new AutoBalanceMove(drivetrain).withTimeout(4));
@@ -834,18 +982,18 @@ Command PickupCubeGround = Commands.sequence(
 
             Command balanceAutoLeave = Commands.sequence(
 
-            new MoveArmToPos(ArmPositions.CUBE_MID, arm),
+            new CoordinatedArmMovePos(ArmPositions.N_CUBE_MID, arm),
             Commands.run(gripper::releaseCube, gripper).withTimeout(1),
             Commands.runOnce(gripper::stopIntake, gripper),
             Commands.runOnce(gripper::opengrip, gripper),
-            new MoveArmToPos(ArmPositions.HOME, arm).withTimeout(2),
+            new CoordinatedArmMovePos(ArmPositions.N_HOME, arm).withTimeout(2),
         
                     new AutoMoveSpeed(-2.5, drivetrain).withTimeout(1.3),
                     new AutoBalanceMove(drivetrain).withTimeout(1.5),
                     
-                    new AutoMoveSpeed(-2.0, drivetrain).withTimeout(1.2),
+                    new AutoMoveSpeed(-2.0, drivetrain).withTimeout(0.8),
                    // new AutoTurnMove(drivetrain).withTimeout(1.0),
-                    new AutoMoveSpeed(2.5, drivetrain).withTimeout(1.3),
+                    new AutoMoveSpeed(2.5, drivetrain).withTimeout(1.0),
                     new AutoBalanceMove(drivetrain).withTimeout(4));
         
             List<PathPlannerTrajectory> ChargeStation977Path =
@@ -905,6 +1053,11 @@ Command PickupCubeGround = Commands.sequence(
     autoChooser.addOption("Cone barrier side R", simpleConeBarrierR);
     autoChooser.addOption("Cone bump side R", simpleConeBumpR);
     autoChooser.addOption("Turntest", turntest);
+    autoChooser.addOption("Barrier2M", barrier2M);
+    autoChooser.addOption("barrierML", barrierML);
+    autoChooser.addOption("BumpML", BumpML);
+    autoChooser.addOption("Bump2M", bump2M);
+
         //"MoveStraight", new AutoMove1(drivetrain, gripper).withTimeout(4)
         // Commands.runOnce(gripper::releaseCube,
         // gripper).withTimeout(2).andThen(Commands.runOnce(gripper::stopIntake, gripper)).andThen(
