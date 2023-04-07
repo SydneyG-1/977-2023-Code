@@ -15,6 +15,6 @@ public final class PneumaticsConstants {
 
   public static final int MIN_LOW_PRESSURE = 50;
   public static final int MAX_LOW_PRESSURE = 60;
-  public static final int MIN_HIGH_PRESSURE = 80;
-  public static final int MAX_HIGH_PRESSURE = 120;
+  public static final int MIN_HIGH_PRESSURE = 0;
+  public static final int MAX_HIGH_PRESSURE = 0;
 }

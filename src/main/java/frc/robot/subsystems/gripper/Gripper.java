@@ -20,8 +20,8 @@ public class Gripper extends SubsystemBase {
       
   private CANSparkMax intake_motor2 =
   new CANSparkMax(5, MotorType.kBrushed);
-  private PneumaticHub ph = new PneumaticHub(20);
-  private Solenoid grip = ph.makeSolenoid(1);
+  //private PneumaticHub ph = new PneumaticHub(20);
+  //private Solenoid grip = ph.makeSolenoid(1);
   private Timer time = new Timer();
   private boolean distBool = false;
 
@@ -38,15 +38,15 @@ public class Gripper extends SubsystemBase {
       intake_motor.set(-GripperConstants.intakeSpeed);
       intake_motor2.set(-GripperConstants.intakeSpeed);
    // }
-    grip.set(true);
+    //grip.set(true);
   }
 
   public void opengrip() {
-    grip.set(true);
+    //grip.set(true);
   }
 
   public void setGrip(boolean state) {
-    grip.set(state);
+    //grip.set(state);
   }
 
   public void intakeCube() {
@@ -54,7 +54,7 @@ public class Gripper extends SubsystemBase {
       intake_motor.set(-GripperConstants.intakeSpeedCube);
       intake_motor2.set(-GripperConstants.intakeSpeedCube);
    // }
-    grip.set(false);
+    //grip.set(false);
   }
 
 
@@ -63,7 +63,7 @@ public class Gripper extends SubsystemBase {
        intake_motor.set(-GripperConstants.intakeSpeedCone);
        intake_motor2.set(-GripperConstants.intakeSpeedCone);
     // }
-     grip.set(false);
+     //grip.set(false);
    }
 
   public void releaseCube() {

@@ -32,8 +32,8 @@ public class CoordinatedArmMove extends CommandBase {
     double[] adjusted_positions = {0,0,0};
 
     adjusted_positions[0] = -m_position[0] + ArmConstants.J1_offset;
-    adjusted_positions[1] = m_position[1] + ArmConstants.J2_offset + (3.168 - m_subsystem.getJ1position()); //+ 0.25*(m_subsystem.getJ1position() - m_subsystem.getJ1goal()) ;
-    adjusted_positions[2] = m_position[2] + ArmConstants.J3_offset + (1.61 - m_subsystem.getJ2position())+(3.168 - m_subsystem.getJ1position());
+    adjusted_positions[1] = m_position[1] + ArmConstants.J2_offset + (3.185 - m_subsystem.getJ1position()); //+ 0.25*(m_subsystem.getJ1position() - m_subsystem.getJ1goal()) ;
+    adjusted_positions[2] = m_position[2] + ArmConstants.J3_offset + (1.61 - m_subsystem.getJ2position())+(3.185 - m_subsystem.getJ1position());
     m_subsystem.moveArm(adjusted_positions);
   }
 

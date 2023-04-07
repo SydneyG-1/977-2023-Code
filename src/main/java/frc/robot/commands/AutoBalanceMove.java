@@ -11,7 +11,7 @@ import frc.robot.subsystems.drivetrain.Drivetrain;
 public class AutoBalanceMove extends CommandBase {
   private Drivetrain drivetrain;
   private double setPoint = 0.0;
-  private double kP = 0.05;
+  private double kP = 0.08;
   private double kI = 0.000;
   private double kD = 0.000;
   private PIDController controller;

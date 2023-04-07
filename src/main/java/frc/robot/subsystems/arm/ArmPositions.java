@@ -17,7 +17,7 @@ public final class ArmPositions {
   public static final double[] N_HOME =       {0.0,   0.0,  0.0};
 
   public static final double[] N_CONE_SHELF = {0.0,   1.22, 0.0};
-  public static final double[] N_CUBE_SHELF = {0.0,   1.25, -0.35};
+  public static final double[] N_CUBE_SHELF = {0.0,   1.25, -0.5};
 
   public static final double[] N_CONE_GROUND_INTERMEDIATE = {0.0,   0.37,   0.0};
   public static final double[] N_CUBE_GROUND_INTERMEDIATE = {0.0,   0.37,   -0.15};
@@ -28,10 +28,10 @@ public final class ArmPositions {
   public static final double[] N_CONE_HIGH_INTERMEDIATE =  {0.0,  1.38, 0.0};
   public static final double[] N_CUBE_HIGH_INTERMEDIATE =  {0.0,  1.18, 0.1};
 
-  public static final double[] N_CONE_HIGH =  {0.6,  1.55, 0.55};
-  public static final double[] N_CUBE_HIGH =  {0.40,  1.18, 0.1};
+  public static final double[] N_CONE_HIGH =  {0.5,  1.6, 0.55};
+  public static final double[] N_CUBE_HIGH =  {0.40,  1.28, 0.1};
 
-  public static final double[] N_CONE_HOME =  {0.0,  0.0, 0.1};
+  public static final double[] N_CONE_HOME =  {0.0,  0.0, 0.15};
   public static final double[] N_CUBE_HOME =  {0.0,  0.0, 0.0};
 
   public static final double[] N_CONE_MID =  {0.0,  1.1, 0.35};
@@ -46,7 +46,7 @@ public final class ArmPositions {
   public static final double[] TEST1 = {1.4, 3.05, 4.0};
   public static final double[] TEST2 = {2.1, 3.05, 4.0};
 
-  public static final double[] HOME = {3.168, 1.67, 5.487};
+  public static final double[] HOME = {3.181, 1.67, 5.487};
 
 
   public static final double[] CONE_SHELF_NEW = {3.168, 2.85, 5.487};

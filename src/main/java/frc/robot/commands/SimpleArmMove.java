@@ -8,11 +8,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
 
-public class CoordinatedArmMovePos extends CommandBase {
+public class SimpleArmMove extends CommandBase {
   private Arm m_subsystem;
   private double[] m_position;
   /** Creates a new MoveJoint1. */
-  public CoordinatedArmMovePos(double[] position, Arm subsystem) {
+  public SimpleArmMove(double[] position, Arm subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
 
     m_position = position;
@@ -32,7 +32,7 @@ public class CoordinatedArmMovePos extends CommandBase {
     double[] adjusted_positions = {0,0,0};
 
     adjusted_positions[0] = -m_position[0] + ArmConstants.J1_offset;
-    adjusted_positions[1] = m_position[1] + ArmConstants.J2_offset + (3.185 - m_subsystem.getJ1position());// + 0.25*(m_subsystem.getJ1position() - m_subsystem.getJ1goal()) ;
+    adjusted_positions[1] = m_position[1] + ArmConstants.J2_offset; //+ 0.25*(m_subsystem.getJ1position() - m_subsystem.getJ1goal()) ;
     adjusted_positions[2] = m_position[2] + ArmConstants.J3_offset + (1.61 - m_subsystem.getJ2position())+(3.185 - m_subsystem.getJ1position());
     m_subsystem.moveArm(adjusted_positions);
   }
@@ -46,6 +46,6 @@ public class CoordinatedArmMovePos extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_subsystem.getAtPosition();
+    return false;
   }
 }

@@ -304,7 +304,7 @@ public boolean passedGoal(){
   public double getJ2FF() {
     //double ff = 0.0;//0.05;
 
-   SmartDashboard.putNumber("J2 FeedForward", j2Controller.calculate(getJ2position()) +j2ArmFeedforward.calculate(j2Controller.getSetpoint().position + -3.0,j2Controller.getSetpoint().velocity));
+   //SmartDashboard.putNumber("J2 FeedForward", j2Controller.calculate(getJ2position()) +j2ArmFeedforward.calculate(-j2Controller.getSetpoint().position + 3.0,j2Controller.getSetpoint().velocity));
     double ff = 0.27*getJ2position()-0.33;
     SmartDashboard.putNumber("J2MyFF", ff);
     if (ff < -0.5) {
