@@ -16,7 +16,7 @@ public final class ArmPositions {
   //NEW positions with home at 0 radians 
   public static final double[] N_HOME =       {0.0,   0.0,  0.0};
 
-  public static final double[] N_CONE_SHELF = {0.0,   1.22, 0.0};
+  public static final double[] N_CONE_SHELF = {0.0,   1.19, 0.0};
   public static final double[] N_CUBE_SHELF = {0.0,   1.25, -0.5};
 
   public static final double[] N_CONE_GROUND_INTERMEDIATE = {0.0,   0.37,   0.0};

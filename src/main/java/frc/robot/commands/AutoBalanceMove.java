@@ -11,7 +11,7 @@ import frc.robot.subsystems.drivetrain.Drivetrain;
 public class AutoBalanceMove extends CommandBase {
   private Drivetrain drivetrain;
   private double setPoint = 0.0;
-  private double kP = 0.08;
+  private double kP = 0.05;
   private double kI = 0.000;
   private double kD = 0.000;
   private PIDController controller;
@@ -37,11 +37,11 @@ public class AutoBalanceMove extends CommandBase {
 
     // double output = kP * error;
     // SmartDashboard.putNumber("balanceout", output);
-    if (output > 0.75) {
-      output = 0.75;
+    if (output > 0.70) {
+      output = 0.70;
     }
-    if (output < -0.75) {
-      output = -0.75;
+    if (output < -0.70) {
+      output = -0.70;
     }
 
     drivetrain.drive(output, 0.0, 0.0);

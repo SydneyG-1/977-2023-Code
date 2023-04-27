@@ -39,7 +39,8 @@ import frc.robot.commands.ArmMoveHome;
 import frc.robot.commands.AutoBalanceMove;
 import frc.robot.commands.AutoMove1;
 import frc.robot.commands.AutoMoveSpeed;
-import frc.robot.commands.AutoTurnMove;
+import frc.robot.commands.AutoTurn;
+import frc.robot.commands.AutoBalanceMove;
 import frc.robot.commands.CoordinatedArmMove;
 import frc.robot.commands.CoordinatedArmMovePos;
 import frc.robot.commands.DriveReset;
@@ -274,6 +275,8 @@ public class RobotContainer {
 
     oi.getSpeedOverrideR().onTrue(Commands.runOnce(drivetrain::setPrecisionMode));
     oi.getSpeedOverrideR().onFalse(Commands.runOnce(drivetrain::endPrecisionMode));
+
+    oi.getAutoTurn().whileTrue(new AutoTurn(drivetrain));
 
     // intake & gripper controls
     oi.getCloseButton()
@@ -957,7 +960,7 @@ Command PickupCubeGround = Commands.sequence(
     //.andThen(new CoordinatedArmMovePos(ArmPositions.N_CONE_HIGH_INTERMEDIATE, arm))
     .andThen(new CoordinatedArmMovePos(ArmPositions.N_HOME, arm).withTimeout(2.0))
     .andThen(new CoordinatedArmMovePos(ArmPositions.N_HOME, arm)
-        .alongWith(new AutoMoveSpeed(-2.75, drivetrain).withTimeout(1.5)));
+        .alongWith(new AutoMoveSpeed(-2.75, drivetrain).withTimeout(2.25)));
     
 
     Command balanceAutoMid = Commands.sequence(
@@ -972,9 +975,9 @@ Command PickupCubeGround = Commands.sequence(
     new CoordinatedArmMovePos(ArmPositions.N_HOME, arm).withTimeout(2),
 
             new AutoMoveSpeed(-2.5, drivetrain).withTimeout(1.2),
-            new AutoBalanceMove(drivetrain).withTimeout(4));
+            new AutoBalanceMove(drivetrain).withTimeout(8.0));
 
-    Command turntest = new AutoTurnMove(drivetrain).withTimeout (1.0);
+    Command turntest = new AutoBalanceMove(drivetrain).withTimeout (1.0);
 
     Command balanceAutoLeave = Commands.sequence(
 

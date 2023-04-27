@@ -8,15 +8,15 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.drivetrain.Drivetrain;
 
-public class AutoTurnMove extends CommandBase {
+public class AutoTurn extends CommandBase {
   private Drivetrain drivetrain;
   private double setPoint = 0.0;
-  private double kP = 0.05;
+  private double kP = 0.20;
   private double kI = 0.000;
   private double kD = 0.000;
   private PIDController controller;
-  /** Creates a new AutoBalanceMove. */
-  public AutoTurnMove(Drivetrain subsystem) {
+  /** Creates a new AutoTurn. */
+  public AutoTurn(Drivetrain subsystem) {
     drivetrain = subsystem;
     controller = new PIDController(kP, kI, kD);
     addRequirements(drivetrain);
@@ -32,16 +32,16 @@ public class AutoTurnMove extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double output = controller.calculate(drivetrain.getYaw());
-    // error = drivetrain.getPitch() - setPoint;
+    double output = controller.calculate(drivetrain.getRotation().getDegrees());
+    // error = drivetrain.getYaw() - setPoint;
 
     // double output = kP * error;
     // SmartDashboard.putNumber("balanceout", output);
-    if (output > 0.5) {
-      output = 0.5;
+    if (output > 2.0) {
+      output = 2.0;
     }
-    if (output < -0.5) {
-      output = -0.5;
+    if (output < -2.0) {
+      output = -2.0;
     }
 
     drivetrain.drive(0.0, 0.0, output);
