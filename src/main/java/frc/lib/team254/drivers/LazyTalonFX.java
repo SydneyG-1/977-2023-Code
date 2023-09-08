@@ -6,7 +6,7 @@ package frc.lib.team254.drivers;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-//import com.ctre.phoenixpro.hardware.TalonFX;
+// import com.ctre.phoenixpro.hardware.TalonFX;
 
 /**
  * This class is a thin wrapper around the CANTalon that reduces CAN bus / CPU overhead by skipping

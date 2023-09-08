@@ -48,6 +48,7 @@ public interface OperatorInterface {
   public default Trigger getOpenButton() {
     return new Trigger(() -> false);
   }
+
   public default Trigger getSpeedOverrideR() {
     return new Trigger(() -> false);
   }
@@ -84,11 +85,11 @@ public interface OperatorInterface {
     return new Trigger(() -> false);
   }
 
-  public default Trigger getHighScoreButton(){
+  public default Trigger getHighScoreButton() {
     return new Trigger(() -> false);
   }
-  
-  public default Trigger getMidScoreButton(){
+
+  public default Trigger getMidScoreButton() {
     return new Trigger(() -> false);
   }
 
@@ -99,5 +100,4 @@ public interface OperatorInterface {
   public default boolean getGamePieceType() {
     return false;
   }
-
 }

@@ -10,8 +10,8 @@ import frc.robot.subsystems.arm.Arm;
 public class MoveArmToPosN extends CommandBase {
   private Arm m_subsystem;
   private double[] m_position;
-  private double[] subdivision= {0,0,0};
-  private double[] waypoint = {0,0,0};
+  private double[] subdivision = {0, 0, 0};
+  private double[] waypoint = {0, 0, 0};
   private int currentWaypoint = 0;
   /** Creates a new MoveJoint1. */
   public MoveArmToPosN(double[] position, Arm subsystem) {
@@ -26,13 +26,13 @@ public class MoveArmToPosN extends CommandBase {
   @Override
   public void initialize() {
     m_subsystem.resetPositions(); // sets the joint controllers to their current positions
-    subdivision[0] = (m_position[0] -m_subsystem.getJ1position())/5;
-    subdivision[1] = (m_position[1] -m_subsystem.getJ2position())/5;
-    subdivision[2] = (m_position[2] -m_subsystem.getJ3position())/5;
+    subdivision[0] = (m_position[0] - m_subsystem.getJ1position()) / 5;
+    subdivision[1] = (m_position[1] - m_subsystem.getJ2position()) / 5;
+    subdivision[2] = (m_position[2] - m_subsystem.getJ3position()) / 5;
 
-    waypoint[0] = m_subsystem.getJ1position()+subdivision[0];
-    waypoint[1] = m_subsystem.getJ2position()+subdivision[1];
-    waypoint[2] = m_subsystem.getJ3position()+subdivision[2];
+    waypoint[0] = m_subsystem.getJ1position() + subdivision[0];
+    waypoint[1] = m_subsystem.getJ2position() + subdivision[1];
+    waypoint[2] = m_subsystem.getJ3position() + subdivision[2];
     currentWaypoint = 1;
   }
 
@@ -41,14 +41,13 @@ public class MoveArmToPosN extends CommandBase {
   public void execute() {
 
     m_subsystem.moveArm(waypoint);
-  
+
     if (m_subsystem.getAtPosition()) {
-      waypoint[0] = m_subsystem.getJ1position()+subdivision[0];
-      waypoint[1] = m_subsystem.getJ2position()+subdivision[1];
-      waypoint[2] = m_subsystem.getJ3position()+subdivision[2];
+      waypoint[0] = m_subsystem.getJ1position() + subdivision[0];
+      waypoint[1] = m_subsystem.getJ2position() + subdivision[1];
+      waypoint[2] = m_subsystem.getJ3position() + subdivision[2];
       currentWaypoint++;
     }
-    
   }
 
   // Called once the command ends or is interrupted.
@@ -60,6 +59,6 @@ public class MoveArmToPosN extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return currentWaypoint>5;
+    return currentWaypoint > 5;
   }
 }

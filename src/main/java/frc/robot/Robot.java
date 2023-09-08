@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.lib.team6328.util.Alert;
@@ -39,7 +38,7 @@ public class Robot extends LoggedRobot {
    */
   @Override
   public void robotInit() {
-    //CameraServer.startAutomaticCapture();
+    // CameraServer.startAutomaticCapture();
     final String GIT_DIRTY = "GitDirty";
 
     // from AdvantageKit Robot Configuration docs

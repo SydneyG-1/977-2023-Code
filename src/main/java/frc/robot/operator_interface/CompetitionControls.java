@@ -117,15 +117,15 @@ public class CompetitionControls implements OperatorInterface {
     return operatorJoystick.button(8);
   }
 
-@Override
-public Trigger getHighScoreButton(){
-  return operatorJoystick.button(9);
-}
+  @Override
+  public Trigger getHighScoreButton() {
+    return operatorJoystick.button(9);
+  }
 
-@Override
-public Trigger getMidScoreButton(){
-  return operatorJoystick.button(10);
-}
+  @Override
+  public Trigger getMidScoreButton() {
+    return operatorJoystick.button(10);
+  }
 
   @Override
   public boolean getPickupLocation() {
@@ -136,6 +136,4 @@ public Trigger getMidScoreButton(){
   public boolean getGamePieceType() {
     return !operatorJoystick.button(13).getAsBoolean();
   }
-
-  
 }
