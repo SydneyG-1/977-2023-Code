@@ -67,8 +67,13 @@ public class CompetitionControls implements OperatorInterface {
   }
 
   @Override
-  public Trigger getAutoTurn() {
+  public Trigger getAutoTurnNorth() {
     return new Trigger(driverJoystick::getLeftStickButton);
+  }
+
+  @Override
+  public Trigger getAutoTurnSouth() {
+    return new Trigger(driverJoystick::getRightStickButton);
   }
 
   @Override

@@ -16,8 +16,9 @@ public class AutoTurn extends CommandBase {
   private double kD = 0.000;
   private PIDController controller;
   /** Creates a new AutoTurn. */
-  public AutoTurn(Drivetrain subsystem) {
+  public AutoTurn(double angle, Drivetrain subsystem) {
     drivetrain = subsystem;
+    setPoint = angle;
     controller = new PIDController(kP, kI, kD);
     addRequirements(drivetrain);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -26,6 +27,7 @@ public class AutoTurn extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    controller.enableContinuousInput(0.0, 360.0);
     controller.setSetpoint(setPoint);
   }
 
@@ -37,11 +39,11 @@ public class AutoTurn extends CommandBase {
 
     // double output = kP * error;
     // SmartDashboard.putNumber("balanceout", output);
-    if (output > 2.0) {
-      output = 2.0;
+    if (output > 4.0) {
+      output = 4.0;
     }
-    if (output < -2.0) {
-      output = -2.0;
+    if (output < -4.0) {
+      output = -4.0;
     }
 
     drivetrain.drive(0.0, 0.0, output);

@@ -57,7 +57,11 @@ public interface OperatorInterface {
     return new Trigger(() -> false);
   }
 
-  public default Trigger getAutoTurn() {
+  public default Trigger getAutoTurnNorth() {
+    return new Trigger(() -> false);
+  }
+
+  public default Trigger getAutoTurnSouth() {
     return new Trigger(() -> false);
   }
 

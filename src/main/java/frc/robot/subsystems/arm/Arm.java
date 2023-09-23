@@ -87,7 +87,7 @@ public class Arm extends SubsystemBase {
     J3_motor.enableSoftLimit(SoftLimitDirection.kReverse, false);
 
     J1_motor.setSmartCurrentLimit(40);
-    J2_motor.setSmartCurrentLimit(30);
+    J2_motor.setSmartCurrentLimit(40);
     J3_motor.setSmartCurrentLimit(20);
 
     J1_Encoder.setInverted(false);
@@ -301,12 +301,12 @@ public class Arm extends SubsystemBase {
   }
 
   public double getJ2FF() {
-    // double ff = 0.0;//0.05;
+     double ff = 0.0;//0.05;
 
     // SmartDashboard.putNumber("J2 FeedForward", j2Controller.calculate(getJ2position())
     // +j2ArmFeedforward.calculate(-j2Controller.getSetpoint().position +
     // 3.0,j2Controller.getSetpoint().velocity));
-    double ff = 0.27 * getJ2position() - 0.33;
+    //double ff = 0.27 * getJ2position() - 0.33;
     SmartDashboard.putNumber("J2MyFF", ff);
     if (ff < -0.5) {
       ff = -0.5;
@@ -350,7 +350,7 @@ public class Arm extends SubsystemBase {
   }
 
   public boolean safeToDriveFast() {
-    return (getJ1position() > 3.1) && (getJ2position() < 1.77);
+    return (getJ1position() > 3.05) && (getJ2position() < 1.77);
   }
 
   public double getJ1goal() {

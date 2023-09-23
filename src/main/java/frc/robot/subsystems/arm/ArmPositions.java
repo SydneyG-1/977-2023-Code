@@ -16,7 +16,7 @@ public final class ArmPositions {
   // NEW positions with home at 0 radians
   public static final double[] N_HOME = {0.0, 0.0, 0.0};
 
-  public static final double[] N_CONE_SHELF = {0.0, 1.23, 0.0};
+  public static final double[] N_CONE_SHELF = {0.0, 1.28, 0.0}; //1.23 j2
   public static final double[] N_CUBE_SHELF = {0.0, 1.30, -0.5};
 
   public static final double[] N_CONE_GROUND_INTERMEDIATE = {0.0, 0.37, 0.35};
@@ -46,24 +46,24 @@ public final class ArmPositions {
   public static final double[] TEST1 = {1.4, 3.05, 4.0};
   public static final double[] TEST2 = {2.1, 3.05, 4.0};
 
-  public static final double[] HOME = {3.181, 1.67, 5.487};
+  public static final double[] HOME = {3.08, 1.67, 5.487};
 
-  public static final double[] CONE_SHELF_NEW = {3.168, 2.85, 5.487};
+  public static final double[] CONE_SHELF_NEW = {3.08, 2.85, 5.487};
   public static final double[] CONE_HIGH_NEW = {2.77, 2.85, 5.487};
 
-  public static final double[] CONE_SHELF = {3.168, 2.85, 4.3507};
+  public static final double[] CONE_SHELF = {3.08, 2.85, 4.3507};
   public static final double[] CONE_GROUND = {2.531, 2.117, 5.725};
-  public static final double[] CONE_GROUND_INTERMEDIATE = {3.168, 2.04, 4.99};
-  public static final double[] CONE_HOME = {3.168, 1.67, 5.687}; // {3.162, 1.674, 5.487};
-  public static final double[] CONE_LOW = {3.168, 2.047, 4.75};
-  public static final double[] CONE_LOW_INTERMEDIATE = {3.168, 2.047, 4.75};
-  public static final double[] CONE_MID = {3.168, 2.8, 4.517}; // {3.162, 2.9, 4.517};
+  public static final double[] CONE_GROUND_INTERMEDIATE = {3.08, 2.04, 4.99};
+  public static final double[] CONE_HOME = {3.08, 1.67, 5.687}; // {3.162, 1.674, 5.487};
+  public static final double[] CONE_LOW = {3.08, 2.047, 4.75};
+  public static final double[] CONE_LOW_INTERMEDIATE = {3.08, 2.047, 4.75};
+  public static final double[] CONE_MID = {3.08, 2.8, 4.517}; // {3.162, 2.9, 4.517};
   public static final double[] CONE_MID_SCORE = {2.924, 2.8, 4.5517};
-  public static final double[] CONE_MID_INTERMEDIATE_WAY_UP = {3.172, 2.8, 4.75};
+  public static final double[] CONE_MID_INTERMEDIATE_WAY_UP = {3.08, 2.8, 4.75};
   public static final double[] CONE_MID_INTERMEDIATE_WAY_UP2 = {2.9, 3.034, 4.5};
   public static final double[] CONE_MID_INTERMEDIATE_WAY_UP3 = {2.7, 3.5, 4.313};
-  public static final double[] CONE_MID_INTERMEDIATE = {3.162, 3.034, 4.313};
-  public static final double[] CONE_MID_INTERMEDIATE_WAY_DOWN = {3.168, 3.434, 4.313};
+  public static final double[] CONE_MID_INTERMEDIATE = {3.08, 3.034, 4.313};
+  public static final double[] CONE_MID_INTERMEDIATE_WAY_DOWN = {3.08, 3.434, 4.313};
   public static final double[] CONE_HIGH = {2.77, 3.642, 4.101}; // {2.421, 4.042, 4.101};
   public static final double[] CONE_HIGH_SCORE = {2.421, 3.821, 4.285};
 

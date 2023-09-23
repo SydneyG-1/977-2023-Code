@@ -12,7 +12,7 @@ public final class ArmConstants {
   public static final int J3_motorSparkMaxID = 3;
   public static final int J4_motorSparkMaxID = 4;
 
-  public static final double J1_Encoder_Max = 3.1;
+  public static final double J1_Encoder_Max = 3.08;
   public static final double J1_Encoder_Min = 2.55;
 
   public static final double J2_Encoder_Max = 4.04;
@@ -22,7 +22,7 @@ public final class ArmConstants {
   public static final double J3_Encoder_Min = 3.522;
 
   // offset for J1 to read 0 rad when at home
-  public static final double J1_offset = 3.1;
+  public static final double J1_offset = 3.08;
 
   // offset for J2 to read 0 rad when at home
   public static final double J2_offset = 1.67;
@@ -31,22 +31,22 @@ public final class ArmConstants {
   public static final double J3_offset = 5.487;
 
   // PID coefficients
-  public static final double j1_maxV = 0.250;
-  public static final double j1_maxAcc = 1.0;
-  public static final double j1_kP = 40.0;
+  public static final double j1_maxV = 0.80;
+  public static final double j1_maxAcc = 2.0;
+  public static final double j1_kP = 30.0;
   public static final double j1_kI = 0.0;
   public static final double j1_kD = 0.0;
   public static final double j1_allE = 0.09;
 
-  public static final double j2_maxV = 1.0;
-  public static final double j2_maxAcc = 1.0;
-  public static final double j2_kP = 18.0;
+  public static final double j2_maxV = 1.5;
+  public static final double j2_maxAcc = 1.5;
+  public static final double j2_kP = 18.0;//18.0
   public static final double j2_kI = 0.0;
   public static final double j2_kD = 0.0;
   public static final double j2_allE = 0.09;
 
-  public static final double j3_maxV = 1.0;
-  public static final double j3_maxAcc = 2.0;
+  public static final double j3_maxV = 1.8;
+  public static final double j3_maxAcc = 4.0;
   public static final double j3_kP = 10.0;
   public static final double j3_kI = 10.0;
   public static final double j3_kD = 1.0;

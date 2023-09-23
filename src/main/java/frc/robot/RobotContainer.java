@@ -13,6 +13,7 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -260,8 +261,8 @@ public class RobotContainer {
     oi.getSpeedOverrideR().onTrue(Commands.runOnce(drivetrain::setPrecisionMode));
     oi.getSpeedOverrideR().onFalse(Commands.runOnce(drivetrain::endPrecisionMode));
 
-    oi.getAutoTurn().whileTrue(new AutoTurn(drivetrain));
-
+    oi.getAutoTurnNorth().whileTrue(new AutoTurn(0.0, drivetrain));
+    oi.getAutoTurnSouth().whileTrue(new AutoTurn(180.0, drivetrain));
     // intake & gripper controls
     oi.getCloseButton()
         .onTrue(
@@ -295,11 +296,16 @@ public class RobotContainer {
                         new CoordinatedArmMove(ArmPositions.N_CONE_HIGH_DUNK, arm)
                         .alongWith(
                             Commands.runOnce(gripper::releaseCube, gripper))),
-                new CoordinatedArmMovePos(ArmPositions.N_CONE_MID_DUNK, arm)
-                    .andThen(
-                        new CoordinatedArmMove(ArmPositions.N_CONE_MID_DUNK, arm)
-                        .alongWith(
-                            Commands.runOnce(gripper::releaseCube, gripper))),
+                
+                new ConditionalCommand(
+                    new CoordinatedArmMovePos(ArmPositions.N_CONE_MID_DUNK, arm)
+                        .andThen(
+                            new CoordinatedArmMove(ArmPositions.N_CONE_MID_DUNK, arm)
+                            .alongWith(
+                                Commands.runOnce(gripper::releaseCube, gripper))),
+                    Commands.runOnce(gripper::releaseCube, gripper),
+                    oi.getMoveToMid()),
+
                   oi.getMoveToHigh()),
             Commands.runOnce(gripper::releaseCube, gripper),
             () -> oi.getGamePieceType()));
@@ -312,9 +318,14 @@ public class RobotContainer {
                     new CoordinatedArmMove(ArmPositions.N_CONE_HIGH, arm)
                             .alongWith(
                                 Commands.runOnce(gripper::stopIntake, gripper)),
-                    new CoordinatedArmMove(ArmPositions.N_CONE_MID, arm)
+
+                    new ConditionalCommand(
+                        new CoordinatedArmMove(ArmPositions.N_CONE_MID, arm)
                             .alongWith(
                                 Commands.runOnce(gripper::stopIntake, gripper)),
+                        
+                        Commands.runOnce(gripper::stopIntake, gripper),
+                        oi.getMoveToMid()),
                       oi.getMoveToHigh()),
                 Commands.runOnce(gripper::stopIntake, gripper),
                 () -> oi.getGamePieceType()));
@@ -1119,6 +1130,7 @@ oi.getMoveToMid()
   }
 
   public static boolean safeToDriveFast() {
+    SmartDashboard.putBoolean("Safe to Drive Fast", arm.safeToDriveFast());
     return arm.safeToDriveFast();
   }
   /*
