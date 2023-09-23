@@ -16,14 +16,14 @@ public final class ArmPositions {
   // NEW positions with home at 0 radians
   public static final double[] N_HOME = {0.0, 0.0, 0.0};
 
-  public static final double[] N_CONE_SHELF = {0.0, 1.28, 0.0}; //1.23 j2
+  public static final double[] N_CONE_SHELF = {0.0, 1.28, 0.0}; // 1.23 j2
   public static final double[] N_CUBE_SHELF = {0.0, 1.30, -0.5};
 
   public static final double[] N_CONE_GROUND_INTERMEDIATE = {0.0, 0.37, 0.35};
   public static final double[] N_CUBE_GROUND_INTERMEDIATE = {0.0, 0.37, -0.15};
 
   public static final double[] N_CONE_GROUND = {0.55, 0.0, 0.0};
-  public static final double[] N_CUBE_GROUND = {0.3, 0.20, -0.55};//{0.1, 0.218, -0.35};
+  public static final double[] N_CUBE_GROUND = {0.3, 0.20, -0.55}; // {0.1, 0.218, -0.35};
 
   public static final double[] N_CONE_HIGH_INTERMEDIATE = {0.0, 1.38, 0.0};
   public static final double[] N_CUBE_HIGH_INTERMEDIATE = {0.0, 1.18, 0.1};

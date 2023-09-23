@@ -270,10 +270,8 @@ public class RobotContainer {
                 Commands.runOnce(gripper::intakeCone, gripper),
                 Commands.runOnce(gripper::intakeCube, gripper),
                 () -> oi.getGamePieceType()));
-    oi.getCloseButton()
-        .onFalse(
-            Commands.runOnce(gripper::newIdleIntake, gripper));
-/* 
+    oi.getCloseButton().onFalse(Commands.runOnce(gripper::newIdleIntake, gripper));
+    /*
     oi.getOpenButton()
         .onTrue(
             new ConditionalCommand(
@@ -282,56 +280,44 @@ public class RobotContainer {
                 () -> oi.getGamePieceType()));
     oi.getOpenButton().onFalse(Commands.runOnce(gripper::stopIntake, gripper));
 
-    
+
         oi.getOpenButton()
         .onFalse(Commands.runOnce(gripper::stopIntake, gripper));
     */
 
     oi.getOpenButton()
-    .onTrue(
-        new ConditionalCommand(
+        .onTrue(
             new ConditionalCommand(
-                new CoordinatedArmMovePos(ArmPositions.N_CONE_HIGH_DUNK, arm)
-                    .andThen(
-                        new CoordinatedArmMove(ArmPositions.N_CONE_HIGH_DUNK, arm)
-                        .alongWith(
-                            Commands.runOnce(gripper::releaseCube, gripper))),
-                
                 new ConditionalCommand(
-                    new CoordinatedArmMovePos(ArmPositions.N_CONE_MID_DUNK, arm)
+                    new CoordinatedArmMovePos(ArmPositions.N_CONE_HIGH_DUNK, arm)
                         .andThen(
-                            new CoordinatedArmMove(ArmPositions.N_CONE_MID_DUNK, arm)
-                            .alongWith(
-                                Commands.runOnce(gripper::releaseCube, gripper))),
-                    Commands.runOnce(gripper::releaseCube, gripper),
-                    oi.getMoveToMid()),
+                            new CoordinatedArmMove(ArmPositions.N_CONE_HIGH_DUNK, arm)
+                                .alongWith(Commands.runOnce(gripper::releaseCube, gripper))),
+                    new ConditionalCommand(
+                        new CoordinatedArmMovePos(ArmPositions.N_CONE_MID_DUNK, arm)
+                            .andThen(
+                                new CoordinatedArmMove(ArmPositions.N_CONE_MID_DUNK, arm)
+                                    .alongWith(Commands.runOnce(gripper::releaseCube, gripper))),
+                        Commands.runOnce(gripper::releaseCube, gripper),
+                        oi.getMoveToMid()),
+                    oi.getMoveToHigh()),
+                Commands.runOnce(gripper::releaseCube, gripper),
+                () -> oi.getGamePieceType()));
 
-                  oi.getMoveToHigh()),
-            Commands.runOnce(gripper::releaseCube, gripper),
-            () -> oi.getGamePieceType()));
-
-
-        oi.getOpenButton()
+    oi.getOpenButton()
         .onFalse(
             new ConditionalCommand(
                 new ConditionalCommand(
                     new CoordinatedArmMove(ArmPositions.N_CONE_HIGH, arm)
-                            .alongWith(
-                                Commands.runOnce(gripper::stopIntake, gripper)),
-
+                        .alongWith(Commands.runOnce(gripper::stopIntake, gripper)),
                     new ConditionalCommand(
                         new CoordinatedArmMove(ArmPositions.N_CONE_MID, arm)
-                            .alongWith(
-                                Commands.runOnce(gripper::stopIntake, gripper)),
-                        
+                            .alongWith(Commands.runOnce(gripper::stopIntake, gripper)),
                         Commands.runOnce(gripper::stopIntake, gripper),
                         oi.getMoveToMid()),
-                      oi.getMoveToHigh()),
+                    oi.getMoveToHigh()),
                 Commands.runOnce(gripper::stopIntake, gripper),
                 () -> oi.getGamePieceType()));
-            
-
-
 
     oi.getMoveToPickup()
         .onTrue(
@@ -468,63 +454,63 @@ public class RobotContainer {
 
     */
     /*
+                oi.getMoveToMid()
+                .onTrue(
+                    new ConditionalCommand(
+                        new MoveArm(ArmPositions.CONE_MID, arm),
+                        new MoveArm(ArmPositions.CUBE_MID, arm),
+                        () -> oi.getGamePieceType()));
+
             oi.getMoveToMid()
-            .onTrue(
-                new ConditionalCommand(
-                    new MoveArm(ArmPositions.CONE_MID, arm),
-                    new MoveArm(ArmPositions.CUBE_MID, arm),
-                    () -> oi.getGamePieceType()));
+                .onFalse(
+                    new ConditionalCommand(
+                        new MoveArm(ArmPositions.HOME, arm),
+                        new MoveArm(ArmPositions.HOME, arm),
+                        () -> oi.getGamePieceType()));
+
+            oi.getMidScoreButton()
+                .onTrue(
+                    new MoveArmToPos(ArmPositions.CONE_MID_SCORE, arm)
+                    .andThen(Commands.runOnce(gripper::releaseCube, gripper)
+                    .alongWith(new MoveArm(ArmPositions.CONE_MID_SCORE, arm)))
+                );
+
+            oi.getMidScoreButton()
+            .onFalse(
+                Commands.runOnce(gripper::opengrip, gripper)
+                .andThen(Commands.runOnce(gripper::stopIntake, gripper))
+                .andThen(new MoveArm(ArmPositions.HOME, arm))
+                );
+
+            oi.getMoveToLow()
+                .onTrue(
+                    new ConditionalCommand(
+                        new MoveArmToPos(ArmPositions.CONE_LOW_INTERMEDIATE, arm)
+                            .andThen(new MoveArm(ArmPositions.CONE_LOW, arm)),
+                        new MoveArm(ArmPositions.CUBE_LOW, arm),
+                        () -> oi.getGamePieceType()));
+
+            oi.getMoveToLow()
+                .onFalse(
+                    new ConditionalCommand(
+                        new MoveArm(ArmPositions.HOME, arm),
+                        new MoveArm(ArmPositions.HOME, arm),
+                        () -> oi.getGamePieceType()));
 
         oi.getMoveToMid()
-            .onFalse(
-                new ConditionalCommand(
-                    new MoveArm(ArmPositions.HOME, arm),
-                    new MoveArm(ArmPositions.HOME, arm),
-                    () -> oi.getGamePieceType()));
+        .onTrue(
+            new ConditionalCommand(
+                new SimpleArmMove(ArmPositions.N_CONE_MID, arm),
+                new SimpleArmMove(ArmPositions.N_CUBE_MID, arm),
+                () -> oi.getGamePieceType()));
 
-        oi.getMidScoreButton()
-            .onTrue(
-                new MoveArmToPos(ArmPositions.CONE_MID_SCORE, arm)
-                .andThen(Commands.runOnce(gripper::releaseCube, gripper)
-                .alongWith(new MoveArm(ArmPositions.CONE_MID_SCORE, arm)))
-            );
-
-        oi.getMidScoreButton()
-        .onFalse(
-            Commands.runOnce(gripper::opengrip, gripper)
-            .andThen(Commands.runOnce(gripper::stopIntake, gripper))
-            .andThen(new MoveArm(ArmPositions.HOME, arm))
-            );
-
-        oi.getMoveToLow()
-            .onTrue(
-                new ConditionalCommand(
-                    new MoveArmToPos(ArmPositions.CONE_LOW_INTERMEDIATE, arm)
-                        .andThen(new MoveArm(ArmPositions.CONE_LOW, arm)),
-                    new MoveArm(ArmPositions.CUBE_LOW, arm),
-                    () -> oi.getGamePieceType()));
-
-        oi.getMoveToLow()
-            .onFalse(
-                new ConditionalCommand(
-                    new MoveArm(ArmPositions.HOME, arm),
-                    new MoveArm(ArmPositions.HOME, arm),
-                    () -> oi.getGamePieceType()));
-    
     oi.getMoveToMid()
-    .onTrue(
-        new ConditionalCommand(
-            new SimpleArmMove(ArmPositions.N_CONE_MID, arm),
-            new SimpleArmMove(ArmPositions.N_CUBE_MID, arm),
-            () -> oi.getGamePieceType()));
-
-oi.getMoveToMid()
-    .onFalse(
-        new ConditionalCommand(
-            new SimpleArmMove(ArmPositions.N_HOME, arm),
-            new SimpleArmMove(ArmPositions.N_HOME, arm),
-            () -> oi.getGamePieceType()));
-            */
+        .onFalse(
+            new ConditionalCommand(
+                new SimpleArmMove(ArmPositions.N_HOME, arm),
+                new SimpleArmMove(ArmPositions.N_HOME, arm),
+                () -> oi.getGamePieceType()));
+                */
     oi.getMoveToMid()
         .onTrue(
             new ConditionalCommand(
