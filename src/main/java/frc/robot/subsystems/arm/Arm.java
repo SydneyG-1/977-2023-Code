@@ -350,7 +350,7 @@ public class Arm extends SubsystemBase {
   }
 
   public boolean safeToDriveFast() {
-    return (getJ1position() > 3.05) && (getJ2position() < 1.77);
+    return (getJ1position() > 3.05) && (getJ2position() < 2.00);
   }
 
   public double getJ1goal() {

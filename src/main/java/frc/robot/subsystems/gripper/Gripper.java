@@ -75,8 +75,8 @@ public class Gripper extends SubsystemBase {
   }
 
   public void newIdleIntake() {
-    intake_motor.set(-0.1);
-    intake_motor2.set(-0.1);
+    intake_motor.set(-0.2);
+    intake_motor2.set(-0.2);
   }
 
   public void stopIntake() {

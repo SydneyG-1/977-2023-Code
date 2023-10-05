@@ -67,9 +67,12 @@ public class TeleopSwerve extends CommandBase {
       target_speed = 0.85;
     }
     if (drivetrain.getPrecisionMode()) {
-      target_speed = 0.35;
+      target_speed = 0.25;
     }
     if (!RobotContainer.safeToDriveFast()) {
+      target_speed = 0.5;
+    }
+    if (drivetrain.getPrecisionMode()) {
       target_speed = 0.25;
     }
 
@@ -78,7 +81,7 @@ public class TeleopSwerve extends CommandBase {
     } else {
       speedMod = speedMod - 0.02;
     }
-
+    
     SmartDashboard.putNumber("Speed Mod", speedMod);
     /*
 
@@ -106,7 +109,7 @@ public class TeleopSwerve extends CommandBase {
     double rotationalVelocity =
         rotationPercentage
             * DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
-            * (speedMod * 0.5);
+            * (speedMod);
 
     Logger.getInstance().recordOutput("ActiveCommands/TeleopSwerve", true);
     Logger.getInstance().recordOutput("TeleopSwerve/xVelocity", xVelocity);

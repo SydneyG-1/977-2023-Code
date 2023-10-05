@@ -40,6 +40,7 @@ import frc.robot.commands.CoordinatedArmMovePos;
 import frc.robot.commands.FollowPath;
 import frc.robot.commands.MoveArm;
 import frc.robot.commands.MoveArmToPos;
+import frc.robot.commands.MoveArmToPosN;
 import frc.robot.commands.SimpleArmMove;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.operator_interface.OISelector;
@@ -77,7 +78,7 @@ public class RobotContainer {
   /** Create the container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    CameraServer.startAutomaticCapture();
+    //CameraServer.startAutomaticCapture();
     // create real, simulated, or replay subsystems based on the mode and robot specified
     if (Constants.getMode() != Mode.REPLAY) {
       switch (Constants.getRobot()) {
@@ -329,8 +330,12 @@ public class RobotContainer {
                 new ConditionalCommand(
                     new CoordinatedArmMovePos(ArmPositions.N_CONE_GROUND_INTERMEDIATE, arm)
                         .andThen(new CoordinatedArmMove(ArmPositions.N_CONE_GROUND, arm)),
-                    new CoordinatedArmMovePos(ArmPositions.N_CUBE_GROUND_INTERMEDIATE, arm)
+                        new CoordinatedArmMovePos(ArmPositions.N_CUBE_GROUND_INTERMEDIATE, arm)
                         .andThen(new CoordinatedArmMove(ArmPositions.N_CUBE_GROUND, arm)),
+                     /*   new CoordinatedArmMove(ArmPositions.N_CUBE_GROUND_NEW, arm)
+                        .alongWith( 
+                            Commands.runOnce(drivetrain::setPrecisionMode)), */ 
+                        
                     () -> oi.getGamePieceType()),
                 () -> oi.getPickupLocation()));
 
@@ -344,8 +349,11 @@ public class RobotContainer {
                 new ConditionalCommand(
                     new CoordinatedArmMovePos(ArmPositions.N_CONE_GROUND_INTERMEDIATE, arm)
                         .andThen(new CoordinatedArmMove(ArmPositions.N_CONE_HOME, arm)),
-                    new CoordinatedArmMovePos(ArmPositions.N_CUBE_GROUND_INTERMEDIATE, arm)
-                        .andThen(new CoordinatedArmMove(ArmPositions.N_CUBE_HOME, arm)),
+                        new CoordinatedArmMove(ArmPositions.N_CUBE_HOME, arm)
+                        .alongWith(
+                            Commands.runOnce(drivetrain::endPrecisionMode)),
+                    //new CoordinatedArmMovePos(ArmPositions.N_CUBE_GROUND_INTERMEDIATE, arm)
+                        //.andThen(new CoordinatedArmMove(ArmPositions.N_CUBE_HOME, arm)),
                     () -> oi.getGamePieceType()),
                 () -> oi.getPickupLocation()));
     /*
@@ -425,7 +433,6 @@ public class RobotContainer {
                 new CoordinatedArmMovePos(ArmPositions.N_CUBE_HIGH_INTERMEDIATE, arm)
                     .andThen(new CoordinatedArmMove(ArmPositions.N_HOME, arm)),
                 () -> oi.getGamePieceType()));
-
     /*
     oi.getHighScoreButton()
             .onTrue(
@@ -1043,7 +1050,83 @@ public class RobotContainer {
                     .withTimeout(1)
                     .andThen(new MoveArmToPos(ArmPositions.CONE_MID_INTERMEDIATE, arm))
                     .andThen(new MoveArm(ArmPositions.HOME, arm)));
+    
+        List<PathPlannerTrajectory> AutoNewCubeBarrier =
+            PathPlanner.loadPathGroup(
+                        "NewCubeBarrier",
+                        AUTO_MAX_SPEED_METERS_PER_SECOND,
+                        AUTO_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED);
 
+//Ethan's Code certified approval team 997 The Comet bot
+                    Command NewCubeBarrier =
+                        Commands.sequence(
+
+                        Commands.run(gripper::closegrip, gripper).withTimeout(0.4),
+            Commands.runOnce(gripper::stopIntake, gripper),
+            new CoordinatedArmMovePos(ArmPositions.N_CUBE_HIGH_INTERMEDIATE, arm),
+            new CoordinatedArmMovePos(ArmPositions.N_CUBE_HIGH, arm),
+            Commands.run(gripper::releaseCube, gripper)
+                .withTimeout(0.25),
+            Commands.runOnce(gripper::stopIntake, gripper),
+            Commands.runOnce(gripper::opengrip, gripper),
+            new FollowPath(AutoNewCubeBarrier.get(0), drivetrain, true)
+            .alongWith(
+                new CoordinatedArmMovePos(ArmPositions.N_CUBE_GROUND_INTERMEDIATE, arm)),
+                
+            //drive back while its coming down 
+            //changing stop point to not turn until after arm comes down
+
+            new FollowPath(AutoNewCubeBarrier.get(1), drivetrain, false)
+            .alongWith(
+                new CoordinatedArmMovePos(ArmPositions.N_CUBE_GROUND, arm)),
+           
+
+           // new CoordinatedArmMovePos(ArmPositions.N_CUBE_GROUND, arm),
+            new FollowPath(AutoNewCubeBarrier.get(2), drivetrain, false)
+            .alongWith(
+                
+                new CoordinatedArmMovePos(ArmPositions.N_CUBE_GROUND, arm)
+                .alongWith(
+                    Commands.run(gripper::closegrip, gripper).withTimeout(2.0)) 
+                
+            ),
+            Commands.runOnce(gripper::newIdleIntake, gripper),
+            new CoordinatedArmMovePos(ArmPositions.N_CUBE_GROUND_INTERMEDIATE, arm),
+            new CoordinatedArmMovePos(ArmPositions.N_HOME, arm)
+                        );
+
+                        List<PathPlannerTrajectory> AutoNewCubeBump =
+                        PathPlanner.loadPathGroup(
+                                    "NewCubeBump",
+                                    AUTO_MAX_SPEED_METERS_PER_SECOND,
+                                    AUTO_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED);
+            
+            //Ethan's Code certified approval team 997 The Comet bot
+                                Command NewCubeBump =
+                                    Commands.sequence(
+            
+                                    Commands.run(gripper::closegrip, gripper).withTimeout(0.4),
+                        Commands.runOnce(gripper::stopIntake, gripper),
+                        new CoordinatedArmMovePos(ArmPositions.N_CUBE_HIGH_INTERMEDIATE, arm),
+                        new CoordinatedArmMovePos(ArmPositions.N_CUBE_HIGH, arm),
+                        Commands.run(gripper::releaseCube, gripper)
+                            .withTimeout(0.25),
+                        Commands.runOnce(gripper::stopIntake, gripper),
+                        Commands.runOnce(gripper::opengrip, gripper),
+                        new CoordinatedArmMovePos(ArmPositions.N_CUBE_HIGH_INTERMEDIATE, arm),
+                        new CoordinatedArmMovePos(ArmPositions.N_HOME, arm),
+                        new FollowPath(AutoNewCubeBump.get(0), drivetrain, true),
+                        new CoordinatedArmMovePos(ArmPositions.N_CUBE_GROUND_INTERMEDIATE, arm),
+                        new CoordinatedArmMovePos(ArmPositions.N_CUBE_GROUND, arm),
+                        new FollowPath(AutoNewCubeBump.get(1), drivetrain, false)
+                        .alongWith(
+                            Commands.run(gripper::closegrip, gripper).withTimeout(2.0)
+                            
+                        ),
+                        Commands.runOnce(gripper::newIdleIntake, gripper),
+                        new CoordinatedArmMovePos(ArmPositions.N_CUBE_GROUND_INTERMEDIATE, arm),
+                        new CoordinatedArmMovePos(ArmPositions.N_HOME, arm)
+                                    );
     // .andThen(Commands.runOnce(drivetrain::enableXstance, drivetrain)).withTimeout(1);
     // new MoveArmToPos(ArmPositions.CUBE_MID, arm)
     // .andThen(new MoveArmToPos(ArmPositions.HOME, arm))
@@ -1069,14 +1152,17 @@ public class RobotContainer {
     // autoChooser.addDefaultOption("Balance Barrier", P_balanceWithAutoBarrier);
     // autoChooser.addDefaultOption("Cube Mid Auto", auto2);
 
-    autoChooser.addOption("BalanceMID", balanceAutoMid);
+    // autoChooser.addOption("BalanceMID", balanceAutoMid);
 
     // autoChooser.addOption("Cone Then balance", ChargeStationAuto);
     // autoChooser.addOption("X:ConeCubeBarrierB", autoTest);
     // autoChooser.addOption("X:ConeOverBalanceRB",P_balanceAuto);
-    // autoChooser.addOption("Balance Auto Leave Community", balanceAutoLeave);
+    autoChooser.addOption("balanceAutoLeave", balanceAutoLeave);
 
-    autoChooser.addOption("AutoCubeMidLeave", autoMidCube);
+    // autoChooser.addOption("AutoCubeMidLeave", autoMidCube);
+    autoChooser.addOption("NewCubeBarrier", NewCubeBarrier);
+    autoChooser.addOption("NewCubeBump", NewCubeBump);
+    
 
     // demonstration of PathPlanner path group with event markers
     // autoChooser.addOption("Test Path", autoTest);
