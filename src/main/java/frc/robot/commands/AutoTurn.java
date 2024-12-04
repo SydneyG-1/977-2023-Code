@@ -26,7 +26,7 @@ public class AutoTurn extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
+  public void initialize(360.0) {
     controller.enableContinuousInput(0.0, 360.0);
     controller.setSetpoint(setPoint);
   }
